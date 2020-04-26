@@ -109,9 +109,8 @@ $(function(){
 
   });
   $('[data-toggle="datepicker"]').datepicker({
-    format: 'dd-mm-yyyy',
+    format: 'yyyy-mm-dd',
     autoHide: true,
-    language: 'ar-IQ'
   });
 
 });
