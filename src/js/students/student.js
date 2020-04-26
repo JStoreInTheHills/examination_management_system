@@ -30,7 +30,7 @@ $(function(){
         "targets": 5,
         "data": "Status",
         'render': function (data) {
-          if (data === 1) {
+          if (data === "1") {
             return '<span class="label label-flat border-success text-success-600">Active</span>'
           } else {
             return '<span class="label label-flat border-danger text-danger-600">InActive</span>'
@@ -55,6 +55,7 @@ $(function(){
   });
 
   $('#form').on('submit', function (event) {
+
 
     var formData = {
       'fullanme': $('#fullanme').val(),

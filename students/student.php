@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Manage || Classes</title>
+    <title>Manage || Students</title>
 
     <!-- Custom fonts for this template -->
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -117,9 +117,10 @@
                                     <input type="email" name="emailid"  id="email" class="form-control " placeholder="Email Address">
                                 </div>
                                 <div class="col-sm-6">
-                                    <input type="radio"  name="gender"  id="gender" checked >Male
-                                    <input type="radio"  name="gender"  id="gender" >Female
-
+                                <select name="gender" id="gender" class="form-control">
+                                      <option value="Male">Male</option>
+                                      <option value="Female">Female</option>
+                                    </select>
                                 </div>                                            
                             </div>
                             <div class="form-group row">
