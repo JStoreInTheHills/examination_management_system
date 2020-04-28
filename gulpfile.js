@@ -114,22 +114,28 @@ function modules() {
   );
 }
 
-function customJs(){
-   
-  var classes = gulp.src('./src/js/class/*')
-                  .pipe(gulp.dest('./dist/js/classes'));
-  var exam = gulp.src('./src/js/exam/*')
-                 .pipe(gulp.dest('./dist/js/exams'));
-  var result = gulp.src('./src/js/result/*')
-                   .pipe(gulp.dest('./dist/js/results'));
-  var stream = gulp.src('./src/js/stream/*')
-                    .pipe(gulp.dest('./dist/js/streams'));
-  var student = gulp.src('./src/js/students/*')
-                    .pipe(gulp.dest('./dist/js/students'));
-  var subjects = gulp.src('./src/js/subjects/*')
-                    .pipe(gulp.dest('./dist/js/subjects'))
+function customJs() {
+  var classes = gulp
+    .src("./src/js/class/*")
+    .pipe(gulp.dest("./dist/js/classes"));
+  var exam = gulp.src("./src/js/exam/*").pipe(gulp.dest("./dist/js/exams"));
+  var result = gulp
+    .src("./src/js/result/*")
+    .pipe(gulp.dest("./dist/js/results"));
+  var stream = gulp
+    .src("./src/js/stream/*")
+    .pipe(gulp.dest("./dist/js/streams"));
+  var student = gulp
+    .src("./src/js/students/*")
+    .pipe(gulp.dest("./dist/js/students"));
+  var year = gulp
+    .src("./src/js/year/*")
+    .pipe(gulp.dest("./dist/js/years"));
+  var subjects = gulp
+    .src("./src/js/subjects/*")
+    .pipe(gulp.dest("./dist/js/subjects"));
 
-  return merge(result, classes, exam, stream, student, subjects);
+  return merge(result, classes, exam, stream, student, subjects, year);
 }
 
 // CSS task
@@ -225,7 +231,7 @@ function css() {
 function watchFiles() {
   gulp.watch(["./scss/**/*", "./src/css/*"], css);
   gulp.watch(["./js/**/*", "!./js/**/*.min.js"], js);
-  gulp.watch(['./src/js/**/*'], customJs);
+  gulp.watch(["./src/js/**/*"], customJs);
   // gulp.watch("./**/*.html", browserSyncReload);
 }
 
