@@ -13,8 +13,7 @@ $(function () {
         class_id: class_id,
       },
     },
-    columnDefs: [
-      {
+    columnDefs: [{
         targets: 0,
         data: "exam_name",
       },
@@ -29,6 +28,118 @@ $(function () {
       {
         targets: 3,
         data: "created_by",
+      },
+      {
+        targets: 4,
+        data: "id",
+        orderable: false,
+        render: function (data) {
+          return (
+            '<div class="dropdown">' +
+            ' <a class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+            '<i class="icon-menu9"></i>' +
+            '</a> <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+            "" +
+            '<a class="dropdown-item" id="view" href="./class_exams.php?id=' + data +'&class_id=' +class_id + '">View Performance</a>' +
+            '<a class="dropdown-item" href="queries/delete_class.php?classid=' +
+            data +
+            '">Remove Exam from Class</a>' +
+            '<a class="dropdown-item" href="queries/delete_class.php?classid=' +
+            data +
+            '">Mark as Closed</a>' +
+            "</div></div>" +
+            ""
+          );
+        },
+      },
+    ],
+  });
+
+  var view_class_student = $("#view_class_student").DataTable({
+    ajax: {
+      url: "../queries/get_class_students.php",
+      type: "GET",
+      data: {
+        class_id: class_id,
+      },
+      dataSrc: "",
+    },
+    columnDefs: [{
+        targets: 0,
+        data: "StudentName",
+      },
+      {
+        targets: 1,
+        data: "RollId",
+      },
+      {
+        targets: 2,
+        data: "RegDate",
+      },
+      {
+        targets: 3,
+        data: "DOB",
+      },
+      {
+        targets: 4,
+        data: "Gender",
+      },
+      {
+        targets: 5,
+        data: "Status",
+      },
+      {
+        targets: 6,
+        orderable: false,
+        data: "StudentId",
+        render: function (data) {
+          return (
+            '<div class="dropdown">' +
+            ' <a class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+            '<i class="icon-menu9"></i>' +
+            '</a> <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+            "" +
+            '<a class="dropdown-item" id="view" href="./class_exams.php?id=' +
+            data +
+            '">View Performance</a>' +
+            '<a class="dropdown-item" href="queries/delete_class.php?classid=' +
+            data +
+            '">Remove Exam from Class</a>' +
+            '<a class="dropdown-item" href="queries/delete_class.php?classid=' +
+            data +
+            '">Mark as Closed</a>' +
+            "</div></div>" +
+            ""
+          );
+        },
+      },
+    ],
+  });
+
+  var view_class_subjects = $("#view_class_subjects").DataTable({
+    ajax: {
+      url: "../queries/get_class_subjects.php",
+      type: "GET",
+      dataSrc: "",
+      data: {
+        class_id: class_id,
+      },
+    },
+    columnDefs: [{
+        targets: 0,
+        data: "SubjectName",
+      },
+      {
+        targets: 1,
+        data: "SubjectCode",
+      },
+      {
+        targets: 2,
+        data: "CreationDate",
+      },
+      {
+        targets: 3,
+        data: "status",
       },
       {
         targets: 4,
@@ -58,58 +169,17 @@ $(function () {
     ],
   });
 
-  var view_class_student = $("#view_class_student").DataTable({
-    ajax: {
-      url: "../queries/get_class_students.php",
-      type: "GET",
-      data: {
-        class_id: class_id,
-      },
-      dataSrc: "",
-    },
-    columnDefs: [
-      {
-        targets: 0,
-        data: "StudentName",
-      },
-      {
-        targets: 1,
-        data: "RollId",
-      },
-      {
-        targets: 2,
-        data: "RegDate",
-      },
-      {
-        targets: 3,
-        data: "DOB",
-      },
-      {
-        targets: 4,
-        data: "Gender",
-      },
-      {
-        targets: 5,
-        data: "Status",
-      },
-      {
-        targets: 6,
-        orderable: false,
-        data: "StudentId",
-        render: function (data) {
-          return data;
-        },
-      },
-    ],
-  });
-
   setInterval(function () {
     view_class_student.ajax.reload(null, false);
-  }, 1000000);
+  }, 100000);
 
   setInterval(function () {
     view_class_table.ajax.reload(null, false);
   }, 100000);
+
+  setInterval(function () {
+    view_class_subjects.ajax.reload(null, false);
+  }, 500000);
 
   $("#view_class_submit").on("click", function (event) {
     event.preventDefault();
