@@ -4,27 +4,33 @@
 
         $marks=array();
 
+        $errors = array();
+        $data = array();
+
         $class = $_POST['class'];
         $studentid = $_POST['studentid'];
         $mark = $_POST['marks'];
 
         $class_exam_id = $_POST['class_exam_id'];
 
-        if (empty($class)){
-            $data['success'] = false;
-            $data['message'] = 'Class Name Cannot be Empty';
-        }
+        if (empty($class))
+            $errors['class'] = 'Class Name Cannot be Empty';
 
-        if (empty($studentid)){
-            $data['success'] = false;
-            $data['message'] = 'StudentName cannot be Empty';
-        }
+        if (empty($studentid))
+           $errors['student_id'] = 'Student Id cannot be Empty';
 
-        if (empty($mark)){
-            $data['success'] = false;
-            $data['message'] = 'Marks cannot be Empty';
-        }
+        if (empty($mark))
+            $errors['mark'] = 'Marks cannot be Empty';
+        
+        if (empty($class_exam_id))
+            $errors['class_exam_id'] = 'Class Exam cannot be Empty';
 
+        if(!empty($errors)){
+            
+            $data['success'] = false;
+            $data['message'] = $errors;
+
+        }else {
 
         $stmt = $dbh->prepare("SELECT tblsubjects.SubjectName,tblsubjects.subject_id 
                                      FROM tblsubjectcombination join  tblsubjects on  tblsubjects.subject_id=tblsubjectcombination.SubjectId
@@ -47,16 +53,20 @@
             $query->bindParam(':sid', $sid, PDO::PARAM_STR);
             $query->bindParam(':marks', $mar);
             $query->execute();
+
              $lastInsertId = $dbh->lastInsertId();
 
             if($lastInsertId) {
                 $data['success'] = true;
                 $data['message'] = 'Result Added Successfully';
             }else{
+
+                $er = $query->errorInfo();
+
                 $data['success'] = false;
-                $data['message'] = 'Something Went Wrong';
+                $data['message'] = ($er[2]);
             }
 
+        }
     }
-
     echo json_encode($data);

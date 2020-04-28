@@ -100,13 +100,13 @@ include '../config/config.php';
                 <!-- Basic Card Example -->
                 <div id="result_add_card" class="card shadow mb-4 col-sm-offset-3">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Add Student</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Add Results</h6>
                     </div>
                     <div class="card-body">
                         <form class="user" id="result_form">
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                <select name="class" class="form-control clid" id="class" onChange="getStudent(this.value);" >
+                                    <select name="class" class="form-control clid" id="class" onChange="getStudent(this.value);" >
                                         <option value="">Select Class</option>
                                         <?php
                                         $sql = "SELECT id, s.name, c.ClassName 
@@ -124,6 +124,28 @@ include '../config/config.php';
                                         } ?>
                                     </select>
                                 </div>
+
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <select name="class_exam_id" class="form-control class_exam_id" id="class_exam_id" >
+                                        <option value="">Select Exam</option>
+                                        <?php
+                                        $sql = "SELECT id, exam_name FROM class_exams JOIN exam ON class_exams.exam_id = exam.exam_id";
+                                        $query = $dbh->prepare($sql);
+                                        $query->execute();
+                                        $results = $query->fetchAll(PDO::FETCH_OBJ);
+                                        if ($query->rowCount() > 0) {
+
+                                            foreach ($results as $result) {   ?>
+
+                                                <option value="<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->exam_name); ?></option>
+                                                
+                                            <?php }
+                                        } ?>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="form-group row">
                                 <div class="col-sm-6">
                                 <select name="studentid" class="form-control stid" id="studentid"  onChange="getresult(this.value);">
                                     </select>
@@ -190,7 +212,7 @@ include '../config/config.php';
 </div>
 
 <script src="/dist/js/main.min.js"></script>
-<script src="/dist/js/result/result.js"></script>
+<script src="/dist/js/results/result.js"></script>
 </body>
 
 </html>

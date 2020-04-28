@@ -49,19 +49,19 @@ $(function(){
 
     $('#result_form').on('submit', function (e) {
         
-        e.preventDefault();
+            e.preventDefault();
 
-        var l = $('.marks').length; // getting the length of the class element marks
-        var result = []; // creating an empty array. 
+            var l = $('.marks').length; // getting the length of the class element marks
+            var result = []; // creating an empty array. 
 
-        for(var i = 0; i < l; i++){
-            result.push($('.marks').eq(i).val());
-        }
+            for(var i = 0; i < l; i++){
+                result.push($('.marks').eq(i).val());
+            }
             var formData = {
                 class : $('#class').val(),
                 studentid : $('#studentid').val(),
                 marks : result,
-                class_exam_id : 70,
+                class_exam_id : $('#class_exam_id').val(),
             };
 
         $.ajax({
@@ -70,22 +70,19 @@ $(function(){
             'method':'POST',
         }).done(function (response) {
             var s = JSON.parse(response);
-
-            console.log(response);
-            console.log(s);
-            // if (s.success === true) {
-            //     iziToast.success({
-            //         title: 'Success',
-            //         position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
-            //         message: s.message,
-            //     });
-            // }else{
-            //     iziToast.error({
-            //         title: 'Error',
-            //         position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
-            //         message: s.message,
-            //     });
-            // }
+            if (s.success === true) {
+                iziToast.success({
+                    title: 'Success',
+                    position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+                    message: s.message,
+                });
+            }else{
+                iziToast.error({
+                    title: 'Error',
+                    position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+                    message: s.message,
+                });
+            }
         })
     })
 
