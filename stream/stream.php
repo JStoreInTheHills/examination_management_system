@@ -11,12 +11,14 @@
     <title>Manage || Streams</title>
 
     <!-- Custom fonts for this template -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
     <link href="../vendor/fontawesome-free/css/all.css" rel="stylesheet" type="text/css">
     <link href="../dist/css/main.min.css" rel="stylesheet" type="text/css">
 
     <style>
-        #stream_add_card{
+        #stream_add_card {
             display: none;
         }
     </style>
@@ -26,137 +28,128 @@
 
 <body id="page-top">
 
-<!-- Page Wrapper -->
-<div id="wrapper">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
 
-    <?php include "../layouts/sidebar.php"; ?>
+        <?php include "../layouts/sidebar.php"; ?>
 
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Main Content -->
-        <div id="content">
+            <!-- Main Content -->
+            <div id="content">
 
-            <?php include '../layouts/topbar.php' ?>
+                <?php include '../layouts/topbar.php' ?>
 
-            <!-- Begin Page Content -->
-            <div class="container-fluid">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
 
-                <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800"> Manage Streams </h1>
-                <!-- DataTales Example -->
-                <div id="stream_main_content" class="card shadow mb-4">
-                    <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">All Stream</h6>
-                        <div class="dropdown no-arrow">
-                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                <div class="dropdown-header">Tools:</div>
-                                <a class="dropdown-item" id="add_stream" href="#">Add Stream</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="stream_table" width="100%" cellspacing="0">
-                                <thead>
-                                <tr>
-                                    <th>Stream Name</th>
-                                    <th>Created At</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tfoot>
-                                <tr>
-                                    <th>Stream Name</th>
-                                    <th>Created At</th>
-                                    <th>Action</th>
-                                </tr>
-                                </tfoot>
-
-                            </table>
-                        </div>
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Manage Stream</h1>
                     </div>
 
-                </div>
+                    <!-- start of row -->
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    All Class Streams
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="stream_table" width="100%"
+                                            cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Stream Name</th>
+                                                    <th>Created At</th>
+                                                    <th style="text-align:center">Action</th>
+                                                </tr>
+                                            </thead>
 
-                <!-- Basic Card Example -->
-                <div id="stream_add_card" class="card shadow mb-4 col-sm-offset-3">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Add Stream</h6>
-                    </div>
-                    <div class="card-body">
-                        <form id="stream_form" class="user">
-                            <div class="form-group row">
-                                <div class="col-sm-12 mb-3 mb-sm-0">
-                                    <input type="text" id="stream_name" class="form-control" placeholder="Enter Stream Name">
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="btn-group">
-                                <button class="btn btn-primary" name="submit" type="submit">Save</button>
-                                <button id="cancel_stream_form_add" class="btn btn-warning"><i class="icon-cross"></i> Close</button>
-                            </div>
+                        </div>
+                        <!------------------------------------------------------------------------------------------------->
+                        <div class="col-lg-6">
+                            <div class="card shadow mb-4">
+                                <div class="card-header">
+                                    Add Stream
+                                </div>
+                                <div class="card-body">
+                                    <form id="stream_form" class="user">
+                                        <div class="form-group row">
+                                            <div class="col-sm-12 mb-3 mb-sm-0">
+                                                <input type="text" id="stream_name" class="form-control"
+                                                    placeholder="Enter Stream Name">
+                                            </div>
+                                        </div>
 
-                        </form>
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary" name="submit" type="submit">Save</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- endo of row -->
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2019</span>
                     </div>
                 </div>
-
-            </div>
-            <!-- /.container-fluid -->
+            </footer>
+            <!-- End of Footer -->
 
         </div>
-        <!-- End of Main Content -->
+        <!-- End of Content Wrapper -->
 
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Your Website 2019</span>
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="../login.php">Logout</a>
                 </div>
             </div>
-        </footer>
-        <!-- End of Footer -->
-
-    </div>
-    <!-- End of Content Wrapper -->
-
-</div>
-<!-- End of Page Wrapper -->
-
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="../login.php">Logout</a>
-            </div>
         </div>
     </div>
-</div>
 
-<script src="/dist/js/main.min.js"></script>
-<script src="/dist/js/streams/stream.js"></script>
-
+    <script src="/dist/js/main.min.js"></script>
+        <script src="/dist/js/streams/stream.js"></script>
+    
 </body>
 
 </html>
