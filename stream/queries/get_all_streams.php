@@ -2,7 +2,7 @@
 
     include "../../config/config.php";
     
-        $sql = "SELECT name, stream_id, created_at FROM stream";
+        $sql = "SELECT name, stream_id, created_at,(SELECT COUNT(*)FROM tblclasses WHERE stream_id = stream.stream_id)AS number_of_classes FROM stream";
         $query = $dbh->prepare($sql);
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_OBJ);

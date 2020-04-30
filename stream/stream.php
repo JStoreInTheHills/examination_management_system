@@ -64,6 +64,7 @@
                                                 <tr>
                                                     <th>Stream Name</th>
                                                     <th>Created At</th>
+                                                    <th>Classes</th>
                                                     <th style="text-align:center">Action</th>
                                                 </tr>
                                             </thead>

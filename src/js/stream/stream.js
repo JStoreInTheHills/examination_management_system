@@ -8,6 +8,9 @@ var stream_table = $("#stream_table").DataTable({
     {
       targets: 0,
       data: "name",
+      render: function (data) {
+        return `<a href="./page/view_stream.php?stream_name=${data}">${data}</a>`;
+      },
     },
     {
       targets: 1,
@@ -15,10 +18,23 @@ var stream_table = $("#stream_table").DataTable({
     },
     {
       targets: 2,
+      data: "number_of_classes",
+      render: function (data) {
+        if (data > 1) {
+          return `
+          ${data} classes`;
+        } else {
+          return `${data} class`;
+        }
+      },
+    },
+    {
+      targets: 3,
+
       data: "stream_id",
       render: function (data) {
         var string = `
-            <a class="" href="#" onClick="del()"><i class="fas fa-trash"></i></a>
+            <a style = "color:red" onClick="del()"><i class="fas fa-trash"></i></a>
 
             <script type='text/javascript'>
 
