@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Manage || Academic Year</title>
+    <title id=year_title></title>
 
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -38,10 +38,21 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
+
+                <nav aria-label="breadcrumb mb-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/academic_year/year.php">Academic Year</a></li>
+                        <li id="bread_list" class="breadcrumb-item active" aria-current="page"></li>
+                    </ol>
+                </nav>
+
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 id="heading" class="h3 mb-0 text-gray-800"></h1>
+                        <h1 id="heading" class="h3 mb-0 text-gray-800">Exam Period ~ </h1>
                     </div>
+
+
 
                     <!-- start of row -->
                     <div class="row">
@@ -58,7 +69,7 @@
                                                     <th>Class Name</th>
                                                     <th>Class Code</th>
                                                     <th>Stream</th>
-                                                    <th>Action</th>
+                                                    <th>Total Marks</th>
                                                 </tr>
                                             </thead>
                                         </table>
