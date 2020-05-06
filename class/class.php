@@ -23,9 +23,6 @@
         #class_add_card{
             display: none;
         }
-        #subject_add_card{
-            display: none;
-        }
     </style>
 </head>
 
@@ -47,8 +44,16 @@
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
+            <nav aria-label="breadcrumb mb-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Classes</li>
+                    </ol>
+                </nav>
+
+
                 <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800"> Manage Classes </h1>
+                <h1 class="h3 mb-2 text-gray-800"> Manage Classes _  </h1>
 
                 <!-- DataTales Example -->
                 <div id="class_main_content" class="card shadow mb-4">
@@ -76,21 +81,11 @@
                                     <th>Class Name</th>
                                     <th>Code</th>
                                     <th>Stream</th>
-                                    <th>Total Subjects</th>
-                                    <th>Total Students</th>
+                                    <th>Subjects</th>
+                                    <th>Students</th>
                                     <th class="text-center sorting_disabled" rowspan="1" colspan="1" aria-label="Actions" style="width: 100px;">Actions</th>
                                 </tr>
                                 </thead>
-                                <tfoot>
-                                <tr>
-                                    <th>Class Name</th>
-                                    <th>Code</th>
-                                    <th>Stream</th>
-                                    <th>Total Subjects</th>
-                                    <th>Total Students</th>
-                                    <th class="text-center sorting_disabled" rowspan="1" colspan="1" aria-label="Actions" style="width: 100px;">Actions</th>
-                                </tr>
-                                </tfoot>
 
                             </table>
                         </div>
@@ -99,7 +94,7 @@
                 </div>
 
                 <!-- Class Add Card -->
-                <div id="class_add_card" class="card shadow mb-4 col-sm-offset-3">
+                <div id="class_add_card" class="card col-md-6 mb-4 mx-auto">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Add Class</h6>
                     </div>
@@ -143,66 +138,13 @@
                     </div>
                 </div>
 
-                <!-- Class Add Card -->
-                <div id="subject_add_card" class="card shadow mb-4 col-sm-offset-3">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Add Subject</h6>
-                    </div>
-                    <div class="card-body">
-                        <form id="subject_form_add" class="user">
-                            <div class="form-group row">
-                                <div class="col-sm-6 mb-3 mb-sm-0">
-                                    <input type="text" id="ClassName" class="form-control" name="ClassName" placeholder="Class Name" >
-                                </div>
-                                <div class="col-sm-6">
-                                    <input type="text" id="ClassNameNumeric" class="form-control" name="ClassNameNumeric" placeholder="Class Code" >
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="col-sm-6 mb-3 mb-sm-0">
-                                    <select name="stream_id" id="stream_id" class="form-control">
-                                        <?php
-                                        include "../config/config.php";
-
-                                        $sql = "SELECT stream_id, name from stream";
-                                        $query = $dbh->prepare($sql);
-                                        $query->execute();
-                                        $results = $query->fetchAll(PDO::FETCH_OBJ);
-                                        if ($query->rowCount() > 0) {
-                                            foreach ($results as $result) {   ?>
-                                                <option value="<?php echo htmlentities($result->stream_id); ?>"><?php echo htmlentities($result->name); ?>&nbsp;</option>
-                                            <?php }
-                                        } ?>
-                                    </select>
-                                </div>
-
-                            </div>
-
-                            <div class="btn-group">
-                                <button class="btn btn-primary"  name="submit" type="submit">Save</button>
-                                <button class="btn btn-danger" id="cancel_add_subject" >Cancel</button>
-                            </div>
-
-                        </form>
-                    </div>
-                </div>
-
             </div>
             <!-- /.container-fluid -->
 
         </div>
         <!-- End of Main Content -->
 
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Your Website 2019</span>
-                </div>
-            </div>
-        </footer>
-        <!-- End of Footer -->
+       <?php include '../layouts/footer.php'; ?>
 
     </div>
     <!-- End of Content Wrapper -->
@@ -210,29 +152,7 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="../login.php">Logout</a>
-            </div>
-        </div>
-    </div>
-</div>
+<?php include '../layouts/utils/logout_modal.html'; ?>
 
 <script src="/dist/js/main.min.js"></script>
 <script src="/dist/js/classes/class.js"></script>
