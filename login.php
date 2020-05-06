@@ -1,10 +1,3 @@
-<?php
-  
-  session_start();
-
-?>
-
-
 <!DOCTYPE html>
   <html lang="en">
 <head>
@@ -24,9 +17,18 @@
   <!-- Custom styles for this template-->
   <link href="/dist/css/main.min.css" rel="stylesheet">
 
+
+  <style>
+    .ff {
+      color:red;
+    }
+    .success {
+      color:green;
+    }
+  </style>
 </head>
 
-<body class="bg-gradient-primary">
+<body class="bg-gradient-info">
 
   <div class="container">
 
@@ -39,18 +41,23 @@
           <div class="card-body p-0">
             <!-- Nested Row within Card Body -->
             <div class="row">
-              <div class="col-lg-6 d-none d-lg-block"></div>
-              <div class="col-lg-6">
+              <div class="col-lg-12">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                    <h1 class="h4 text-gray-900 mb-4">Al Madrasatul Munawarah Al Islamiyyah</h1>
+                    <h1 class="h4 mb-4">Welcome Back!</h1>
                   </div>
+
+                  <span id="toast"></span>
                   <form class="user" id="login_form">
                         <div class="form-group">
-                          <input type="email" class="form-control form-control-user" required id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                          <label for=""></label>
+                          <input type="email" class="form-control form-control-user"
+                           id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
                         </div>
                         <div class="form-group">
-                          <input type="password" class="form-control form-control-user" required id="exampleInputPassword" placeholder="Password">
+                          <input type="password" class="form-control form-control-user"
+                           id="exampleInputPassword" placeholder="Password">
                         </div>
                         <div class="form-group">
                           <div class="custom-control custom-checkbox small">
@@ -58,7 +65,7 @@
                             <label class="custom-control-label" for="customCheck">Remember Me</label>
                           </div>
                         </div>
-                        <button name="submit" id="submit" class="btn btn-primary btn-user btn-block">
+                        <button name="submit" id="submit" class="btn btn-info btn-user btn-block">
                           Login 
                         </button>
                   </form>
@@ -87,8 +94,6 @@
   <script src="/dist/js/main.min.js"></script>
 
   <script>
-      $(function(){
-
           $('#login_form').on('submit', function(event){
             event.preventDefault();
 
@@ -96,47 +101,41 @@
             var password = $('#exampleInputPassword').val();
 
             if(email === "" && password === ""){
-              iziToast.error({
-                    title: 'Error',
-                    position: 'topCenter', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
-                    message: "Please Enter all Fields",
-                });
-            }
+
+              $('#toast').addClass('ff');
+              $('#toast').append('All fields are required');
+
+            }else{
+              $('#toast').addClass('success');
+              $('#toast').empty().append('Please Wait...');
 
             formData = {
               "email_address" : email,
               "password" : password,
             }
             $.ajax({
-              "url" : "/auth/login_attempt.php",
-              "type" : "POST",
+              "url" : "/admin/login_attempt.php",
+              "type" : "GET",
               "data" : formData,
             }).done(function(response){
-              
+
               var s = JSON.parse(response)
 
               if(s.success === true){
-                iziToast.success({
-                    title: 'Success',
-                    position: 'topCenter', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
-                    message: s.message,
-                    onClosed : function(){
-                      document.location = '/index.php';
-                    }
-                });
-               
+                $('#toast').addClass('success');
+                $('#toast').empty().append('Login Success.. Kindly Wait');  
+                  document.location = './index.php'; 
               }else{
-                iziToast.error({
-                    title: 'Error',
-                    position: 'topCenter', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
-                    message: s.message,
-                });
+                $('#toast').addClass('ff');
+                $('#toast').empty().append('User Not Found! Kindly contact Examination Administrator for Assistance!');  
               }
             });
+
+            }
+
             
           });
 
-      });     
   </script>
 </body>
 
