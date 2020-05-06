@@ -1,110 +1,161 @@
-var queryString = window.location.search;
-var urlParams = new URLSearchParams(queryString);
+/**
+ * This is the Class Exam Main JS file.
+ * It contains subject performance table, student result table and the subject performance chart
+ * the chart, the subject performance table and the student result table refresh after 100000 ms.
+ * the heading is appended from this file.
+ * the rest of the code uses the above variables to query the database using ajax jquery calls.
+ *
+ * author: Salim Juma.
+ */
 
-var class_exam_id = urlParams.get("id");
-var cid = urlParams.get("class_id");
+var queryString = window.location.search; // points to the url and store the value in a variable
+var urlParams = new URLSearchParams(queryString); // the url is passed as an argurment to the search
 
-$(function () {
+var class_exam_id = urlParams.get("id"); // the pointer holds the value that match the passed argurment
+var cid = urlParams.get("class_id"); // the pointer also holds the value of the matching passed value
+var class_exam_name = urlParams.get("exam_name"); // the pointer holds the value of the matching passed argurment
+var class_name = urlParams.get("class_name"); // the pointer now holds the value of the matching passed argurment
 
-  var class_exam_subject = $("#class_exam_subject_table").DataTable({
-    ajax: {
-      url: "../queries/fetch_class_exam_subject_perrormance.php",
-      type: "GET",
-      dataSrc: "",
+// Setting the heading and the page title using jquery.
+$("#heading").append(`${class_name} ~ ${class_exam_name} Performance`);
+$("#page_title").append(`${class_name} || ${class_exam_name} Performance`);
+
+// The exam subject datatable. fetches the performance of students per subjects using average and total marks obtained.
+// We pass the class and class_exam ids as parameters to be used to query the database.
+var class_exam_subject = $("#class_exam_subject_table").DataTable({
+  ajax: {
+    url: "../queries/fetch_class_exam_subject_perrormance.php",
+    type: "GET",
+    dataSrc: "",
+    data: {
+      class_exam_id: class_exam_id,
+      class_id: cid,
+    },
+  },
+  columnDefs: [
+    {
+      targets: 0,
+      data: "SubjectName",
+    },
+    {
+      targets: 1,
+      data: "marks",
+    },
+    {
+      targets: 2,
       data: {
-        class_exam_id: class_exam_id,
-        class_id: cid,
+        concat: "concat",
+        marks: "marks",
+      },
+      render: function (data) {
+        var x = data.concat;
+        var marks = data.marks;
+        var y = x.split(",");
+        return Math.round(marks / y.length);
       },
     },
-    columnDefs: [
-      {
-        targets: 0,
-        data: "SubjectName",
-      },
-      {
-        targets: 1,
-        data: "marks",
-      },
-      {
-        targets: 2,
-        data: {
-          concat : "concat",
-          marks : "marks"
-        },
-        render: function (data) {
-              var x = data.concat;
-              var marks = data.marks;
-                var y = x.split(',');
-                return Math.round(marks / y.length);
-        },
-      },
-    ],
-  });
+  ],
+});
 
-  var class_exam_student_table = $("#class_exam_student_table").DataTable({
-    ajax: {
-      url: "../queries/fetch_class_exams_student_performance.php",
-      type: "GET",
-      dataSrc: "",
-      data: {
-        class_exam_id: class_exam_id,
-        class_id: cid,
-      },     
+/**
+ * This is the students datatables. fetches the performance of students in an exam. The total and mean score are placed here
+ * We pass the class and class_exam id as parameters for the call
+ */
+var class_exam_student_table = $("#class_exam_student_table").DataTable({
+  ajax: {
+    url: "../queries/fetch_class_exams_student_performance.php",
+    type: "GET",
+    dataSrc: "",
+    data: {
+      class_exam_id: class_exam_id,
+      class_id: cid,
     },
-    "columnDefs" : [
-      {
-        targets : 0,
-        data : "StudentName"
+  },
+  columnDefs: [
+    {
+      targets: 0,
+      data: "StudentName",
+    },
+    {
+      targets: 1,
+      data: "RollId",
+    },
+    {
+      targets: 2,
+      data: "total", // this is the sum of all the marks of the student for that exam.
+    },
+    {
+      targets: 3,
+      data: {
+        total: "total", // total marks of the students.
+        subjects: "subjects", // string from group_concat values of the result.
+        subject: "subject", //count of all the subject the class sits for
       },
-      {
-        targets : 1,
-        data : "total",
-      },
-        {
-            targets : 2,
-            data : "total",
-        },
-      {
-        targets : 3,
-        data : "total",
-        render : function(data){
-          if(data <= 100){
-            return "F"
-          }else if(data >=100 && data <= 200){
-            return "E"
-          }else if(data >= 200 && data <=300){
-            return "D"
-          }else if(data >= 300 && data <= 400){
-            return "C"
-          }else if(data >= 400 && data <= 500){
-            return "B"
-          }else{
-            return "A"
-          }
+      render: function (data) {
+        let total_marks = data.total, // declaration of total marks.
+          d = data.subjects; // declararion and assigning of the string concatenated .
+
+        let l = d.split(","); // split the string to array and find the length of the array.
+        if (data.subject == l.length) {
+          // comparing the value of count subjects against length of the array.
+          return total_marks / l.length;
+        } else {
+          return `__`; //return this if the student didnt sit for all the exams.
         }
       },
-      {
-        targets : 4,
-        data : "students_id",
-        render : function(data){
-          return '<a href="./_individual_student_result.php?student_id='+data+'"> Print </a>'
+    },
+    {
+      targets: 4,
+      data: {
+        total: "total",
+        subject: "subject",
+      },
+      render: function (data) {
+        var t = data.total;
+        var s = data.subject;
+        var result = t / s;
+        if (result >= 96) {
+          return "Excellent";
+        } else if ((result < 95) & (result >= 86)) {
+          return "Very Good";
+        } else if ((result < 85) & (result >= 70)) {
+          return "Good";
+        } else if ((result < 69) & (result >= 69)) {
+          return "Pass";
+        } else {
+          return "Fail";
         }
-      }
-    ]
-  });
+      },
+    },
+    {
+      targets: 5,
+      data: "subjects",
+      render: function (data) {
+        let d = data, //get the total subjects sat by the student in form of a string
+          l = d.split(","); // remove the commas and convert to array`
+        return l.length; // check the length of the array and output it.
+      },
+    },
+    {
+      targets: 6,
+      data: {
+        students_id: "students_id",
+      },
+      render: function (data) {
+        return `<a class="" title="Print"  target="_blank"
+                  href="/reports/dompdf_example.php?sid=${data.students_id}&cid=${cid}&ceid=${class_exam_id}">
+                  <i class="fas fa-print"></i></a>
+                  
+                  <a style="color:red" title="Delete">
+                  <i class="fas fa-trash"></i></a>
+                  `;
+      },
+    },
+  ],
+});
 
-  setInterval(function () {
-    class_exam_subject.ajax.reload(null, false);
-  }, 100000);
-
-  setInterval(function(){
-    class_exam_student_table.ajax.reload(null, false);
-  }, 100000)
-
-
-
-
-
+// This function gets the result of individual student
+function getIndividualResult() {
   $.ajax({
     url: "../queries/get_in_results.php",
     type: "get",
@@ -130,4 +181,244 @@ $(function () {
       console.log(`--------------------------------------------------`);
     }
   });
+}
+
+// This is the chart method definition. Settings and Options are declared here. Datasets are populated from an ajax requesting
+// class and class_exam id are passed as argurments.
+function reloadChart() {
+  var ctx = document.getElementById("chart");
+  $.ajax({
+    url: "/subjects/queries/get_chart1_data.php",
+    type: "GET",
+    data: {
+      class_id: cid,
+      class_exam_id: class_exam_id,
+    },
+  })
+    .done(function (response) {
+      var ds = JSON.parse(response); // Array of all subject Objects
+
+      var label_array = []; // holds the charts label
+      var myChartDataSet = []; // holds the chart datasets data.
+
+      for (let i = 0; i < ds.length; i++) {
+        let ds_items = ds[i];
+        label_array.push(ds_items.SubjectName); // pushes subjectnames to the the subject pointer.
+        myChartDataSet.push(ds_items.total);
+      }
+
+      var myChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: label_array,
+          datasets: [
+            {
+              label: "Subject Total Score (Units)",
+              data: myChartDataSet,
+              backgroundColor: function () {
+                var letters = "0123456789ABDCEF";
+                var color = "#";
+                for (var i = 0; i < 6; i++) {
+                  color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+              },
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            xAxes: [
+              {
+                gridLines: {
+                  display: false,
+                  drawBorder: false,
+                },
+                maxBarThickness: 65,
+              },
+            ],
+
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                },
+                gridLines: {
+                  color: "rgb(234, 236, 244)",
+                  zeroLineColor: "rgb(234, 236, 244)",
+                  drawBorder: false,
+                  borderDash: [2],
+                  zeroLineBorderDash: [2],
+                },
+              },
+            ],
+          },
+        },
+      });
+    })
+    .fail(function (e) {
+      console.log(e);
+    });
+}
+// this toggles the main content and shows the add_results_content
+$("#add_result").on("click", function (e) {
+  e.preventDefault();
+  $("#main_content").toggle();
+  $("#add_result_content").show();
 });
+
+// Cancel the populating of the form
+$("#cancel_form").on("click", function (e) {
+  e.preventDefault();
+  $("#main_content").show();
+  $("#add_result_content").toggle();
+});
+
+// get the subjects and students for that class.
+function getStudent(val) {
+  $.ajax({
+    type: "GET",
+    url: "../queries/get_student.php",
+    data: "classid=" + val,
+    success: function (data) {
+      iziToast.info({
+        type: "Info",
+        message: "Loading Students and Subject Classes. Please Wait...",
+      });
+      $("#studentid").html(data);
+    },
+  });
+  $.ajax({
+    type: "GET",
+    url: "../queries/get_student.php",
+    data: "classid1=" + val,
+    success: function (data) {
+      $("#subject").html(data);
+    },
+  });
+}
+
+function getresult(val, clid) {
+  var clid = $(".clid").val();
+  var val = $(".stid").val();
+  var abh = clid + "$" + val;
+  //alert(abh);
+  $.ajax({
+    type: "GET",
+    url: "../queries/get_student.php",
+    data: "studclass=" + abh,
+    success: function (data) {
+      $("#reslt").html(data);
+    },
+  });
+}
+// fetches the class exams using ajax call. We are passing class id as an argurment and appending the result to a select element.
+function fetch_class_exams() {
+  $.ajax({
+    url: "../queries/fetch_class_exams.php",
+    type: "GET",
+    data: {
+      cid: cid,
+      class_exam_id: class_exam_id,
+    },
+  })
+    .done(function (response) {
+      let select = $("#class_exam_id");
+      let j = JSON.parse(response);
+      for (let i = 0; i < j.length; i++) {
+        let item = j[i];
+        let exam_name = item.exam_name;
+        let exam_id = item.id;
+        select
+          .empty()
+          .append(`<option value="${exam_id}">${exam_name}</option>`);
+      }
+    })
+    .fail(function (e) {
+      console.log(e);
+    });
+}
+// fetching the classes using ajax call.
+function fetch_class() {
+  $.ajax({
+    url: "../queries/fetch_class.php",
+    type: "GET",
+    data: {
+      cid: cid,
+    },
+  }).done(function (response) {
+    let select = $("#class");
+    var j = JSON.parse(response);
+    for (var i = 0; i < j.length; i++) {
+      var item = j[i];
+      var class_name = item.ClassName;
+      var class_id = item.id;
+      select
+        .empty()
+        .append(`<option value="${class_id}">${class_name}</option>`);
+    }
+  });
+}
+
+// Form submission.
+$("#result_form").on("submit", function (e) {
+  e.preventDefault();
+
+  var l = $(".marks").length; // getting the length of the class element marks
+  var result = []; // creating an empty array.
+
+  for (var i = 0; i < l; i++) {
+    result.push($(".marks").eq(i).val());
+  }
+  var formData = {
+    class: cid,
+    studentid: $("#studentid").val(),
+    marks: result,
+    class_exam_id: class_exam_id,
+  };
+
+  $.ajax({
+    url: "../queries/add_results.php",
+    data: formData,
+    method: "POST",
+  }).done(function (response) {
+    $("#result_form").each(function () {
+      this.reset();
+    });
+    var s = JSON.parse(response);
+    if (s.success === true) {
+      iziToast.success({
+        title: "Success",
+        position: "topRight", // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+        message: s.message,
+        onClosing: function () {
+          class_exam_student_table.ajax.reload(null, false);
+          reloadChart();
+        },
+      });
+    } else {
+      iziToast.error({
+        title: "Error",
+        position: "topRight", // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+        message: s.message,
+      });
+    }
+  });
+});
+
+// Invocation of the function methods. the reloadChart fetch_class and fetch_class_exams functions.
+reloadChart();
+fetch_class_exams();
+fetch_class();
+
+// Refresh Time Intervals for all the queries updates.
+setInterval(function () {
+  reloadChart();
+}, 10000000);
+
+setInterval(function () {
+  class_exam_subject.ajax.reload(null, false);
+  class_exam_student_table.ajax.reload(null, false);
+  fetch_class_exams();
+}, 100000);

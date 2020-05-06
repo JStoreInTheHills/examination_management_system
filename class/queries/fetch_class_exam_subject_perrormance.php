@@ -5,7 +5,7 @@
 
         $sql = 'SELECT result.subject_id, SubjectName, SUM(marks) as marks, GROUP_CONCAT(result.subject_id) AS concat
                 FROM result JOIN tblsubjects ON tblsubjects.subject_id  = result.subject_id 
-                WHERE class_id = 270 AND class_exam_id = 83 GROUP BY result.subject_id';
+                WHERE class_id = :class_id AND class_exam_id =:class_exam_id GROUP BY result.subject_id';
 
 $query = $dbh -> prepare($sql);
 $query->bindParam(':class_exam_id', $class_exam_id, PDO::PARAM_STR);

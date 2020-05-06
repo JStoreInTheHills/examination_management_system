@@ -3,10 +3,10 @@
 $class_exam_id = $_GET['class_exam_id'];
 $class_id = $_GET['class_id'];
 
-$sql = 'SELECT StudentName,RollId, students_id, sum(marks) AS total 
+$sql = 'SELECT StudentName,RollId, students_id, sum(marks) AS total, (SELECT COUNT(DISTINCT subject_id) FROM result WHERE class_id =:class_id AND class_exam_id =:class_exam_id ) as subject,GROUP_CONCAT(subject_id) as subjects
         FROM result JOIN tblstudents ON tblstudents.StudentId = result.students_id
         WHERE class_id =:class_id AND class_exam_id =:class_exam_id
-        GROUP BY students_id ';
+        GROUP BY students_id ORDER BY total desc';
 
 $query = $dbh -> prepare($sql);
 $query->bindParam(':class_id', $class_id, PDO::PARAM_STR);
