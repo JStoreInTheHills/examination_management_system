@@ -5,10 +5,10 @@
     $data = array();
     $error = array();
 
-    if(empty($_POST['email_address']))
+    if(empty($_GET['email_address']))
         $error['Email'] = 'Email Address cannot be empty';
     
-    if(empty($_POST['password']))
+    if(empty($_GET['password']))
         $error['password'] = 'Password cannot be empty.';
 
     if(!empty($error)){
@@ -16,8 +16,8 @@
         $data['message'] = $error;
     }else{
 
-        $email_address = $_POST['email_address'];
-        $password = md5($_POST['password']);
+        $email_address = $_GET['email_address'];
+        $password = md5($_GET['password']);
 
         $sql = "SELECT * FROM admin WHERE email = :email AND Password = :password";
 
@@ -28,6 +28,9 @@
         $query->execute();
 
         if ($query->rowCount() > 0) {
+            
+            $_SESSION['alogin'] = $_GET['email_address'];
+
             $data['success'] = true;
             $data['message'] = 'Login Success!! Redirecting to Dashboard. Please Wait.';
         } else {
