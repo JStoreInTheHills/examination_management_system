@@ -74,6 +74,7 @@
 
   </div>
   <script src="./dist/js/main.min.js"></script>
+  <script src="./src/js/register.js"></script>
 
 </body>
 
