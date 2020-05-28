@@ -23,6 +23,7 @@ $("#page_title").append(`${class_name} || ${class_exam_name} Performance`);
 // The exam subject datatable. fetches the performance of students per subjects using average and total marks obtained.
 // We pass the class and class_exam ids as parameters to be used to query the database.
 var class_exam_subject = $("#class_exam_subject_table").DataTable({
+  order: [[2, "desc"]],
   ajax: {
     url: "../queries/fetch_class_exam_subject_perrormance.php",
     type: "GET",
@@ -62,6 +63,7 @@ var class_exam_subject = $("#class_exam_subject_table").DataTable({
  * We pass the class and class_exam id as parameters for the call
  */
 var class_exam_student_table = $("#class_exam_student_table").DataTable({
+  order: [[3, "desc"]],
   ajax: {
     url: "../queries/fetch_class_exams_student_performance.php",
     type: "GET",
@@ -98,7 +100,8 @@ var class_exam_student_table = $("#class_exam_student_table").DataTable({
         let l = d.split(","); // split the string to array and find the length of the array.
         if (data.subject == l.length) {
           // comparing the value of count subjects against length of the array.
-          return total_marks / l.length;
+          var total = total_marks / l.length;
+          return total.toFixed(2);
         } else {
           return `__`; //return this if the student didnt sit for all the exams.
         }
@@ -138,16 +141,29 @@ var class_exam_student_table = $("#class_exam_student_table").DataTable({
     },
     {
       targets: 6,
+      data: "subjects",
+      render: function (data) {
+        return `Approved`;
+      },
+    },
+    {
+      targets: 7,
+      data: "students_rank",
+    },
+
+    {
+      targets: 8,
+      orderable: false,
       data: {
         students_id: "students_id",
       },
       render: function (data) {
-        return `<a class="" title="Print"  target="_blank"
-                  href="/reports/dompdf_example.php?sid=${data.students_id}&cid=${cid}&ceid=${class_exam_id}">
+        return `
+          <a style="color:green"><span><i class="fas fa-check"></i></span></a>
+        <a title="Print" target="_blank" href="/reports/students/report_card.php?sid=${data.students_id}&cid=${cid}&ceid=${class_exam_id}">
                   <i class="fas fa-print"></i></a>
                   
-                  <a style="color:red" title="Delete">
-                  <i class="fas fa-trash"></i></a>
+                  <a style="color:red" title="Delete"><i class="fas fa-trash"></i></a>
                   `;
       },
     },
@@ -198,8 +214,8 @@ function reloadChart() {
     .done(function (response) {
       var ds = JSON.parse(response); // Array of all subject Objects
 
-      var label_array = []; // holds the charts label
-      var myChartDataSet = []; // holds the chart datasets data.
+      var label_array = []; // array that holds the charts label.
+      var myChartDataSet = []; // array that holds the chart datasets data.
 
       for (let i = 0; i < ds.length; i++) {
         let ds_items = ds[i];
@@ -213,7 +229,7 @@ function reloadChart() {
           labels: label_array,
           datasets: [
             {
-              label: "Subject Total Score (Units)",
+              label: "Subject Total Score",
               data: myChartDataSet,
               backgroundColor: function () {
                 var letters = "0123456789ABDCEF";
@@ -233,7 +249,7 @@ function reloadChart() {
               {
                 gridLines: {
                   display: false,
-                  drawBorder: false,
+                  drawBorder: true,
                 },
                 maxBarThickness: 65,
               },
