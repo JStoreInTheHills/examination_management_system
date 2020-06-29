@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 900){
+  header("Location: /login.php");
+  exit;
+}else{
+    $_SESSION['last_login_timestamp'] = time();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -46,41 +55,39 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-
-                <nav aria-label="breadcrumb mb-3">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Students</li>
-                    </ol>
-                </nav>
-
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800"> Manage Students </h1>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                          <h1 class="h3 mb-2 text-gray-800"> Manage Students </h1>
+                        <button class="btn btn-primary btn-sm"
+                            id="add_student"><span><i class="fas fa-users"></i></span>
+                            Add Students
+                        </button>
+                    </div>
 
-                    <!-- DataTales Example -->
+                    <nav aria-label="breadcrumb mb-3">
+                        <ol class="breadcrumb">
+                            <li class=" breadcrumb-item"><a href="/index.php">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Students</li>
+                        </ol>
+                    </nav>
+
                     <div id="main_content" class="card shadow mb-4">
                         <!-- Card Header - Dropdown -->
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="mxfont-weight-bold text-primary">All Students</h6>
+                            <h6 class="mx font-weight-bold text-primary">All Students</h6>
                             <div class="dropdown no-arrow">
-                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                              <a class="btn btn-outline-primary btn-sm" target="_blank" href="/reports/students/summary_all_students.php"><span><i class="fas fa-file-pdf"></i></span>
+                                  Print PDF
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                    aria-labelledby="dropdownMenuLink">
-                                    <div class="dropdown-header">Tools:</div>
-                                    <a class="dropdown-item" id="add_student" href="#">Add Students</a>
-                                </div>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table table-striped " id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>Name</th>
-                                            <th>Admission #</th>
+                                            <th>RollId</th>
                                             <th>Reg Date</th>
                                             <th>Class</th>
                                             <th>Age</th>
@@ -98,7 +105,7 @@
                     <div id="student_add_card" class="col-xl-8 mx-auto col-md-8 mb-3">
                         <div class="card mb-4">
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold">Add Student</h6>
+                                <h6 class="mx font-weight-bold text-primary">Add Student</h6>
                             </div>
                             <div class="card-body">
                                 <form id="form" class="user">
@@ -107,12 +114,12 @@
 
                                     <div class="form-group row">
                                         <div class="col-sm-6 mb-3 mb-sm-0">
-                                            <label for="fullanme">Full Name</label>
+                                            <label for="fullanme">Student Full Name</label>
                                             <input type="text" name="fullanme" class="form-control" id="fullanme"
                                                 placeholder="Enter Full Name">
                                         </div>
                                         <div class="col-sm-6">
-                                            <label for="rollid">Admission Number</label>
+                                            <label for="rollid"> Admission Number</label>
                                             <input type="number" class="form-control" maxlength="5" name="rollid"
                                                 id="rollid" placeholder="Enter Admission Number">
                                         </div>
@@ -123,6 +130,7 @@
                                             <input type="email" name="emailid" id="email" class="form-control "
                                                 placeholder="Enter Email Address">
                                         </div>
+
                                         <div class="col-sm-6">
                                             <label for="gender">Choose Gender</label>
                                             <select name="gender" id="gender" class="form-control">
@@ -157,6 +165,8 @@
                                         </div>
                                     </div>
 
+                                    <hr>
+
                                     <label class="text-primary" for="">Guardian Details</label>
 
                                     <div class="form-group row">
@@ -172,25 +182,29 @@
                                         </div>
                                     </div>
 
+                                    <hr>
+
                                     <label class="text-primary" for="">Address Details</label>
 
                                     <div class="form-group row">
                                         <div class="col-sm-6 mb-3 mb-sm-0">
                                             <label for="address">Postal Address</label>
-                                            <input type="text" name="address" class="form-control"
-                                                id="address" placeholder="Enter Postal Code">
+                                            <input type="text" name="address" class="form-control" id="address"
+                                                placeholder="Enter Postal Code">
                                         </div>
                                         <div class="col-sm-6">
                                             <label for="county">County</label>
-                                            <input type="text" name="county" class="form-control" id="county"
-                                                placeholer="Enter County">
+                                            <select name="county_id" id="county_id" class="form-control">
+                                            </select>
                                         </div>
                                     </div>
 
+                                    <hr>
 
-                                    <div class="btn-group">
-                                        <button class="btn btn-primary" name="submit" type="submit">Save</button>
-                                        <button class="btn btn-danger" id="cancel_add">Cancel</button>
+                                    <div>
+                                        <button class="btn btn-primary float-right" name="submit"
+                                            type="submit">Save</button>
+                                        <button class="btn btn-danger float-left" id="cancel_add">Cancel</button>
                                     </div>
 
                                 </form>
@@ -218,3 +232,5 @@
 </body>
 
 </html>
+
+<?php } ?>

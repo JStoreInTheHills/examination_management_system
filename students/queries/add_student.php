@@ -41,8 +41,8 @@ if (!empty($errors)) {
     $dob = $_POST['dob'];
     $status = 1;
 
-    $sql = "INSERT INTO  tblstudents(StudentName,RollId,StudentEmail,Gender,ClassId,DOB,Status)
-            VALUES(:studentname,:roolid,:studentemail,:gender,:classid,:dob,:status)";
+    $sql = "INSERT INTO tblstudents(StudentName,RollId,StudentEmail,Gender,ClassId,DOB,RegDate, Status)
+            VALUES(:studentname,:roolid,:studentemail,:gender,:classid,:dob, CURRENT_TIMESTAMP(),:status)";
 
     $query = $dbh->prepare($sql);
 
@@ -58,16 +58,42 @@ if (!empty($errors)) {
 
     $query->execute();
 
+    $er = $query->errorInfo();
+
     $lastInsertId = $dbh->lastInsertId();
 
     // show a message of success and provide a true success variable
     if ($lastInsertId){
-        $data['success'] = true;
-        $data['message'] = 'Student Added Successfully';
+
+        // $next_of_kin = $_POST['next_of_kin'];
+        // $telephone = $_POST['telephone'];
+        // $address = $_POST['address'];
+        // $county_id = $_POST['county_id'];
+
+        // $guardian_insert_query = "INSERT INTO  students_details(next_of_kin, telephone, address,county_id,students_id)
+        //     VALUES(:next_of_kin, :telephone, :address, :county_id, :students_id)";
+        // $guardian_sql = $dbh->prepare($guardian_insert_query);
+        // $guardian_sql->bindParam(":next_of_kin", $next_of_kin, PDO::PARAM_STR);
+        // $guardian_sql->bindParam(":telephone", $telephone, PDO::PARAM_STR);
+        // $guardian_sql->bindParam(":address", $address, PDO::PARAM_STR);
+        // $guardian_sql->bindParam(":county_id", $county_id, PDO::PARAM_STR);
+        // $guardian_sql->bindParam(":students_id", $lastInsertId, PDO::PARAM_STR);
+        
+        // $guardian_sql->execute();
+
+        // $lastInsertId2 = $dbh->lastInsertId();
+
+        // if ($lastInsertId2){
+            $data['success'] = true;
+            $data['message'] = 'Student Added Successfully Yay';
+        // }else{
+        //     $data['success'] = false;
+        //     $data['message'] = 'Contact Cannot be Added.';
+        // }
     }
     else{
         $data['success'] = false;
-        $data['message'] = 'Input Already Exists...Check the name and try again...';
+        $data['message'] = $er[2];
     }
 
 

@@ -1,3 +1,4 @@
+var county_id = $("#county_id");
 /**
  * This is the Students Js File. It contains the dataset used to populate the Students Datatables.
  */
@@ -8,18 +9,20 @@ var student_table = $("#dataTable").DataTable({
     type: "GET",
     dataSrc: "",
   },
-  cache: true,
   columnDefs: [
     {
       targets: 0,
-      data: "StudentName",
+      data: {
+        StudentId: "StudentId",
+      },
       render: function (data) {
-        return `<a href="#"> ${data} </a>`;
+        return `<a href="./pages/details.php?sid=${data.StudentId}"> ${data.StudentName} </a>`;
       },
     },
     {
       targets: 1,
       data: "RollId",
+      width: "10%",
     },
     {
       targets: 2,
@@ -54,81 +57,85 @@ var student_table = $("#dataTable").DataTable({
       targets: 6,
       orderable: false,
       data: "StudentId",
+      width: "10%",
 
       render: function (data, type, row, meta) {
-        return `
-        <a onClick="del()"><i class="fas fa-edit" title="Edit Student"></i></a>
-          <a style = "color:red" onClick="del()"><i class="fas fa-trash" title="Delete Student"></i></a>
-
-          <script type='text/javascript'>
-
-          var toast = {
-            question: function () {
-              return new Promise(function (resolve) {
-                iziToast.question({
-                  title: "Question",
-                  message: "Are you Sure?",
-                  timeout: 20000,
-                  close: false,
-                  position: "center",
-                  buttons: [
-                    [
-                      "<button><b>YES</b></button>",
-                      function (instance, toast, button, e, inputs) {
-                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-                        resolve();
-                      },
-                      false,
-                    ],
-                    [
-                      "<button>NO</button>",
-                      function (instance, toast, button, e, inputs) {
-                        instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-                      },
-                    ],
-                  ],
-                });
-              });
-            },
-          };
-
-          function del(){
-            toast.question().then(function (){
-             $.ajax({
-               url : './queries/delete_student.php',
-               type : 'POST',
-               data : {
-                 student_id : ${data},
-               },
-             }).done(function(response){
-               var r = JSON.parse(response);
-               if(r.success === true){
-                iziToast.success({
-                  type : "Success",
-                  message : r.message,
-                });
-               }else {
-                iziToast.error({
-                  type : "Error",
-                  message :r.message,
-                });
-               }
-             }).fail(function(response){
-               iziToast.error({
-                 type : "Error",
-                 message : "Error Check Again",
-               });
-             });
-            });
-          }
-
-          
-      </script>
-      `;
+        return `<a onClick="del()"><i class="fas fa-edit" title="Edit Student"></i></a>
+          <a style = "color:red" onClick="deleteStudent(${data})"><i class="fas fa-trash" title="Delete Student"></i></a>
+        `;
       },
     },
   ],
 });
+
+var toast = {
+  question: function () {
+    return new Promise(function (resolve) {
+      iziToast.question({
+        title: "Warning",
+        transitionIn: "bounceInLeft",
+        opacity: "100",
+        icon: "fas fa-users",
+        message: "Are you sure you want to delete this student?",
+        timeout: 20000,
+        close: false,
+        position: "center",
+        buttons: [
+          [
+            "<button><b>YES</b></button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+              resolve();
+            },
+            false,
+          ],
+          [
+            "<button>NO</button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+            },
+          ],
+        ],
+      });
+    });
+  },
+};
+
+function deleteStudent(student_id) {
+  toast.question().then(function () {
+    $.ajax({
+      url: "./queries/delete_student.php",
+      type: "POST",
+      data: {
+        student_id: student_id,
+      },
+    })
+      .done(function (response) {
+        var r = JSON.parse(response);
+        if (r.success === true) {
+          iziToast.success({
+            type: "Success",
+            transitionIn: "bounceInLeft",
+            message: r.message,
+            onClosing: function () {
+              student_table.ajax.reload(null, false);
+            },
+          });
+        } else {
+          iziToast.error({
+            type: "Error",
+            message: r.message,
+          });
+        }
+      })
+      .fail(function (response) {
+        iziToast.error({
+          type: "Error",
+          message: "Error Check Again",
+        });
+      });
+  });
+}
 
 $("#form").on("submit", function (event) {
   var formData = {
@@ -139,6 +146,11 @@ $("#form").on("submit", function (event) {
     classid: $("#classid").val(),
     age: $("#age").val(),
     dob: $("#date").val(),
+
+    next_of_kin: $("#next_of_kin").val(),
+    telephone: $("telephone").val(),
+    address: $("#address").val(),
+    county_id: $("#county_id").val(),
   };
 
   $.ajax({
@@ -151,6 +163,7 @@ $("#form").on("submit", function (event) {
     if (arr.success === true) {
       iziToast.success({
         title: "Success",
+        transitionIn: "bounceInLeft",
         position: "topRight",
         message: arr.message,
         onClosing: function () {
@@ -190,3 +203,19 @@ $('[data-toggle="datepicker"]').datepicker({
   format: "yyyy-mm-dd",
   autoHide: true,
 });
+
+function getCounties() {
+  $.ajax({
+    url: "../utils/get_counties.php",
+    dataSrc: "",
+  }).done(function (response) {
+    let res = JSON.parse(response);
+    res.forEach((element) => {
+      county_id.append(
+        `<option value="${element.id}">${element.code} ~ ${element.name}</option>`
+      );
+    });
+  });
+}
+
+getCounties();
