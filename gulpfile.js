@@ -115,10 +115,16 @@ function modules() {
 }
 
 function customJs() {
+  var dashboard = gulp
+    .src("./src/js/dashboard.js")
+    .pipe(gulp.dest("./dist/js/dashboard"));
+
   var classes = gulp
     .src("./src/js/class/*")
     .pipe(gulp.dest("./dist/js/classes"));
+
   var exam = gulp.src("./src/js/exam/*").pipe(gulp.dest("./dist/js/exams"));
+  
   var result = gulp
     .src("./src/js/result/*")
     .pipe(gulp.dest("./dist/js/results"));
@@ -128,14 +134,30 @@ function customJs() {
   var student = gulp
     .src("./src/js/students/*")
     .pipe(gulp.dest("./dist/js/students"));
-  var year = gulp
-    .src("./src/js/year/*")
-    .pipe(gulp.dest("./dist/js/years"));
+  var year = gulp.src("./src/js/year/*").pipe(gulp.dest("./dist/js/years"));
+
   var subjects = gulp
     .src("./src/js/subjects/*")
     .pipe(gulp.dest("./dist/js/subjects"));
 
-  return merge(result, classes, exam, stream, student, subjects, year);
+  var teacher = gulp
+    .src("./src/js/teachers/*")
+    .pipe(gulp.dest("./dist/js/teachers"));
+
+  var admin = gulp.src("./src/js/admin/*").pipe(gulp.dest("./dist/js/admin"));
+
+  return merge(
+    result,
+    classes,
+    exam,
+    stream,
+    student,
+    subjects,
+    year,
+    teacher,
+    dashboard,
+    admin
+  );
 }
 
 // CSS task
@@ -160,14 +182,8 @@ function scss() {
         pkg: pkg,
       })
     )
-    .pipe(gulp.dest("./css"))
-    .pipe(
-      rename({
-        suffix: ".min",
-      })
-    )
     .pipe(cleanCSS())
-    .pipe(gulp.dest("./css"));
+    .pipe(gulp.dest("dist/css"));
   // .pipe(browsersync.stream());
 }
 
