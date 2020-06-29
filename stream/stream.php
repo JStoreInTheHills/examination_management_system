@@ -1,3 +1,14 @@
+<?php
+
+session_start();
+
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 900){
+    header("Location: /login.php");
+    exit;
+  }else{
+      $_SESSION['last_login_timestamp'] = time();
+  ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +19,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Manage || Streams</title>
+    <title>Manage || Classes</title>
 
     <!-- Custom fonts for this template -->
     <link
@@ -16,13 +27,6 @@
         rel="stylesheet">
     <link href="../vendor/fontawesome-free/css/all.css" rel="stylesheet" type="text/css">
     <link href="../dist/css/main.min.css" rel="stylesheet" type="text/css">
-
-    <style>
-        #stream_add_card {
-            display: none;
-        }
-    </style>
-
 
 </head>
 
@@ -46,15 +50,41 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Manage Stream</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Manage All Classes</h1>
                     </div>
 
+                    <nav aria-label="breadcrumb mb-3">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">All Classes</li>
+                        </ol>
+                    </nav>
+
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Total Classes </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="all_classes"></div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <a href="#"> <i class="fas fa-book-reader fa-2x text-info-300"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- start of row -->
                     <div class="row">
-                        <div class="col-lg-6">
-                            <div class="card mb-4">
+                        <div class="col-lg-8">
+                            <div class="card mb-4 shadow">
                                 <div class="card-header">
-                                    All Class Streams
+                                    <span class="text-primary"> <i class="fas fa-book-reader"></i> All Classes</span>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -62,9 +92,9 @@
                                             cellspacing="0">
                                             <thead>
                                                 <tr>
-                                                    <th>Stream Name</th>
+                                                    <th>Class Name</th>
                                                     <th>Created At</th>
-                                                    <th>Classes</th>
+                                                    <th>Streams</th>
                                                     <th style="text-align:center">Action</th>
                                                 </tr>
                                             </thead>
@@ -76,22 +106,29 @@
 
                         </div>
                         <!------------------------------------------------------------------------------------------------->
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <div class="card shadow mb-4">
                                 <div class="card-header">
-                                    Add Stream
+                                    <span class="text-primary"> <i class="fas fa-book-reader"></i> Add a Class</span>
                                 </div>
                                 <div class="card-body">
                                     <form id="stream_form" class="user">
                                         <div class="form-group row">
                                             <div class="col-sm-12 mb-3 mb-sm-0">
-                                                <input type="text" id="stream_name" class="form-control"
-                                                    placeholder="Enter Stream Name">
+                                                <label for="stream_name">Enter Class Name</label>
+                                                <input type="text" id="stream_name" autocomplete="off"
+                                                    class="form-control" placeholder="Raudha, Thanawii">
                                             </div>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="desc">Enter Brief Description <span
+                                                    class="text-danger">(Optional) </span></label>
+                                            <textarea id="desc" class="form-control"
+                                                aria-label="With textarea"></textarea>
+                                        </div>
 
-                                        <div class="btn-group">
-                                            <button class="btn btn-primary" name="submit" type="submit">Save</button>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary float-right" name="submit" type="submit">Save</button>
                                         </div>
 
                                     </form>
@@ -107,15 +144,7 @@
             </div>
             <!-- End of Main Content -->
 
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2019</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
+            <?php require_once '../layouts/footer.php' ?>
 
         </div>
         <!-- End of Content Wrapper -->
@@ -123,34 +152,13 @@
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="../login.php">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <?php require_once '../layouts/utils/logout_modal.html' ?>
 
     <script src="/dist/js/main.min.js"></script>
-        <script src="/dist/js/streams/stream.js"></script>
-    
+    <script src="/dist/js/streams/stream.js"></script>
+
 </body>
 
 </html>
+
+<?php } ?>
