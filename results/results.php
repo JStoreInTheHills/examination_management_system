@@ -1,7 +1,11 @@
 <?php
 
 include '../config/config.php';
+session_start();
 
+if(strlen($_SESSION['alogin'])==""){
+  header("Location: /login.php");
+}else{
 ?>
 
 <!doctype html>
@@ -216,3 +220,4 @@ include '../config/config.php';
 </body>
 
 </html>
+                                    <?php } ?>
