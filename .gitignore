@@ -5,3 +5,5 @@ package-lock.json
 reports
 .idea
 dashboard
+google_maps
+utils
