@@ -30,7 +30,7 @@ var class_table = $("#class_table").DataTable({
         ClassName: "ClassName",
       },
       render: function (data) {
-        return `<a href="./page/view_class.php?classid=${data.id}&class_name=${data.ClassName}" > ${data.ClassName} </a>`;
+        return `<a href="./page/class_view.php?classid=${data.id}&class_name=${data.ClassName}" > ${data.ClassName} </a>`;
       },
     },
     {
