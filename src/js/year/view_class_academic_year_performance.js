@@ -16,9 +16,30 @@ $("#bread_list").append(
   `<a href="/academic_year/page/view_academic_year.php?year_name=${academic_year}">${academic_year}</a>`
 );
 $("#bread_list2").append(`${class_name}`);
-var table = $("#table");
 
+// tables.
+var table = $("#table");
 var class_academic_table = $("#class_academic_table");
+
+
+
+table.DataTable({
+  ajax: {
+    url: "./../queries/class_exam_results.php",
+    data: formData,
+    type: "GET",
+    dataSrc: "",
+  },
+  columnDefs: [
+    {
+      targets: 0,
+      data: "exam_name",
+      render: function (data) {
+        return `<a href="#">${data}</a>`;
+      },
+    },
+  ],
+});
 
 class_academic_table.DataTable({
   ajax: {
@@ -52,23 +73,6 @@ class_academic_table.DataTable({
   ],
 });
 
-table.DataTable({
-  ajax: {
-    url: "./../queries/class_exam_results.php",
-    data: formData,
-    type: "GET",
-    dataSrc: "",
-  },
-  columnDefs: [
-    {
-      targets: 0,
-      data: "exam_name",
-      render: function (data) {
-        return `${data}`;
-      },
-    },
-  ],
-});
 // Intervals
 setInterval(function () {
   class_academic_table.ajax.reload(null, false);

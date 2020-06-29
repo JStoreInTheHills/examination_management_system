@@ -6,7 +6,7 @@ $errors = array();
 $data  = array();
 
 if(empty($year_name))
-    $errors['Year_Id'] = "Year Name Cannot be Blank";
+    $errors['Year_Name'] = "Year Name Cannot be Blank";
 
 if(!empty($errors)){
     $data['success'] = false;

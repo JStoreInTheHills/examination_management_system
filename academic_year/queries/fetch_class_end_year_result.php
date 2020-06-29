@@ -2,9 +2,11 @@
 
 $year_name = $_GET['year_name'];
 
-$sql = "SELECT id, ClassName, ClassNameNumeric,name,(SELECT sum(marks) FROM result where class_id = id) as class_result
-         FROM tblclasses c JOIN stream s 
-        ON c.stream_id = s.stream_id";
+$sql = "SELECT id, ClassName, ClassNameNumeric,s.name,
+          ( SELECT sum(marks) FROM result WHERE class_id = id
+                  ) AS class_result
+         FROM tblclasses AS c, stream AS s 
+        WHERE c.stream_id = s.stream_id";
 
 $query = $dbh->prepare($sql);
 

@@ -1,3 +1,13 @@
+<?php
+
+session_start();
+
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 900){
+    header("Location: /login.php");
+    exit;
+  }else{
+      $_SESSION['last_login_timestamp'] = time();
+  ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,37 +48,58 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-
-                <nav aria-label="breadcrumb mb-3">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/academic_year/year.php">Academic Year</a></li>
-                        <li id="bread_list" class="breadcrumb-item active" aria-current="page"></li>
-                    </ol>
-                </nav>
-
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 id="heading" class="h3 mb-0 text-gray-800">Exam Period ~ </h1>
                     </div>
 
+                    <nav aria-label="breadcrumb mb-3">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/academic_year/year.php">Academic Year</a></li>
+                            <li id="bread_list" class="breadcrumb-item active" aria-current="page"></li>
+                        </ol>
+                    </nav>
+
+
+
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Total Exams This Year</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                                id="all_exams_this_year"></div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <a href="#"> <i class="fas fa-book-reader fa-2x text-info-300"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
 
                     <!-- start of row -->
                     <div class="row">
-                        <div class="col-lg-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    End Year Class Result
+                        <div class="col-lg-8">
+                            <div class="card shadow mb-4">
+                                <div class="card-header text-primary">
+                                    End Year Stream Performance
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-striped" width="100%" cellspacing="0" id="class_end_year_table">
+                                        <table class="table table-striped" width="100%" cellspacing="0"
+                                            id="class_end_year_table">
                                             <thead>
                                                 <tr>
-                                                    <th>Class Name</th>
-                                                    <th>Class Code</th>
-                                                    <th>Stream</th>
+                                                    <th>Stream Name</th>
+                                                    <th>Stream Code</th>
+                                                    <th>Class</th>
                                                     <th>Total Marks</th>
                                                 </tr>
                                             </thead>
@@ -79,9 +110,9 @@
 
                         </div>
                         <!------------------------------------------------------------------------------------------------->
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <div class="card shadow mb-4">
-                                <div class="card-header">
+                                <div class="card-header text-primary">
                                     Add Academic Period
                                 </div>
                                 <div class="card-body">
@@ -92,7 +123,7 @@
                                                     placeholder="Enter Year">
                                             </div>
                                         </div>
-                                        <div class="btn-group">
+                                        <div class="btn-group float-right">
                                             <button class="btn btn-primary" name="submit" type="submit">Save</button>
                                         </div>
                                     </form>
@@ -119,3 +150,5 @@
 </body>
 
 </html>
+
+<?php }?>

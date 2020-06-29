@@ -4,11 +4,12 @@ var urlParams = new URLSearchParams(queryString);
 var year_name = urlParams.get("year_name");
 
 var class_end_year_table = $("#class_end_year_table");
+var all_exams_this_year = $("#all_exams_this_year");
 
 $("#heading").append(year_name);
 $("#bread_list").append(year_name);
 $("#year_title").append(`Manage || ${year_name}`);
-  
+
 class_end_year_table.DataTable({
   ajax: {
     url: "./../queries/fetch_class_end_year_result.php",
@@ -47,6 +48,20 @@ class_end_year_table.DataTable({
     },
   ],
 });
+
+function get_all_exams_this_year() {
+  $.ajax({
+    url: "/utils/get_all_exams_this_year.php",
+    type: "get",
+    data: {
+      year_name: year_name,
+    },
+  }).done(function (response) {
+    var j = JSON.parse(response);
+    all_exams_this_year.append(`${j[0].exams}`);
+  });
+}
+get_all_exams_this_year();
 
 setInterval(function () {
   class_end_year_table.ajax.reload(null, false);

@@ -13,30 +13,25 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="academic_title"></title>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Manage || Academic Year</title>
-
-    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
-    <link href="../dist/css/main.min.css" rel="stylesheet">
-
+    <link href="/dist/css/main.min.css" rel="stylesheet">
 </head>
+
 
 <body id="page-top">
 
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-        <?php include "../layouts/sidebar.php"; ?>
+        <?php include "../../layouts/sidebar.php"; ?>
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -44,38 +39,40 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
             <!-- Main Content -->
             <div id="content">
 
-                <?php include '../layouts/topbar.php' ?>
+                <?php include '../../layouts/topbar.php' ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
+
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Manage Academic Years</h1>
+                        <h1 id="heading" class="h3 mb-0 text-gray-800"></h1>
                     </div>
 
                     <nav aria-label="breadcrumb mb-3">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Academic Years</li>
+                            <li class="breadcrumb-item"><a href="/academic_year/year.php">Academic Year</a></li>
+                            <li id="bread_list" class="breadcrumb-item"></li>
+                            <li id="bread_list2" class="breadcrumb-item active" aria-current="page"></li>
                         </ol>
                     </nav>
 
                     <!-- start of row -->
                     <div class="row">
+
                         <div class="col-lg-8">
                             <div class="card shadow mb-4">
-                                <div class="card-header">
-                                   <span class="text-primary"> <i class="fas fa-address-book"></i> All Academic Years</span>
+                                <div class="card-header text-primary">
+                                    All Exams for the Academic Period
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-striped" width="100%" cellspacing="0" id="year_table">
+                                        <table class="table table-striped" width="100%" cellspacing="0" id="table">
                                             <thead>
                                                 <tr>
-                                                    <th>Year Name</th>
-                                                    <th>Created At</th>
-                                                    <th>Action</th>
+                                                    <th>Exam Name</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -85,45 +82,45 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                         </div>
                         <!------------------------------------------------------------------------------------------------->
-                        <div class="col-lg-4">
+
+                        <div class="col-lg-8">
                             <div class="card shadow mb-4">
-                                <div class="card-header">
-                                   <span class="text-primary" >Add Academic Period</span> 
+                                <div class="card-header text-primary">
+                                    End Year Result Students Table
                                 </div>
                                 <div class="card-body">
-                                    <form id="year_form" class="user">
-                                        <div class="form-group row">
-                                            <div class="col-md-12 mb-3 mb-sm-0">
-                                            <label for="year_name">Enter an Academic Year</label>
-                                               <input type="text" autocomplete="off" class="form-control" id="year_name" placeholder="e.g 2020, 2040">
-                                            </div>
-                                        </div>
-                                        <div class="btn-group float-right">
-                                            <button class="btn btn-primary" name="submit" type="submit">Save</button>
-                                        </div>
-                                    </form>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="class_academic_table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Student Name</th>
+                                                    <th>Admission #</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- endo of row -->
 
+
                 </div>
                 <!-- /.container-fluid -->
 
-               
             </div>
             <!-- End of Main Content -->
-            <?php include '../layouts/footer.php' ?>
         </div>
         <!-- End of Content Wrapper -->
-        <?php include '../layouts/utils/logout_modal.html' ?>
+
     </div>
     <!-- End of Page Wrapper -->
 
 
     <script src="/dist/js/main.min.js"></script>
-    <script src="/dist/js/years/years.js"></script>
+    <script src="/dist/js/years/view_class_academic_year_performance.js"></script>
 </body>
 
 </html>
