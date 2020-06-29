@@ -1,15 +1,24 @@
+<?php
+
+session_start();
+
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 900){
+    header("Location: /login.php");
+    exit;
+  }else{
+      $_SESSION['last_login_timestamp'] = time();
+  ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Manage || Classes</title>
+    <title>Manage || Streams</title>
 
     <!-- Custom fonts for this template -->
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -17,8 +26,6 @@
 
     <!-- Custom styles for this template -->
     <link href="../dist/css/main.min.css" rel="stylesheet">
-
-
     <style>
         #class_add_card{
             display: none;
@@ -44,33 +51,32 @@
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
+             <!-- Page Heading -->
+            
+
+              <!-- Page Heading -->
+              <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-2 text-gray-800"> Manage Streams  </h1>
+                    <a class="btn btn-sm btn-primary" id="add_class" href="#">Add Stream</a>
+                </div>
+
             <nav aria-label="breadcrumb mb-3">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Classes</li>
+                        <li class="breadcrumb-item active" aria-current="page">Streams</li>
                     </ol>
                 </nav>
-
-
-                <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800"> Manage Classes _  </h1>
 
                 <!-- DataTales Example -->
                 <div id="class_main_content" class="card shadow mb-4">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">All Classes</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <span><i class="fas fa-chalkboard-teacher"></i></span>    
+                        All Streams</h6>
                         <div class="dropdown no-arrow">
-                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                <div class="dropdown-header">Tools:</div>
-                                <a class="dropdown-item" id="add_class" href="#">Add Class</a>
-                                <a class="dropdown-item" id="add_subject_to_class" href="#">Add Subject to Class</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
+                            <button class="btn btn-outline-primary btn-sm">
+                                <span><i class="fas fa-file-pdf"></i></span> Generate PDF</button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -78,9 +84,9 @@
                             <table class="table table-striped" id="class_table" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
-                                    <th>Class Name</th>
-                                    <th>Code</th>
-                                    <th>Stream</th>
+                                    <th>Stream Name</th>
+                                    <th>Stream Code</th>
+                                    <th>Class</th>
                                     <th>Subjects</th>
                                     <th>Students</th>
                                     <th class="text-center sorting_disabled" rowspan="1" colspan="1" aria-label="Actions" style="width: 100px;">Actions</th>
@@ -94,23 +100,33 @@
                 </div>
 
                 <!-- Class Add Card -->
-                <div id="class_add_card" class="card col-md-6 mb-4 mx-auto">
+                <div id="class_add_card" class="card shadow col-md-6 mb-4 mx-auto">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Add Class</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Add Stream</h6>
                     </div>
                     <div class="card-body">
                         <form id="class_form" class="user">
-                            <div class="form-group row">
-                                <div class="col-sm-6 mb-3 mb-sm-0">
-                                    <input type="text" id="ClassName" class="form-control" name="ClassName" placeholder="Class Name" >
+                            <div class="row">
+                            
+                            
+                                <div class="form-group col-sm-12 mb-3">
+                                    <label>Stream Name</label>
+                                    <input type="text" id="ClassName" class="form-control" name="ClassName" placeholder="E.g 'Raudha' , 'Thanawii' " >
                                 </div>
-                                <div class="col-sm-6">
-                                    <input type="text" id="ClassNameNumeric" class="form-control" name="ClassNameNumeric" placeholder="Class Code" >
-                                </div>
-                            </div>
+                            
+                            
+                           
+                                    <div class="form-group col-sm-12  mb-3">
+                                        <label>Stream Unique Code</label>
+                                        <input type="text" id="ClassNameNumeric" class="form-control" name="ClassNameNumeric" 
+                                        placeholder="E.g '0CRB', 'OCRG'" >
+                                    </div>
+                           
+                           
 
-                            <div class="form-group row">
-                                <div class="col-sm-6 mb-3 mb-sm-0">
+                           
+                                <div class="form-group col-sm-12 mb-3">
+                                    <label>Choose a Class</label>
                                     <select name="stream_id" id="stream_id" class="form-control">
                                         <?php
                                         include "../config/config.php";
@@ -127,6 +143,7 @@
                                     </select>
                                 </div>
 
+                           
                             </div>
 
                             <div class="btn-group">
@@ -160,3 +177,5 @@
 </body>
 
 </html>
+
+<?php } ?>

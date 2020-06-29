@@ -19,7 +19,8 @@ var class_name = urlParams.get("class_name"); // the pointer now holds the value
 // Setting the heading and the page title using jquery.
 $("#heading").append(`${class_name} ~ ${class_exam_name} Performance`);
 $("#page_title").append(`${class_name} || ${class_exam_name} Performance`);
-
+$("#class_name").append(`${class_name}`);
+$("#class_exam").append(`${class_exam_name}`);
 // The exam subject datatable. fetches the performance of students per subjects using average and total marks obtained.
 // We pass the class and class_exam ids as parameters to be used to query the database.
 var class_exam_subject = $("#class_exam_subject_table").DataTable({
@@ -117,16 +118,19 @@ var class_exam_student_table = $("#class_exam_student_table").DataTable({
         var t = data.total;
         var s = data.subject;
         var result = t / s;
+
+        result = Math.round(result);
+
         if (result >= 96) {
-          return "Excellent";
-        } else if ((result < 95) & (result >= 86)) {
-          return "Very Good";
-        } else if ((result < 85) & (result >= 70)) {
-          return "Good";
-        } else if ((result < 69) & (result >= 69)) {
-          return "Pass";
+          return `Excellent`;
+        } else if ((result <= 95) & (result >= 86)) {
+          return `Very Good`;
+        } else if ((result <= 85) & (result >= 70)) {
+          return `Good`;
+        } else if ((result <= 69) & (result >= 50)) {
+          return `Pass`;
         } else {
-          return "Fail";
+          return `Fail`;
         }
       },
     },
@@ -155,20 +159,23 @@ var class_exam_student_table = $("#class_exam_student_table").DataTable({
       targets: 8,
       orderable: false,
       data: {
-        students_id: "students_id",
+        result_id: "result_id",
       },
+
       render: function (data) {
         return `
-          <a style="color:green"><span><i class="fas fa-check"></i></span></a>
-        <a title="Print" target="_blank" href="/reports/students/report_card.php?sid=${data.students_id}&cid=${cid}&ceid=${class_exam_id}">
-                  <i class="fas fa-print"></i></a>
-                  
-                  <a style="color:red" title="Delete"><i class="fas fa-trash"></i></a>
-                  `;
+          <a target="_blank" href="/reports/students/report_card.php?sid=${data.students_id}&cid=${cid}&ceid=${class_exam_id}">
+                  <i class="fas fa-file-pdf"></i>
+          </a>    
+          <a style="color:red" onClick=deleteResult(${data})><i class="fas fa-trash"></i></a>`;
       },
     },
   ],
 });
+
+function deleteResult(result_id) {
+  console.log("Delete");
+}
 
 // This function gets the result of individual student
 function getIndividualResult() {
@@ -229,7 +236,7 @@ function reloadChart() {
           labels: label_array,
           datasets: [
             {
-              label: "Subject Total Score",
+              label: "Score",
               data: myChartDataSet,
               backgroundColor: function () {
                 var letters = "0123456789ABDCEF";
@@ -277,31 +284,16 @@ function reloadChart() {
       console.log(e);
     });
 }
-// this toggles the main content and shows the add_results_content
-$("#add_result").on("click", function (e) {
-  e.preventDefault();
-  $("#main_content").toggle();
-  $("#add_result_content").show();
-});
-
-// Cancel the populating of the form
-$("#cancel_form").on("click", function (e) {
-  e.preventDefault();
-  $("#main_content").show();
-  $("#add_result_content").toggle();
-});
 
 // get the subjects and students for that class.
 function getStudent(val) {
   $.ajax({
     type: "GET",
     url: "../queries/get_student.php",
-    data: "classid=" + val,
+    data: {
+      classid: val,
+    },
     success: function (data) {
-      iziToast.info({
-        type: "Info",
-        message: "Loading Students and Subject Classes. Please Wait...",
-      });
       $("#studentid").html(data);
     },
   });
@@ -316,14 +308,16 @@ function getStudent(val) {
 }
 
 function getresult(val, clid) {
-  var clid = $(".clid").val();
-  var val = $(".stid").val();
-  var abh = clid + "$" + val;
-  //alert(abh);
+  var formData = {
+    clid: $(".clid").val(),
+    val: $(".stid").val(),
+    class_exam_id: class_exam_id,
+  };
+  // console.log(formData);
   $.ajax({
     type: "GET",
     url: "../queries/get_student.php",
-    data: "studclass=" + abh,
+    data: formData,
     success: function (data) {
       $("#reslt").html(data);
     },
@@ -427,6 +421,22 @@ $("#result_form").on("submit", function (e) {
 reloadChart();
 fetch_class_exams();
 fetch_class();
+
+$("#calculate_student_position").on("click", () => {
+  calculatePosition();
+});
+
+function calculatePosition() {
+  // after all results are entered we calculate the students positions.
+  // we set the exam to be inactive and cannot add more results.
+
+  // if class_exam is inactive already, we return it to active for adding more results.
+
+  $.ajax({
+    url: "../queries/calculate_positions.php",
+    type: "POST",
+  }).done((response) => {});
+}
 
 // Refresh Time Intervals for all the queries updates.
 setInterval(function () {

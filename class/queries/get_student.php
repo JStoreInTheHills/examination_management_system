@@ -43,26 +43,30 @@ if (!empty($_GET["classid1"])) {
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { ?>
 
-            <label> <?php echo htmlentities($row['SubjectName']); ?>
+            <label class="text-primary"> <?php echo htmlentities($row['SubjectName']); ?> </label>
 
-                <input type="text" name="marks[]" class="form-control marks"  placeholder="Enter Marks Out Of 100" autocomplete="off"></label>
+                <input type="text" name="marks[]" class="form-control marks"  placeholder="Enter Marks Out Of 100" autocomplete="off">
 
+            <hr>
         <?php  }
     }
 }
 
-if (!empty($_GET["studclass"])) {
-    $id = $_GET['studclass'];
+if (!empty($_GET["class_exam_id"]) && !empty($_GET['clid']) && !empty($_GET['val'])) {
 
-    $dta = explode("$", $id);
+    $class_exam_id = $_GET['class_exam_id'];
+    $clid = $_GET['clid'];
+    $val = $_GET['val'];
 
-    $id = $dta[0];
-    $id1 = $dta[1];
+    $sql = "SELECT students_id, class_id FROM result 
+            WHERE students_id=:id1 and class_id=:id and class_exam_id =:cid";
+    
+    $query = $dbh->prepare($sql);
 
-    $query = $dbh->prepare("SELECT students_id, class_id FROM result WHERE students_id=:id1 and class_id=:id ");
-    //$query= $dbh -> prepare($sql);
-    $query->bindParam(':id1', $id1, PDO::PARAM_STR);
-    $query->bindParam(':id', $id, PDO::PARAM_STR);
+    $query->bindParam(':id1', $val, PDO::PARAM_STR);
+    $query->bindParam(':id', $clid, PDO::PARAM_STR);
+    $query->bindParam(':cid', $class_exam_id, PDO::PARAM_STR);
+
     $query->execute();
 
     $results = $query->fetchAll(PDO::FETCH_OBJ);

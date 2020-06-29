@@ -2,8 +2,7 @@
 
 $class_id = $_GET['class_id'];
 
-$sql = "SELECT count(ClassId) AS students FROM tblstudents 
-        WHERE ClassId =:class_id";
+$sql = "SELECT count(*) AS subjects FROM tblsubjectcombination WHERE ClassId =:class_id";
 $query = $dbh->prepare($sql);
 $query->bindParam(':class_id', $class_id, PDO::PARAM_STR);
 

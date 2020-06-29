@@ -32,14 +32,14 @@
 
         }else {
 
-        $stmt = $dbh->prepare("SELECT tblsubjects.SubjectName,tblsubjects.subject_id 
-                                     FROM tblsubjectcombination join  tblsubjects on  tblsubjects.subject_id=tblsubjectcombination.SubjectId
-                                  WHERE tblsubjectcombination.ClassId=:cid order by tblsubjects.SubjectName");
+        $stmt = $dbh->prepare("SELECT tblsubjects.SubjectName,t.id 
+                                     FROM tblsubjectcombination t join  tblsubjects on  tblsubjects.subject_id=t.SubjectId
+                                  WHERE t.ClassId=:cid order by tblsubjects.SubjectName");
         $stmt->execute(array(':cid' => $class));
         $sid1 = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-            array_push($sid1, $row['subject_id']);
+            array_push($sid1, $row['id']);
         }
 
         for ($i = 0; $i < count($mark); $i++) {

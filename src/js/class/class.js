@@ -68,77 +68,10 @@ var class_table = $("#class_table").DataTable({
       data: "id",
       orderable: false,
       render: function (data) {
-        var string = `
+        return `
         <a href=""><i class="fas fa-edit" title="Edit Class"></i></a>
-            <a style="color:red" onClick="del()" title="Delete Class"><i class="fas fa-trash"></i></a>
-
-            <script type='text/javascript'>
-
-            var toast = {
-              question: function () {
-                return new Promise(function (resolve) {
-                  iziToast.question({
-                    title: "Question",
-                    message: "Are you Sure?",
-                    timeout: 20000,
-                    close: false,
-                    position: "center",
-                    buttons: [
-                      [
-                        "<button><b>YES</b></button>",
-                        function (instance, toast, button, e, inputs) {
-                          instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-                          resolve();
-                        },
-                        false,
-                      ],
-                      [
-                        "<button>NO</button>",
-                        function (instance, toast, button, e, inputs) {
-                          instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-                        },
-                      ],
-                    ],
-                  });
-                });
-              },
-            };
-        
-
-            function del(){
-              toast.question().then(function (){
-               $.ajax({
-                 url : './queries/delete_class.php',
-                 type : 'POST',
-                 data : {
-                   id : ${data},
-                 },
-               }).done(function(response){
-                 let s = JSON.parse(response);
-                 if(s.success === true){
-                  iziToast.success({
-                    type : "Success",
-                    message : s.message,
-                  });
-                 }else {
-                  iziToast.error({
-                    type : "Error",
-                    message :s.message,
-                  });
-                 }
-               }).fail(function(){
-                 iziToast.error({
-                   type : "Error",
-                   message : "Error",
-                 });
-               });
-              });
-            }
-
-            
-        </script>
+            <a style="color:red" onClick="del(${data})" title="Delete Class"><i class="fas fa-trash"></i></a>
         `;
-        return string;
       },
     },
   ],
@@ -202,3 +135,68 @@ $('[data-toggle="datepicker"]').datepicker({
   format: "dd-mm-yyyy",
   autoHide: true,
 });
+
+var toast = {
+  question: function () {
+    return new Promise(function (resolve) {
+      iziToast.question({
+        title: "Question",
+        message: "Are you Sure?",
+        timeout: 20000,
+        close: false,
+        position: "center",
+        buttons: [
+          [
+            "<button><b>YES</b></button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+              resolve();
+            },
+            false,
+          ],
+          [
+            "<button>NO</button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+            },
+          ],
+        ],
+      });
+    });
+  },
+};
+
+function del(data) {
+  toast.question().then(function () {
+    $.ajax({
+      url: "./queries/delete_class.php",
+      type: "POST",
+      data: {
+        id: data,
+      },
+    })
+      .done(function (response) {
+        let s = JSON.parse(response);
+        if (s.success === true) {
+          iziToast.success({
+            type: "Success",
+            message: s.message,
+            onClosing: function () {
+              class_table.ajax.reload(null, false);
+            },
+          });
+        } else {
+          iziToast.error({
+            type: "Error",
+            message: s.message,
+          });
+        }
+      })
+      .fail(function () {
+        iziToast.error({
+          type: "Error",
+          message: "Error",
+        });
+      });
+  });
+}

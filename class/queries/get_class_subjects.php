@@ -4,8 +4,9 @@
 
     $class_id = $_GET['class_id'];
 
-    $sql = 'SELECT id,SubjectId,status,SubjectName,SubjectCode,tblsubjectcombination.CreationDate 
+    $sql = 'SELECT id,SubjectId,status,SubjectName,SubjectCode,tblsubjectcombination.CreationDate, tblteachers.name
             FROM tblsubjectcombination JOIN tblsubjects ON tblsubjectcombination.SubjectId = tblsubjects.subject_id 
+            JOIN tblteachers ON tblsubjectcombination.teachers_id = tblteachers.teacher_id
             WHERE ClassId =:class_id';
     
     $query=$dbh->prepare($sql);
