@@ -149,14 +149,10 @@ var view_class_student = $("#view_class_student").DataTable({
     },
     {
       targets: 3,
-      data: "DOB",
-    },
-    {
-      targets: 4,
       data: "Gender",
     },
     {
-      targets: 5,
+      targets: 4,
       data: "Status",
       render: function (data) {
         if (data == 1) {
@@ -167,7 +163,7 @@ var view_class_student = $("#view_class_student").DataTable({
       },
     },
     {
-      targets: 6,
+      targets: 5,
       orderable: false,
       data: "StudentId",
       render: function (data) {
