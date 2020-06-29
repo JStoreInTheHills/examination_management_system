@@ -4,8 +4,10 @@
 $class_id = $_GET['class_id'];
 $class_exam_id = $_GET['class_exam_id'];
 
-$sql = "SELECT result.subject_id, sum(CASE WHEN tblsubjects.subject_id = result.subject_id THEN marks ELSE 0 END) AS total, SubjectName 
-        FROM result JOIN tblsubjects ON result.subject_id = tblsubjects.subject_id WHERE class_id =:class_id 
+$sql = "SELECT result.subject_id, sum(CASE WHEN tblsubjectcombination.id = result.subject_id THEN marks ELSE 0 END) AS total, SubjectName 
+        FROM result JOIN tblsubjectcombination ON result.subject_id = tblsubjectcombination.id 
+        JOIN tblsubjects ON tblsubjectcombination.SubjectId = tblsubjects.subject_id
+        WHERE class_id =:class_id 
         AND class_exam_id =:class_exam_id
         GROUP BY result.subject_id";
 

@@ -1,8 +1,9 @@
-
-
+/**
+ *
+ * This is the official javascript page that hoises the subjects.
+ */
 
 var subject_table = $("#subject_table").DataTable({
-  autoWidth: false,
   ajax: {
     url: "queries/get_all_subjects.php",
     type: "GET",
@@ -27,73 +28,9 @@ var subject_table = $("#subject_table").DataTable({
       data: "subject_id",
       render: function (data) {
         return `
-        <a href="#" style = "color:red" onClick="del()"><i class="fas fa-trash"></i></a>
-
-        <script type='text/javascript'>
-
-        var toast = {
-          question: function () {
-            return new Promise(function (resolve) {
-              iziToast.question({
-                title: "Question",
-                message: "Are you Sure?",
-                timeout: 20000,
-                close: false,
-                position: "center",
-                buttons: [
-                  [
-                    "<button><b>YES</b></button>",
-                    function (instance, toast, button, e, inputs) {
-                      instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-                      resolve();
-                    },
-                    false,
-                  ],
-                  [
-                    "<button>NO</button>",
-                    function (instance, toast, button, e, inputs) {
-                      instance.hide({ transitionOut: "fadeOut" }, toast, "button");
-                    },
-                  ],
-                ],
-              });
-            });
-          },
-        };
-
-        function del(){
-          toast.question().then(function (){
-           $.ajax({
-             url : './queries/delete_subject.php',
-             type : 'POST',
-             data : {
-               subject_id : ${data},
-             },
-           }).done(function(response){
-             var r = JSON.parse(response);
-             if(r.success === true){
-              iziToast.success({
-                type : "Success",
-                message : r.message,
-              });
-             }else {
-              iziToast.error({
-                type : "Error",
-                message :r.message,
-              });
-             }
-           }).fail(function(response){
-             iziToast.error({
-               type : "Error",
-               message : "Error Check Again",
-             });
-           });
-          });
-        }
-
-        
-    </script>
-    `;
+                  <a style="color:blue"><span><i class="fas fa-edit"></i></span></a>
+                  <a style ="color:red" onClick="deleteSubject(${data})"> <i class="fas fa-trash"></i> </a>
+                  `;
       },
     },
   ],
@@ -138,3 +75,70 @@ $("#subject_form").on("submit", function (e) {
     }
   });
 });
+
+var toast = {
+  question: function () {
+    return new Promise(function (resolve) {
+      iziToast.question({
+        title: "Warning",
+        message: "Are you Sure?",
+        timeout: 20000,
+        close: false,
+        position: "center",
+        buttons: [
+          [
+            "<button><b>YES</b></button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+              resolve();
+            },
+            false,
+          ],
+          [
+            "<button>NO</button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+            },
+          ],
+        ],
+      });
+    });
+  },
+};
+
+function deleteSubject(subject_id) {
+  toast.question().then(function () {
+    $.ajax({
+      url: "./queries/delete_subject.php",
+      type: "POST",
+      data: {
+        subject_id: subject_id,
+      },
+    })
+      .done(function (response) {
+        var r = JSON.parse(response);
+        if (r.success === true) {
+          iziToast.success({
+            type: "Success",
+            onClosing: function () {
+              subject_table.ajax.reload(null, false);
+            },
+            message: r.message,
+          });
+        } else {
+          iziToast.error({
+            type: "Error",
+            message: r.message,
+          });
+        }
+      })
+      .fail(function (response) {
+        iziToast.error({
+          type: "Error",
+          message: "Error Check Again",
+        });
+      });
+  });
+}
+
+let print_subjects = $("#print_subjects").on("click", function (event) {});

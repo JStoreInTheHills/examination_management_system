@@ -1,3 +1,13 @@
+<?php 
+session_start();
+
+if(strlen($_SESSION['alogin'])==""){
+  header("Location: /login.php");
+}else{
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,25 +50,33 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                <nav aria-label="breadcrumb mb-3">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/class/class.php">Subjects</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"></li>
-                    </ol>
-                </nav>
+                
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800" id="heading"> Manage Subjects </h1>
+                        <h1 class="h3 mb-0 text-gray-800" id="heading">
+                        <span><i class="fas fa-chalkboard"></i></span> Manage Subjects </h1>
+
+                       
                     </div>
+
+                    <nav aria-label="breadcrumb mb-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Subjects</li>
+                    </ol>
+                </nav>
 
                     <!-- start of row -->
                     <div class="row">
-                        <div class="col-lg-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    All Subjects
+                        <div class="col-lg-7">
+                            <div class="card shadow mb-4">
+                                <div class="m-0 card-header text-primary">
+                                    <span><i class="fas fa-chalkboard"></i></span>  All Subjects
+
+                                    <button class="btn btn-primary btn-sm float-right" id="print_subjects">
+                                        <span><i class="fas fa-file-pdf"></i></span>
+                                        Generate PDF </button>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -78,21 +96,23 @@
 
                         </div>
                         <!------------------------------------------------------------------------------------------------->
-                        <div class="col-lg-6">
+                        <div class="col-lg-5">
                             <div class="card shadow mb-4">
-                                <div class="card-header">
-                                    Add New Subject
+                                <div class="card-header text-primary">
+                                    <span><i class="fas fa-plus"></i></span> New Subject
                                 </div>
                                 <div class="card-body">
                                     <form id="subject_form" class="user">
                                         <div class="form-group row">
                                             <div class="col-sm-12 mb-3 mb-sm-3">
+                                            <label for="subject_name">Enter Subject Name:</label>
                                                 <input type="text" id="subject_name" class="form-control"
-                                                    placeholder="Enter Subject Name">
+                                                    placeholder="Enter Subject Name e.g. English, Kiswahili" autocomplete="off">
                                             </div>
                                             <div class="col-sm-12 mb-3 mb-sm-0">
+                                            <label for="subject_code">Enter Subject Code:</label>
                                                 <input type="text" id="subject_code" class="form-control"
-                                                    placeholder="Enter Subject Code">
+                                                    placeholder="Enter Subject Code e.g. ENG, KIS" autocomplete="off">
                                             </div>
                                         </div>
 
@@ -129,3 +149,5 @@
 </body>
 
 </html>
+
+<?php } ?>
