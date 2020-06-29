@@ -23,6 +23,8 @@
 
         $query->execute();
 
+        $er = $query->errorInfo();
+
         $lastInsertId = $dbh->lastInsertId();
 
         if ($lastInsertId) {
@@ -30,7 +32,7 @@
             $data['message'] = 'Exam Added Successfully';
         } else {
             $data['success'] = false;
-            $data['message'] = 'Exam Already Exists!! Check The Name and Try Again!!';
+            $data['message'] = $er[2];
 
         }
 
