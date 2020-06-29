@@ -1,13 +1,15 @@
 <?php
 
-    include "../config/config.php"; 
+    session_start();
+
+    include "../config/config.php";
 
     $data = array();
     $error = array();
 
     if(empty($_GET['email_address']))
         $error['Email'] = 'Email Address cannot be empty';
-    
+
     if(empty($_GET['password']))
         $error['password'] = 'Password cannot be empty.';
 
@@ -19,20 +21,27 @@
         $email_address = $_GET['email_address'];
         $password = md5($_GET['password']);
 
-        $sql = "SELECT * FROM admin WHERE email = :email AND Password = :password";
+        $sql = "SELECT * FROM admin 
+                WHERE email = :email 
+                AND Password = :password 
+                AND status = 1";
 
         $query = $dbh->prepare($sql);
-        
+
         $query->bindParam(':email', $email_address, PDO::PARAM_STR);
         $query->bindParam(':password', $password, PDO::PARAM_STR);
         $query->execute();
 
+        $result = $query->fetchColumn(PDO::FETCH_OBJ);
+
         if ($query->rowCount() > 0) {
-            
-            $_SESSION['alogin'] = $_GET['email_address'];
+
+            $_SESSION['alogin'] = $email_address;
+            $_SESSION['last_login_timestamp'] = time();
 
             $data['success'] = true;
             $data['message'] = 'Login Success!! Redirecting to Dashboard. Please Wait.';
+            
         } else {
             $data['success'] = false;
             $data['message'] = 'User Invalid!! Check the name or If you dont have an account. Register One.';
