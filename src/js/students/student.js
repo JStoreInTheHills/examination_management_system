@@ -1,9 +1,20 @@
-var county_id = $("#county_id");
 /**
  * This is the Students Js File. It contains the dataset used to populate the Students Datatables.
  */
 
-var student_table = $("#dataTable").DataTable({
+const county_id = $("#county_id");
+
+const toggle = () => {
+  $("body").toggleClass("sidebar-toggled");
+  $(".sidebar").toggleClass("toggled");
+  if ($(".sidebar").hasClass("toggled")) {
+    $(".sidebar .collapse").collapse("hide");
+  }
+};
+toggle();
+
+const student_table = $("#dataTable").DataTable({
+  order: [[0, "DESC"]],
   ajax: {
     url: "./queries/get_all_students.php",
     type: "GET",
@@ -14,9 +25,15 @@ var student_table = $("#dataTable").DataTable({
       targets: 0,
       data: {
         StudentId: "StudentId",
+        FirstName: "FirstName",
+        OtherNames: "OtherNames",
+        LastName: "LastName",
       },
       render: function (data) {
-        return `<a href="./pages/details.php?sid=${data.StudentId}"> ${data.StudentName} </a>`;
+        let full_name = data.FirstName.concat(
+          " " + data.OtherNames + " " + data.LastName
+        );
+        return `<a href="./pages/details?sid=${data.StudentId}"> ${full_name} </a>`;
       },
     },
     {
@@ -32,7 +49,7 @@ var student_table = $("#dataTable").DataTable({
       targets: 3,
       data: "ClassName",
       render: function (data) {
-        return '<a href="../class/pg/class_exams.php">' + data + "</a>";
+        return '<a href="../class/pg/class_exams">' + data + "</a>";
       },
     },
     {
@@ -49,7 +66,7 @@ var student_table = $("#dataTable").DataTable({
         if (data === "1") {
           return `<span class="badge badge-pill badge-success">Active</span>`;
         } else {
-          return `<span class="badge badge-pill badge-danger">Active</span>`;
+          return `<span class="badge badge-pill badge-danger">In Active</span>`;
         }
       },
     },
@@ -139,18 +156,14 @@ function deleteStudent(student_id) {
 
 $("#form").on("submit", function (event) {
   var formData = {
-    fullanme: $("#fullanme").val(),
+    first_name: $("#first_name").val(),
+    second_name: $("#second_name").val(),
+    last_name: $("#last_name").val(),
     rollid: $("#rollid").val(),
-    emailid: $("#email").val(),
     gender: $("#gender").val(),
     classid: $("#classid").val(),
-    age: $("#age").val(),
     dob: $("#date").val(),
-
-    next_of_kin: $("#next_of_kin").val(),
-    telephone: $("telephone").val(),
-    address: $("#address").val(),
-    county_id: $("#county_id").val(),
+    telephone: $("#telephone").val(),
   };
 
   $.ajax({

@@ -1,9 +1,8 @@
 <?php
-session_start();
+include "../layouts/utils/redirect.php";
 
-if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 900){
-  header("Location: /login.php");
-  exit;
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500){
+    redirectToHomePage();
 }else{
     $_SESSION['last_login_timestamp'] = time();
 ?>
@@ -57,39 +56,49 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                          <h1 class="h3 mb-2 text-gray-800"> Manage Students </h1>
-                        <button class="btn btn-primary btn-sm"
-                            id="add_student"><span><i class="fas fa-users"></i></span>
-                            Add Students
-                        </button>
+                          <h1 class="h3 mb-2 text-gray-800"> <span><i class="fas fa-users"></i></span> Manage Students 
+                          </h1>
+                          <div class="btn-group">
+                            <button class="btn btn-primary btn-xs" id="add_student"><span><i class="fas fa-users"></i></span>
+                                Add New Students
+                            </button>
+                            <a class="btn btn-outline-primary btn-xs" target="_blank" href="/reports/students/summary_all_students"><span><i class="fas fa-file-pdf"></i></span>
+                                    Print Report
+                            </a>
+                          </div>
                     </div>
 
                     <nav aria-label="breadcrumb mb-3">
                         <ol class="breadcrumb">
-                            <li class=" breadcrumb-item"><a href="/index.php">Home</a></li>
+                            <li class=" breadcrumb-item"><a href="/index">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Students</li>
                         </ol>
                     </nav>
 
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        <strong>All Students in the school, both inactive and active are highlighted here</strong>
+                        <hr>
+                            <p class="mb-0">Active students are denoted by <span class="badge badge-pill badge-success">Active</span> while In Active students are denoted by <span class="badge badge-pill badge-danger">Inactive</span> </p>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
                     <div id="main_content" class="card shadow mb-4">
                         <!-- Card Header - Dropdown -->
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="mx font-weight-bold text-primary">All Students</h6>
-                            <div class="dropdown no-arrow">
-                              <a class="btn btn-outline-primary btn-sm" target="_blank" href="/reports/students/summary_all_students.php"><span><i class="fas fa-file-pdf"></i></span>
-                                  Print PDF
-                                </a>
-                            </div>
+                            <h6 class="mx font-weight-bold text-primary">
+                               <span><i class="fas fa-users"></i></span> All Students</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-striped " id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>RollId</th>
-                                            <th>Reg Date</th>
-                                            <th>Class</th>
+                                            <th>Students Name</th>
+                                            <th>Roll-Id</th>
+                                            <th>Registration Date</th>
+                                            <th>Stream Name</th>
                                             <th>Age</th>
                                             <th>Status</th>
                                             <th>Action</th>
@@ -114,21 +123,33 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                                     <div class="form-group row">
                                         <div class="col-sm-6 mb-3 mb-sm-0">
-                                            <label for="fullanme">Student Full Name</label>
-                                            <input type="text" name="fullanme" class="form-control" id="fullanme"
-                                                placeholder="Enter Full Name">
+                                            <label for="first_name">First Name</label>
+                                            <input type="text" name="first_name" class="form-control" id="first_name"
+                                                placeholder="Enter First Name">
                                         </div>
                                         <div class="col-sm-6">
-                                            <label for="rollid"> Admission Number</label>
-                                            <input type="number" class="form-control" maxlength="5" name="rollid"
-                                                id="rollid" placeholder="Enter Admission Number">
+                                            <label for="rollid"> Second Name</label>
+                                            <input type="text" class="form-control" name="second_name"
+                                                id="second_name" placeholder="Enter Second Name">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-6 mb-3 mb-sm-0">
-                                            <label for="email">Email Address</label>
-                                            <input type="email" name="emailid" id="email" class="form-control "
-                                                placeholder="Enter Email Address">
+                                            <label for="last_name">Last Name</label>
+                                            <input type="text" name="last_name" class="form-control" id="last_name"
+                                                placeholder="Enter Last Name">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label for="rollid"> Admission Number</label>
+                                            <input type="text" class="form-control" name="rollid"
+                                                id="rollid" placeholder="Enter Admission Number">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                    <div class="col-sm-6">
+                                            <label for="telephone">Telephone Number</label>
+                                            <input type="text" name="telephone_no" class="form-control" id="telephone"
+                                                placeholer="Enter Phone Number">
                                         </div>
 
                                         <div class="col-sm-6">
@@ -142,7 +163,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                                     <div class="form-group row">
                                         <div class="col-sm-6 mb-3 mb-sm-0">
-                                            <label for="classid">Choose Class</label>
+                                            <label for="classid">Choose a Class</label>
                                             <select name="id" id="classid" class="form-control ">
                                                 <?php
                                             include './../config/config.php';
@@ -175,11 +196,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                             <input type="text" name="Guardian Name" class="form-control"
                                                 id="next_of_kin" placeholder="Enter Next Of Kin">
                                         </div>
-                                        <div class="col-sm-6">
-                                            <label for="telephone">Telephone Number</label>
-                                            <input type="tel" name="telephone_no" class="form-control" id="telephone"
-                                                placeholer="Enter Phone Number">
-                                        </div>
+                                       
                                     </div>
 
                                     <hr>
@@ -202,9 +219,11 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                     <hr>
 
                                     <div>
-                                        <button class="btn btn-primary float-right" name="submit"
-                                            type="submit">Save</button>
-                                        <button class="btn btn-danger float-left" id="cancel_add">Cancel</button>
+                                        <div class="btn-grp">
+                                            <button class="btn btn-primary float-right" name="submit"
+                                                type="submit">Save</button>
+                                            <button class="btn btn-danger float-left" id="cancel_add">Cancel</button>
+                                        </div>
                                     </div>
 
                                 </form>
@@ -229,6 +248,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
     <script src="/dist/js/main.min.js"></script>
     <script src="/dist/js/students/student.js"></script>
+    <script src="/dist/js/utils/utils.js"></script>
 </body>
 
 </html>
