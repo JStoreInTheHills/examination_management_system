@@ -41,14 +41,14 @@
 
                     <nav aria-label="breadcrumb mb-3">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/index">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page"><a>Counties</a></li>
                         </ol>
                     </nav>
 
                     <!-- start of row -->
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="card shadow mb-4">
                                 <div class="m-0 card-header text-primary">
                                     <span><i class="fas fa-address-card"></i></span> Physical Addresses / Counties
@@ -91,6 +91,7 @@
     <?php include '../layouts/utils/logout_modal.html'; ?>
 
     <script src="/dist/js/main.min.js"></script>
+    <script src="/dist/js/utils/utils.js"></script>
 
     <script>
         $('#counties_table').DataTable({
