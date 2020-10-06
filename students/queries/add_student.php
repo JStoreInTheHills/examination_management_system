@@ -7,14 +7,21 @@ $errors = array();      // array to hold validation errors
 $data = array();      // array to pass back data
 
 
-if (empty($_POST['fullanme']))
-    $errors['fullname'] = 'Name is required.';
+if (empty($_POST['first_name']))
+    $errors['first_name'] = 'Name is required.';
+
+if (empty($_POST['second_name']))
+    $errors['second_name'] = 'Name is required.';
+
+if (empty($_POST['last_name']))
+    $errors['last_name'] = 'Name is required.';
+
 
 if (empty($_POST['rollid']))
     $errors['rollid'] = 'Roll ID is required.';
 
-if (empty($_POST['emailid']))
-    $errors['emailid'] = 'Email is required.';
+if (empty($_POST['telephone']))
+    $errors['telephone'] = 'Telephone is required.';
 
 if (empty($_POST['gender']))
     $errors['gender'] = 'Gender is required.';
@@ -32,23 +39,27 @@ if (!empty($errors)) {
     $data['message'] = $errors;
 } else {
 
-    $studentname = $_POST['fullanme'];
+    $first_name = $_POST['first_name'];
+    $second_name = $_POST['second_name'];
+    $last_name = $_POST['last_name'];
     $roolid = $_POST['rollid'];
-    $studentemail = $_POST['emailid'];
+    $telephone = $_POST['telephone'];
     $gender = $_POST['gender'];
     $classid = $_POST['classid'];
 
     $dob = $_POST['dob'];
     $status = 1;
 
-    $sql = "INSERT INTO tblstudents(StudentName,RollId,StudentEmail,Gender,ClassId,DOB,RegDate, Status)
-            VALUES(:studentname,:roolid,:studentemail,:gender,:classid,:dob, CURRENT_TIMESTAMP(),:status)";
+    $sql = "INSERT INTO tblstudents(FirstName,OtherNames, LastName,RollId,TelNo,Gender,ClassId,DOB,RegDate, Status)
+            VALUES(:first_name,:second_name,:last_name,:roolid,:telephone,:gender,:classid,:dob, CURRENT_TIMESTAMP(),:status)";
 
     $query = $dbh->prepare($sql);
 
-    $query->bindParam(':studentname', $studentname, PDO::PARAM_STR);
+    $query->bindParam(':first_name', $first_name, PDO::PARAM_STR);
+    $query->bindParam(':second_name', $second_name, PDO::PARAM_STR);
+    $query->bindParam(':last_name', $last_name, PDO::PARAM_STR);
     $query->bindParam(':roolid', $roolid, PDO::PARAM_STR);
-    $query->bindParam(':studentemail', $studentemail, PDO::PARAM_STR);
+    $query->bindParam(':telephone', $telephone, PDO::PARAM_STR);
     $query->bindParam(':gender', $gender, PDO::PARAM_STR);
     $query->bindParam(':classid', $classid, PDO::PARAM_STR);
     $query->bindParam(':dob', $dob, PDO::PARAM_STR);

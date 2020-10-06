@@ -47,7 +47,12 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                 <div class="container-fluid">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800" id="heading"> </h1>
+
+                        <button class="btn btn-primary btn-md" id="edit_students">
+                        </button>
                     </div>
+
+                    <span id="alert"></span>
 
                     <nav class="mb-4">
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -188,8 +193,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
     <script src="/dist/js/main.min.js"></script>
     <script src="/dist/js/students/student_details.js"></script>
-    <script src="/src/js/demo/chart-bar-demo.js"></script>
-
+    <!-- <script src="/src/js/demo/chart-bar-demo.js"></script> -->
+    <script src="/dist/js/utils/utils.js"></script>
 </body>
 
 </html>

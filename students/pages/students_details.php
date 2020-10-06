@@ -3,7 +3,7 @@
 session_start();
 
 if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 900){
-    header("Location: /login.php");
+    header("Location: /login");
     exit;
 }else{
       $_SESSION['last_login_timestamp'] = time();
@@ -41,8 +41,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                 <nav aria-label="breadcrumb mb-3">
                     <ol class="breadcrumb">
-                        <li class=" breadcrumb-item"><a href="/index.php">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/students/student.php">All Students</a></li>
+                        <li class=" breadcrumb-item"><a href="/index">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/students/student">All Students</a></li>
                         <li id="nav" class="breadcrumb-item active" aria-current="page"></li>
                     </ol>
                 </nav>
@@ -123,6 +123,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
     <script src="/dist/js/main.min.js"></script>
     <script src="/dist/js/students/student_details.js"></script>
     <script src="/src/js/demo/chart-bar-demo.js"></script>
+    
 </body>
 
 </html>
