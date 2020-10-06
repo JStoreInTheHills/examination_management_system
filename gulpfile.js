@@ -18,6 +18,7 @@ var concatCss = require("gulp-concat-css");
 
 // Load package.json for banner
 const pkg = require("./package.json");
+const gulpConcatCss = require("gulp-concat-css");
 
 // Set the banner content
 const banner = [
@@ -82,10 +83,31 @@ function modules() {
       "./node_modules/datatables.net-bs4/css/*.css",
     ])
     .pipe(gulp.dest("./vendor/datatables"));
+
   // Font Awesome
   var fontAwesome = gulp
     .src("./node_modules/@fortawesome/**/*")
     .pipe(gulp.dest("./vendor"));
+
+  var progressbar = gulp
+    .src("./node_modules/progressbar.js/dist/*.js")
+    .pipe(gulp.dest("./vendor/progressbar"));
+
+  var nprogress = gulp
+    .src("./node_modules/nprogress/**")
+    .pipe(gulp.dest("./vendor/nprogress"));
+
+  // select2
+  var select2js = gulp
+    .src("./node_modules/select2/**/*")
+    .pipe(gulp.dest("./vendor/select2"));
+
+  // Select2 bootstrap4
+
+  var select2 = gulp
+    .src("./node_modules/@ttskch/**/*")
+    .pipe(gulp.dest("./vendor"));
+
   // jQuery Easing
   var jqueryEasing = gulp
     .src("./node_modules/jquery.easing/*.js")
@@ -101,6 +123,11 @@ function modules() {
       "!./node_modules/jquery/dist/core.js",
     ])
     .pipe(gulp.dest("./vendor/jquery"));
+
+  var jquery_validation = gulp
+    .src("./node_modules/jquery-validation/dist/*.js")
+    .pipe(gulp.dest("./vendor/jquery-validation"));
+
   return merge(
     bootstrapJS,
     bootstrapSCSS,
@@ -110,7 +137,12 @@ function modules() {
     jquery,
     jqueryEasing,
     izitoast,
-    datePicker
+    datePicker,
+    select2,
+    select2js,
+    progressbar,
+    nprogress,
+    jquery_validation
   );
 }
 
@@ -119,12 +151,20 @@ function customJs() {
     .src("./src/js/dashboard.js")
     .pipe(gulp.dest("./dist/js/dashboard"));
 
+  var utils = gulp.src("./src/js/utils.js").pipe(gulp.dest("./dist/js/utils"));
+
+  var terms = gulp.src("./src/js/terms/*").pipe(gulp.dest("./dist/js/terms"));
+
   var classes = gulp
     .src("./src/js/class/*")
     .pipe(gulp.dest("./dist/js/classes"));
 
   var exam = gulp.src("./src/js/exam/*").pipe(gulp.dest("./dist/js/exams"));
-  
+
+  var webfonts = gulp
+    .src("./vendor/fontawesome-free/webfonts/*")
+    .pipe(gulp.dest("./dist/webfonts"));
+
   var result = gulp
     .src("./src/js/result/*")
     .pipe(gulp.dest("./dist/js/results"));
@@ -156,7 +196,10 @@ function customJs() {
     year,
     teacher,
     dashboard,
-    admin
+    admin,
+    utils,
+    terms,
+    webfonts
   );
 }
 
@@ -200,6 +243,10 @@ function js() {
       "./vendor/datatables/jquery.dataTables.min.js",
       "./vendor/datatables/dataTables.bootstrap4.min.js",
       "./vendor/chart.js/Chart.min.js",
+      "./vendor/select2/dist/js/select2.min.js",
+      "./vendor/progressbar/progressbar.min.js",
+      "./vendor/nprogress/nprogress.js",
+      "./vendor/jquery-validation/jquery.validate.min.js",
     ])
     .pipe(concat("main.js"))
     .pipe(uglify())
@@ -225,7 +272,10 @@ function css() {
       "./vendor/izitoast/iziToast.min.css",
       "./vendor/datepicker/datepicker.min.css",
       "./vendor/datatables/dataTables.bootstrap4.min.css",
+      "./vendor/select2-bootstrap4-theme/dist/*.css",
+      "./vendor/select2/dist/css/select2.css",
       "./src/css/*.css",
+      "./vendor/nprogress/nprogress.css",
     ])
     .pipe(cleanCSS())
     .pipe(concatCss("main.css"))
