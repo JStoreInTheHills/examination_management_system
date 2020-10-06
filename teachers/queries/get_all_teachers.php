@@ -2,10 +2,11 @@
 
     include '../../config/config.php';
     
-    $sql = "SELECT name,teacher_id,id_no,gender,email,phone,SubjectName 
+    $sql = "SELECT name,teacher_id,id_no,gender,tbl_user.email,phone 
             FROM tblteachers 
-            JOIN tblsubjects 
-            ON tblteachers.teacher_subject = tblsubjects.subject_id";
+            JOIN tbl_user 
+            ON tbl_user.id = tblteachers.user_id";
+
     $query = $dbh->prepare($sql);
     $query->execute();
 

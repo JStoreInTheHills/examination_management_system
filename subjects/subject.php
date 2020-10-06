@@ -2,7 +2,7 @@
 session_start();
 
 if(strlen($_SESSION['alogin'])==""){
-  header("Location: /login.php");
+  header("Location: /login");
 }else{
 
 ?>
@@ -56,13 +56,19 @@ if(strlen($_SESSION['alogin'])==""){
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800" id="heading">
                         <span><i class="fas fa-chalkboard"></i></span> Manage Subjects </h1>
-
+                        <div class="btn-group">
+                            <button class="btn btn-primary btn-xs" id="print_subjects">
+                                <span><i class="fas fa-file-pdf"></i></span>
+                                Print Report 
+                            </button>
+                        </div>
+                       
                        
                     </div>
 
                     <nav aria-label="breadcrumb mb-3">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/index">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Subjects</li>
                     </ol>
                 </nav>
@@ -74,9 +80,7 @@ if(strlen($_SESSION['alogin'])==""){
                                 <div class="m-0 card-header text-primary">
                                     <span><i class="fas fa-chalkboard"></i></span>  All Subjects
 
-                                    <button class="btn btn-primary btn-sm float-right" id="print_subjects">
-                                        <span><i class="fas fa-file-pdf"></i></span>
-                                        Generate PDF </button>
+                                   
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -86,6 +90,7 @@ if(strlen($_SESSION['alogin'])==""){
                                                 <tr>
                                                     <th>Subject Name</th>
                                                     <th>Subject Code</th>
+                                                    <th>Subject Name</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -105,12 +110,17 @@ if(strlen($_SESSION['alogin'])==""){
                                     <form id="subject_form" class="user">
                                         <div class="form-group row">
                                             <div class="col-sm-12 mb-3 mb-sm-3">
-                                            <label for="subject_name">Enter Subject Name:</label>
+                                            <label class="text-primary" for="subject_name">Enter Subject Name:</label>
                                                 <input type="text" id="subject_name" class="form-control"
                                                     placeholder="Enter Subject Name e.g. English, Kiswahili" autocomplete="off">
                                             </div>
+                                            <div class="col-sm-12 mb-3 mb-sm-3">
+                                            <label class="text-primary" for="subject_name">Arabic Subject Name: <span><i class="text-danger">(Optional)</i></span></label>
+                                                <input type="text" id="ar_subject_name" class="form-control"
+                                                    placeholder="Enter Subject Name In Arabic E.g Al Quran" autocomplete="off">
+                                            </div>
                                             <div class="col-sm-12 mb-3 mb-sm-0">
-                                            <label for="subject_code">Enter Subject Code:</label>
+                                            <label class="text-primary" for="subject_code">Enter Subject Code:</label>
                                                 <input type="text" id="subject_code" class="form-control"
                                                     placeholder="Enter Subject Code e.g. ENG, KIS" autocomplete="off">
                                             </div>
@@ -145,7 +155,7 @@ if(strlen($_SESSION['alogin'])==""){
 
     <script src="/dist/js/main.min.js"></script>
     <script src="/dist/js/subjects/subject.js"></script>
-
+    <script src="/dist/js/utils/utils.js"></script>
 </body>
 
 </html>

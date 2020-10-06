@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 $_SESSION = array();
 if (ini_get("session.use_cookies")) {
@@ -10,6 +11,8 @@ if (ini_get("session.use_cookies")) {
 }
 unset($_SESSION['alogin']);
 unset($_SESSION['last_login_timestamp']);
+
 session_destroy(); // destroy session
-header("location:login.php");
+
+header("location:login");
 ?>

@@ -1,14 +1,15 @@
 <?php
-session_start(); // start a session 
 
 // check to see if the session has been started and unset the active session.
 if(isset($_SESSION['alogin'])){
   unset($_SESSION['alogin']);
   session_destroy(); // destroy session
 }
+
 ?>
 <!DOCTYPE html>
-  <html lang="en">
+<html lang="en">
+
 <head>
 
   <meta charset="utf-8">
@@ -17,30 +18,20 @@ if(isset($_SESSION['alogin'])){
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Munawarah ~ Login</title>
+  <title>Munawwarah || Login</title>
 
   <!-- Custom fonts for this template-->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    rel="stylesheet">
 
   <!-- Custom styles for this template-->
   <link href="/dist/css/main.min.css" rel="stylesheet">
 
-
-  <style>
-    .ff {
-      color:red;
-    }
-    .success {
-      color:green;
-    }
-    .border {
-      border
-    }
-  </style>
 </head>
 
-<body class="">
+<body>
 
   <div class="container">
 
@@ -49,38 +40,45 @@ if(isset($_SESSION['alogin'])){
 
       <div class="col-xl-6 col-lg-6 col-md-6">
 
-        <div class="card o-hidden border shadow-lg my-3">
+        <div class="card shadow o-hidden border my-3">
           <div class="card-body p-0">
             <!-- Nested Row within Card Body -->
             <div class="row">
               <div class="col-lg-12">
                 <div class="p-5">
+                  
                   <div class="text-center">
-                  <img src="/img/favicon.jpeg"  width="50%"  alt="">
-                    <h1 class="h4 text-gray-900 mb-1">Al Madrasatul Munawarah Al Islamiyyah</h1>
-                    <h1 class="h4 mb-3">Welcome Back!</h1>
+
+                  <!-- <h1 class="h4 text-gray-900 mb-4">Electronic Examination Management</h1> -->
+
+                    <img class="mb-2" src="./src/img/favicon.jpeg" width="50%" alt="">
+                    <h1 class="h4 text-gray-900 mb-4">Al Madrasatul Munawarah Al Islamiyyah</h1>
+                    
+
+                    <h1 class="h4 text-primary mb-4">Please Sign In</h1>
                   </div>
 
                   <span id="toast"></span>
-                  <form class="user" id="login_form">
-                        <div class="form-group">
-                          <label id="email_label" for="">Email Address:</label>
-                          <input type="email" class="form-control form-control-user"
-                           id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
-                        </div>
-                        <div class="form-group">
-                        <label id="pass_label" for="exampleInputPassword">Password:</label>
-                          <input type="password" class="form-control form-control-user"
-                           id="exampleInputPassword" placeholder="Enter Password...">
-                        </div>
-                        <button name="submit" id="submit" class="btn btn-primary btn-user btn-block">
-                          Login 
-                        </button>
-                  </form>
                   
-              <div class="text-center">
-                <a class="small" href="register.php">New User? Register</a>
-              </div>
+                  <form class="user mb-1" id="login_form">
+                    <div class="form-group">
+                      <label class="text-gray-900" id="email_label" for="">Email Address:</label>
+                      <input type="email" required class="form-control form-control-user" id="exampleInputEmail"
+                        aria-describedby="emailHelp" placeholder="Enter your Email Address...">
+                    </div>
+                    <div class="form-group">
+                      <label class="text-gray-900" id="pass_label" for="exampleInputPassword">Password:</label>
+                      <input type="password" required class="form-control form-control-user" id="exampleInputPassword"
+                        placeholder="Enter you password...">
+                    </div>
+                    <button name="submit" id="submit" class="btn btn-primary btn-user btn-block">
+                      Login
+                    </button>
+                  </form>
+
+                  <div class="text-center">
+                    <a class="small" href="forgot-password"">Forgot your password?</a>
+                  </div>
 
                 </div>
               </div>
@@ -97,52 +95,70 @@ if(isset($_SESSION['alogin'])){
   <script src="/dist/js/main.min.js"></script>
 
   <script>
-          
-          $('#login_form').on('submit', function(event){
-            event.preventDefault();
 
-            let email = $('#exampleInputEmail').val();
-            let password = $('#exampleInputPassword').val();
+    sessionStorage.removeItem('teachers_token');
+    sessionStorage.removeItem('_token');
+    
+    $('#login_form').submit((e) => {
 
-            if(email === "" && password === ""){
-           
-              $('#exampleInputEmail').addClass("border border-danger");
-              $('#exampleInputPassword').addClass("border border-danger");
-              $('#email_label').addClass("text-danger");
-              $('#pass_label').addClass("text-danger");          
-            }else{
-            formData = {
-              "email_address" : email,
-              "password" : password,
+        const email = $('#exampleInputEmail').val();
+        const password = $('#exampleInputPassword').val();
+
+        const formData = {
+          email_address: email,
+          password: password,
+        }
+
+        $.ajax({
+          "url": "/admin/login_attempt.php",
+          "type": "POST",
+          "data": formData,
+        }).done((resp) => {
+          const s = JSON.parse(resp);
+          if (s.success === true) {
+            const last_page = sessionStorage.getItem("last_page");
+            const role = sessionStorage.setItem('_token', s.role);
+
+            $('#toast').empty().append(`<div class="alert alert-success" role="alert">${s.message}.</div>`);
+
+            if (s.role === "Teacher") {
+              $.ajax({
+                url : "/admin/queries/get_login_teacher.php",
+                type : "GET",
+                data : {
+                    uuid : s.uuid,
+                }
+              }).done((response)=>{
+                const arr = JSON.parse(response);
+                let id;
+                arr.forEach(item => {
+                    id = item.teacher_id
+                });    
+                // const new_teachers_id = sessionStorage.setItem('teachers_token', id);
+
+                document.location = `./teachers/pages/view_teacher?teachers_id=${id}`;
+              });
+            } else if (last_page == null) {
+              document.location = './index';
+            } else {
+              document.location = last_page;
             }
-            $.ajax({
-              "url" : "/admin/login_attempt.php",
-              "type" : "GET",
-              "data" : formData,
-            }).done(function(response){
-
-              var s = JSON.parse(response)
-
-              if(s.success === true){
-                
-                $('#toast').empty()
-                .append(`<div class="alert alert-success" role="alert">
-                        Redirecting.. Please Wait.</div>`);
-                setInterval(() => {
-                  document.location = './index.php'; 
-                }, 100);
-              }else{
-                $('#toast').addClass('ff');
-                $('#toast').empty().append('User Not Found! Kindly contact Examination Administrator for Assistance!');  
-              }
-            });
-
-            }
-
-            
-          });
-
+          } else {
+            $('#toast').empty().append(
+              `<div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading"><span><i class="fas fa-exclamation-triangle"></i></span>
+                 User Not Found.
+                 </h4>
+                <hr>
+                <p class="mb-0">Contact the Examination Officer for assistance</p>
+              </div>`);
+          }
+        });
+        
+      e.preventDefault();
+    });
   </script>
+
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 <?php include '../../config/config.php';
 
-$sql = "SELECT * FROM admin";
+$sql = "SELECT * FROM tbl_user JOIN roles on roles.role_id = tbl_user.role_id";
 $query = $dbh->prepare($sql);
 
 $query->execute();

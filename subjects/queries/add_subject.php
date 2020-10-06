@@ -23,15 +23,17 @@ if (!empty($errors)) {
 
     $subject_name = $_POST['subject_name'];
     $subject_code = $_POST['subject_code'];
+    $ar_subject_name = $_POST['ar_subject_name'];
 
 
-    $sql = "INSERT INTO  tblsubjects(SubjectName, SubjectCode, Creationdate)
-            VALUES(:subject_name,:subject_code,CURRENT_TIMESTAMP)";
+    $sql = "INSERT INTO  tblsubjects(SubjectName, SubjectCode, Creationdate, SubjectNameAr)
+            VALUES(:subject_name,:subject_code,CURRENT_TIMESTAMP, :subject_name_ar)";
 
     $query = $dbh->prepare($sql);
 
     $query->bindParam(':subject_name', $subject_name, PDO::PARAM_STR);
     $query->bindParam(':subject_code', $subject_code, PDO::PARAM_STR);
+    $query->bindParam(':subject_name_ar', $ar_subject_name, PDO::PARAM_STR);
 
     $query->execute();
 

@@ -1,8 +1,9 @@
+
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion navigation" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/index.php">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/index">
         <div class="sidebar-brand-icon">
             <i class="fas  fa-user-graduate"></i>
         </div>
@@ -18,8 +19,8 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
-        <a class="nav-link" href="/index.php">
+    <li class="nav-item">
+        <a class="nav-link" href="/index">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
@@ -36,15 +37,23 @@
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="/academic_year/year.php" >
+        <a class="nav-link collapsed" href="/academic_year/year" >
             <i class="fas fa-poll-h"></i>
             <span>Academic Year</span>
         </a>
     </li>
 
+     <!-- Nav Item - Pages Collapse Menu -->
+     <li class="nav-item">
+        <a class="nav-link collapsed" href="/terms/terms" >
+            <i class="fas fa-calendar"></i>
+            <span>Terms</span>
+        </a>
+    </li>
+
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="/stream/stream.php">
+        <a class="nav-link collapsed" href="/stream/stream">
             <i class="fas fa-book-reader"></i>
             <span>Classes</span>
         </a>
@@ -52,31 +61,23 @@
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseClasses"
-            aria-expanded="true" aria-controls="collapseClasses">
+        <a class="nav-link collapsed" href="/class/class">
             <i class="fas fa-glasses"></i>
             <span>Streams</span>
-        </a>
-        <div id="collapseClasses" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Setup:</h6>
-                <a class="collapse-item" href="/class/class.php"> Manage Streams</a>
-                <a class="collapse-item" href="/class/page/add_subject_to_class.php"> Add Subject to Stream</a>
-            </div>
-        </div>
-    </li>
-
-       <!-- Nav Item - Pages Collapse Menu -->
-       <li class="nav-item">
-        <a class="nav-link collapsed" href="/subjects/subject.php">
-            <i class="fas fa-street-view"></i>
-            <span>Subjects</span>
         </a>
     </li>
 
     <!-- Nav Item - Pages Collapse Menu -->
+       <li class="nav-item">
+        <a class="nav-link collapsed" href="/subjects/subject">
+            <i class="fas fa-street-view"></i>
+            <span>Subjects</span>
+        </a>
+      </li>
+
+    <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="/students/student.php">
+        <a class="nav-link collapsed" href="/students/student">
             <i class="fas fa-user-graduate"></i>
             <span>Students</span>
         </a>
@@ -84,15 +85,16 @@
 
     <!-- Nav Item - Utilities Teachers Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="/teachers/teachers.php">
+        <a class="nav-link collapsed" href="/teachers/teachers">
             <i class="fas fa-users"></i>
             <span>Teachers</span>
         </a>
       </li>
 
     <!-- Nav Item - Pages Collapse Menu -->
+    
     <li class="nav-item">
-        <a class="nav-link collapsed" href="/exam/exam.php">
+        <a class="nav-link collapsed" href="/exam/exam">
             <i class="fas fa-user-edit"></i>
             <span>Exams</span>
         </a>
@@ -100,16 +102,16 @@
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="/results/results.php">
+        <a class="nav-link collapsed" href="/grading/grading">
             <i class="fas fa-poll-h"></i>
-            <span>Results</span>
+            <span>Grading</span>
         </a>
     </li>
 
 
     <!-- Nav Item - Utilities Reports Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="/reports/reports.php">
+        <a class="nav-link collapsed" href="/reports/reports">
             <i class="fas fa-certificate"></i>
             <span>Reports</span>
         </a>
@@ -124,29 +126,30 @@
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSettings"
-            aria-expanded="true" aria-controls="collapseSettings">
-            <i class="fas fa-toolbox"></i>
-            <span>Setup</span>
+        <a class="nav-link collapsed" href="/admin/pages/new_user">
+            <i class="fas fa-users"></i>
+            <span>Add System User</span>
         </a>
-        <div id="collapseSettings" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Settings:</h6>
-                <a class="collapse-item" href="/counties/counties.php">Counties</a>
-                <a class="collapse-item" href="/admin/pages/new_user.php">Add System User</a>
-                <a class="collapse-item">Grading <span style="color:blue">(Coming Soon)</span></a>
-                <a class="collapse-item">Imports <span style="color:blue">(Coming Soon)</span></a>
-            </div>
-        </div>
+        
+    </li>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="/counties/counties">
+            <i class="fas fa-phone"></i>
+            <span>Addresses</span>
+        </a>
+        
     </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
-    <li class="nav-item">
-        <a class="nav-link" href="/log_file.php">
-            <i class="fas fa-address-book"></i>
-            <span>Logs</span></a>
-    </li>
+    <!-- <li class="nav-item"> -->
+        <!-- <a class="nav-link" href="/log_file"> -->
+            <!-- <i class="fas fa-address-book"></i>
+            <span>Logs</span></a> -->
+    <!-- </li> -->
+
 </ul>
 <!-- End of Sidebar -->

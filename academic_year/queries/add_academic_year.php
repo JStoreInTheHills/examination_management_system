@@ -24,8 +24,8 @@ if(!empty($errors)){
         $data['success'] = true;
         $data['message'] = "Academic Year Added Successfully";
     }else{
-        $data['success'] = true;
-        $data['message'] = $er[2];
+        $data['success'] = false;
+        $data['message'] = "Warning! " . $er[2];
     }
 }
 echo json_encode($data);

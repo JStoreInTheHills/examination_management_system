@@ -1,10 +1,10 @@
 <?php
 
-session_start();
+session_start();    
 
-if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 900){
-    header("Location: /login.php");
-    exit;
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1000){
+        header("Location: /login");
+        exit;
   }else{
       $_SESSION['last_login_timestamp'] = time();
   ?>
@@ -50,25 +50,36 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Manage All Classes</h1>
+                        <h1 class="h3 mb-0 text-gray-800" id="page_heading">  
+                        </h1>
                     </div>
 
                     <nav aria-label="breadcrumb mb-3">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/index">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">All Classes</li>
                         </ol>
                     </nav>
 
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Overview of all the classes in the school.</strong>
+                        <hr>
+                        <p class="mb-0">Click on the class to view more details or add a new class and start setting it up.</p>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
                     <div class="row">
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border border-bottom-primary h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Total Classes </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="all_classes"></div>
+                                             <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Total Number of Classes 
+                                                </div>
+                                            <div class="h1 mb-0 font-weight-bold text-gray-800" id="all_classes"></div>
                                         </div>
                                         <div class="col-auto">
                                             <a href="#"> <i class="fas fa-book-reader fa-2x text-info-300"></i></a>
@@ -79,7 +90,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         </div>
                     </div>
                     
-                    <!-- start of row -->
+                    <!-- Start of Row -->
                     <div class="row">
                         <div class="col-lg-8">
                             <div class="card mb-4 shadow">
@@ -93,9 +104,9 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                             <thead>
                                                 <tr>
                                                     <th>Class Name</th>
+                                                    <th>Number of Streams</th>
                                                     <th>Created At</th>
-                                                    <th>Streams</th>
-                                                    <th style="text-align:center">Action</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                             </thead>
 
@@ -115,16 +126,19 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                     <form id="stream_form" class="user">
                                         <div class="form-group row">
                                             <div class="col-sm-12 mb-3 mb-sm-0">
-                                                <label for="stream_name">Enter Class Name</label>
+                                                <label class="text-primary" for="stream_name">Enter Class Name</label>
                                                 <input type="text" id="stream_name" autocomplete="off"
                                                     class="form-control" placeholder="Raudha, Thanawii">
+                                                    <small id="emailHelp" class="form-text text-muted">Class Name cannot
+                                                        be less than 3 letters or digits.</small>
+
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="desc">Enter Brief Description <span
+                                            <label class="text-primary" for="desc">Enter Brief Description <span
                                                     class="text-danger">(Optional) </span></label>
                                             <textarea id="desc" class="form-control"
-                                                aria-label="With textarea"></textarea>
+                                                aria-label="With textarea" placeholder="Enter brief description of the class"></textarea>
                                         </div>
 
                                         <div class="form-group">
@@ -136,7 +150,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                             </div>
                         </div>
                     </div>
-                    <!-- endo of row -->
+                    <!-- End of Row  -->
 
                 </div>
                 <!-- /.container-fluid -->
@@ -156,7 +170,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
     <script src="/dist/js/main.min.js"></script>
     <script src="/dist/js/streams/stream.js"></script>
-
+    <script src="/dist/js/utils/utils.js"></script>
+    
 </body>
 
 </html>

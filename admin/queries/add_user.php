@@ -1,16 +1,18 @@
 <?php
 
-require_once "../../config/config.php";
+include ("../../config/config.php");
 
 $errors = array();      // array to hold validation errors
 $data = array();      // array to pass back data
 
-$first_name = $_POST['first_name'];
-$last_name = $_POST['last_name'];
+$first_name = $_POST['firstname'];
+$last_name = $_POST['lastname'];
 $email = $_POST['email'];
 $username = $_POST['username'];
-$password = md5($_POST['password']);
+$password = password_hash(htmlentities($_POST['password']), PASSWORD_DEFAULT);
+
 $status = 1;
+$role_id = $_POST['role_id'];
 
 if (empty($first_name))
     $errors['First Name'] = 'First Name is required.';
@@ -34,8 +36,8 @@ if (!empty($errors)) {
     $data['errors'] = $errors;
 }else{
 
-    $sql = "INSERT INTO  admin(Username,Password,updationDate, email, status,first_name, last_name)
-    VALUES(:username,:password,CURRENT_TIMESTAMP(),:email,:status,:first_name,:last_name)";
+    $sql = "INSERT INTO tbl_user(username, firstname, email, lastname, password, created_at, status, role_id)
+    VALUES(:username, :first_name, :email, :last_name, :password, CURRENT_TIMESTAMP(), :status, :role_id)";
 
     $query = $dbh->prepare($sql);
 
@@ -45,6 +47,7 @@ if (!empty($errors)) {
     $query->bindParam(':status', $status, PDO::PARAM_STR);
     $query->bindParam(':first_name', $first_name, PDO::PARAM_STR);
     $query->bindParam(':last_name', $last_name, PDO::PARAM_STR);
+    $query->bindParam(':role_id', $role_id, PDO::PARAM_STR);
 
     $query->execute();
     $er = $query->errorInfo();
@@ -57,7 +60,6 @@ if (!empty($errors)) {
     } else {
         $data['success'] = false;
         $data['message'] = $er[2];
-
     }
 
 }

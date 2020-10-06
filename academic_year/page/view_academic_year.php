@@ -1,13 +1,12 @@
 <?php
 
-session_start();
+include "../../layouts/utils/redirect.php";
 
-if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 900){
-    header("Location: /login.php");
-    exit;
-  }else{
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500){
+  redirectToHomePage();
+}else{
       $_SESSION['last_login_timestamp'] = time();
-  ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -50,13 +49,16 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 id="heading" class="h3 mb-0 text-gray-800">Exam Period ~ </h1>
+                        <h1 id="heading" class="h3 mb-0 text-gray-800"> </h1>
+                        <div class="btn-group">
+                            <button id="edit_academic_year" class="btn btn-md btn-primary"></button>
+                        </div>
                     </div>
 
                     <nav aria-label="breadcrumb mb-3">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
-                            <li class="breadcrumb-item"><a href="/academic_year/year.php">Academic Year</a></li>
+                            <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/academic_year/year">Academic Year</a></li>
                             <li id="bread_list" class="breadcrumb-item active" aria-current="page"></li>
                         </ol>
                     </nav>
@@ -84,27 +86,70 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                     </div>
 
 
+                    <span id="alert"></span>
+
+                    <nav class="mb-4">
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+                                role="tab" aria-controls="nav-home" aria-selected="true"> <span><i
+                                        class="fas fa-chalkboard "></i></span> Academic Year Terms</a>
+                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                                role="tab" aria-controls="nav-profile" aria-selected="false"> <span><i
+                                        class="fas fa-book-reader"></i></span> End Year Performance</a>
+                        </div>
+                    </nav>
+
                     <!-- start of row -->
                     <div class="row">
                         <div class="col-lg-8">
-                            <div class="card shadow mb-4">
-                                <div class="card-header text-primary">
-                                    End Year Stream Performance
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped" width="100%" cellspacing="0"
-                                            id="class_end_year_table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Stream Name</th>
-                                                    <th>Stream Code</th>
-                                                    <th>Class</th>
-                                                    <th>Total Marks</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
+                            <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                                    aria-labelledby="nav-home-tab">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header text-primary">
+                                            Academic Year Terms
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped" width="100%" cellspacing="0"
+                                                    id="term_year_table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Date Added</th>
+                                                            <th>Term Name</th>
+                                                            <th>Created By</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="nav-profile" role="tabpanel"
+                                    aria-labelledby="nav-profile-tab">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header text-primary">
+                                            End Year Stream Performance
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped" width="100%" cellspacing="0"
+                                                    id="class_end_year_table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Stream Name</th>
+                                                            <th>Stream Code</th>
+                                                            <th>Class</th>
+                                                            <th>Total Marks</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -113,18 +158,23 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         <div class="col-lg-4">
                             <div class="card shadow mb-4">
                                 <div class="card-header text-primary">
-                                    Add Academic Period
+                                    Add Terms to Academic Year
                                 </div>
+
+                                
+
                                 <div class="card-body">
+                                <span id="card_alert"></span>
                                     <form id="year_form" class="user">
                                         <div class="form-group row">
                                             <div class="col-md-12 mb-3 mb-sm-0">
-                                                <input type="text" class="form-control" id="year_name"
-                                                    placeholder="Enter Year">
+                                                <label class="text-primary" for="term_name">Choose Term Name:</label>
+                                                <select class="form-control" name="term_name" id="term_name">
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="btn-group float-right">
-                                            <button class="btn btn-primary" name="submit" type="submit">Save</button>
+                                            <button class="btn btn-primary" name="submit" type="submit" id="form_submit">Save</button>
                                         </div>
                                     </form>
                                 </div>
@@ -138,15 +188,17 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
             </div>
             <!-- End of Main Content -->
+            <?php include '../../layouts/footer.php' ?>
         </div>
         <!-- End of Content Wrapper -->
-
+        <?php include '../../layouts/utils/logout_modal.html' ?>
     </div>
     <!-- End of Page Wrapper -->
 
 
-    <script src="/../dist/js/main.min.js"></script>
-    <script src="/../dist/js/years/view_academic_year.js"></script>
+    <script src="/dist/js/main.min.js"></script>
+    <script src="/dist/js/years/view_academic_year.js"></script>
+    <script src="/dist/js/utils/utils.js"></script>
 </body>
 
 </html>

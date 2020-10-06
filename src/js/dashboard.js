@@ -1,24 +1,56 @@
 // Official js page for the index page.
 
 // Set new default font family and font color to mimic Bootstrap's default styling
-(Chart.defaults.global.defaultFontFamily = "Nunito"),'-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+(Chart.defaults.global.defaultFontFamily = "Nunito"),
+  '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = "#858796";
 
 // variable holding the gender url.
 const gender_url = "/dashboard/queries/get_gender_count.php";
 
-// variable holding the chart element.
+// variable holding the pie chart element.
 const ctx = document.getElementById("myPieChart");
+
+// Area Chart Example
+const clx = document.getElementById("myAreaChart");
 
 // variable holding the index title.
 const index_title = $("#index_title");
 
+edit_madrasa = $("#edit_madrasa");
+
 // variable holding the index heading.
 const index_heading = $("#index_heading");
 
-index_heading.html(`Al Madrasatul Munawwarah Al Islamiyah`);
+NProgress.start();
 
-index_title.html("Dashboard");
+const init = () => {
+  $.ajax({
+    url: "./admin/queries/get_school.php",
+    type: "GET",
+    dataSrc: "json",
+  }).done((resp) => {
+    const arr = JSON.parse(resp);
+    arr.forEach((item) => {
+      index_heading.html(item.school_name);
+      const school = sessionStorage.setItem("school", item.school_name);
+      index_title.html(`Home - ${item.school_name}`);
+    });
+    get_students_count();
+    get_all_teachers();
+    get_all_class();
+
+    edit_madrasa.html("Edit Madrasa");
+
+    NProgress.done();
+  });
+};
+
+init();
+
+//------------------------------------------------------------------------------------------------------
+
+edit_madrasa.click(() => {});
 
 // Function to populate the number of students in the school.
 const get_students_count = () => {
@@ -31,7 +63,7 @@ const get_students_count = () => {
       $("#all_students").html(items.students);
     });
   });
-}
+};
 
 // Function to populate the number of teachers in the school.
 const get_all_teachers = () => {
@@ -42,7 +74,7 @@ const get_all_teachers = () => {
     let t = JSON.parse(response);
     $("#all_teachers").empty().append(t[0].teachers_id);
   });
-}
+};
 
 // Function to populate the number of streams in the school.
 const get_all_class = () => {
@@ -53,19 +85,9 @@ const get_all_class = () => {
     const j = JSON.parse(response);
     $("#all_classes").empty().append(j[0].classes);
   });
-}
+};
 
-// ---------------------------------------------------------
-get_students_count();
-get_all_teachers();
-get_all_class();
-// ---------------------------------------------------------
-
-
-const populate_students_ratio = () => {
-
-}
-
+const populate_students_ratio = () => {};
 
 // Pie Chart Example
 const myPieChart = new Chart(ctx, {
@@ -124,10 +146,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   return s.join(dec);
 }
 
-// Area Chart Example
-const clx = document.getElementById("myAreaChart");
-
-const options = {
+const line_chart_options = {
   maintainAspectRatio: false,
   layout: {
     padding: {
@@ -157,10 +176,6 @@ const options = {
         ticks: {
           maxTicksLimit: 5,
           padding: 10,
-          // Include a dollar sign in the ticks
-          callback: function (value, index, values) {
-            return "" + number_format(value);
-          },
         },
         gridLines: {
           color: "rgb(234, 236, 244)",
@@ -189,16 +204,10 @@ const options = {
     intersect: false,
     mode: "index",
     caretPadding: 10,
-    callbacks: {
-      label: function (tooltipItem, chart) {
-        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || "";
-        return datasetLabel + ": " + number_format(tooltipItem.yLabel);
-      },
-    },
   },
 };
 
-var data = {
+var line_chart_data = {
   labels: ["Jan", "Feb", "Mar", "April"],
   datasets: [
     {
@@ -221,8 +230,8 @@ var data = {
 
 const myLineChart = new Chart(clx, {
   type: "line",
-  data: data,
-  options: options,
+  data: line_chart_data,
+  options: line_chart_options,
 });
 
 setInterval(() => {
@@ -230,4 +239,3 @@ setInterval(() => {
   get_all_class();
   get_all_teachers();
 }, 1000000);
-

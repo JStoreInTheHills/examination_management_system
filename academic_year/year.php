@@ -1,10 +1,9 @@
 <?php
 
-session_start();
+include "../layouts/utils/redirect.php";
 
-if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 900){
-    header("Location: /login.php");
-    exit;
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500){
+  redirectToHomePage();
   }else{
       $_SESSION['last_login_timestamp'] = time();
   ?>
@@ -20,7 +19,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Manage || Academic Year</title>
+    <title id="academic_year_title"></title>
 
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -28,6 +27,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
         rel="stylesheet">
 
     <link href="../dist/css/main.min.css" rel="stylesheet">
+
 
 </head>
 
@@ -51,12 +51,14 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Manage Academic Years</h1>
+                        <h1 class="h3 mb-0 text-gray-800" id="year_heading"></h1>
                     </div>
+
+                    <div id="alert"></div>
 
                     <nav aria-label="breadcrumb mb-3">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/index">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Academic Years</li>
                         </ol>
                     </nav>
@@ -73,8 +75,9 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                         <table class="table table-striped" width="100%" cellspacing="0" id="year_table">
                                             <thead>
                                                 <tr>
-                                                    <th>Year Name</th>
+                                                   
                                                     <th>Created At</th>
+                                                    <th>Year Name</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -91,15 +94,18 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                    <span class="text-primary" >Add Academic Period</span> 
                                 </div>
                                 <div class="card-body">
+
+                                <div class="errors text-danger"><span></span></div>
+
                                     <form id="year_form" class="user">
                                         <div class="form-group row">
                                             <div class="col-md-12 mb-3 mb-sm-0">
-                                            <label for="year_name">Enter an Academic Year</label>
-                                               <input type="text" autocomplete="off" class="form-control" id="year_name" placeholder="e.g 2020, 2040">
+                                            <label for="year_name" class="text-primary">Enter an Academic Year</label>
+                                               <input type="text" name="year_name"  autocomplete="off" class="form-control" id="year_name" placeholder="e.g 2020, 2040">
                                             </div>
                                         </div>
                                         <div class="btn-group float-right">
-                                            <button class="btn btn-primary" name="submit" type="submit">Save</button>
+                                            <button class="btn btn-primary" type="submit">Save</button>
                                         </div>
                                     </form>
                                 </div>
@@ -124,6 +130,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
     <script src="/dist/js/main.min.js"></script>
     <script src="/dist/js/years/years.js"></script>
+    <script src="/dist/js/utils/utils.js"></script>
 </body>
 
 </html>

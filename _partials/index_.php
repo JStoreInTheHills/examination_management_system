@@ -4,10 +4,11 @@
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
   <h1 class="h3 mb-0 text-gray-800" id="index_heading"></h1>
-  <button class="btn btn-primary btn-md">
-    <i><span class="fas fa-edit"></span></i> Edit Madrasa
+  <button class="btn btn-primary btn-md" id="edit_madrasa">
+    <i><span class="fas fa-edit"></span></i>
   </button>
 </div>
+
 
 
 <div class="row">

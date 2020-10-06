@@ -4,7 +4,8 @@
 include("../../config/config.php");
 
 // Standard Query to select all students in the database.
-$getStudentsQuery = "SELECT SubjectName,subject_id,SubjectCode,Creationdate FROM tblsubjects";
+$getStudentsQuery = "SELECT SubjectNameAr, SubjectName,subject_id,SubjectCode,Creationdate 
+                     FROM tblsubjects";
 
 // Prepare query using procedure stataements
 $query = $dbh->prepare($getStudentsQuery);
