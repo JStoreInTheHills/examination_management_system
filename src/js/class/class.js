@@ -1,22 +1,55 @@
-let select = document.getElementById("stream_id");
+/**
+ * This is the official javascript file for class page.
+ */
 
-function stream_request() {
+// $(document).ready(() => {
+const select = document.getElementById("stream_id");
+const mainContent = $("#class_main_content");
+const classAddContent = $("#class_add_card");
+
+// $('.dataTables_filter input[type="search"]').css({
+//   width: "350px",
+//   display: "inline-block",
+// });
+
+const toggle = () => {
+  $("body").toggleClass("sidebar-toggled");
+  $(".sidebar").toggleClass("toggled");
+  if ($(".sidebar").hasClass("toggled")) {
+    $(".sidebar .collapse").collapse("hide");
+  }
+};
+toggle();
+
+const streamFunction = () => {
   $.ajax({
     url: "./queries/fetch_streams.php",
     type: "GET",
-  }).done((response) => {
-    var data = JSON.parse(response);
-    $.each(data, function (i, d) {
-      select.append(
-        `<option value="${data.stream_id}"> ${data.name} </option>`
-      );
+  })
+    .done((response) => {
+      let data = JSON.parse(response);
+      $.each(data, function (i, d) {
+        select.append(
+          `<option value="${data.stream_id}"> ${data.name} </option>`
+        );
+      });
+    })
+    .fail(() => {
+      iziToast.error({
+        type: "Error",
+        position: "topRight",
+        transitionIn: "bounceInLeft",
+        message: "Error fetching streams.. Refresh the page.",
+      });
     });
-  });
-}
+};
 
-stream_request();
+streamFunction();
 
-var class_table = $("#class_table").DataTable({
+const classTable = $("#class_table").DataTable({
+  autoWidth: true,
+  info: true,
+  processing: true,
   ajax: {
     url: "queries/get_all_classes.php",
     type: "GET",
@@ -28,9 +61,10 @@ var class_table = $("#class_table").DataTable({
       data: {
         id: "id",
         ClassName: "ClassName",
+        ClassCode: "ClassCode",
       },
       render: function (data) {
-        return `<a href="./page/class_view.php?classid=${data.id}&class_name=${data.ClassName}" > ${data.ClassName} </a>`;
+        return `<a href="./page/class_view?classid=${data.id}"> ${data.ClassName} (${data.ClassCode}) </a>`;
       },
     },
     {
@@ -44,6 +78,7 @@ var class_table = $("#class_table").DataTable({
     {
       targets: 3,
       data: "number_of_subjects",
+
       render: function (data) {
         if (data > 1) {
           return `${data} subjects`;
@@ -54,7 +89,20 @@ var class_table = $("#class_table").DataTable({
     },
     {
       targets: 4,
+      data: "exams",
+
+      render: function (data) {
+        if (data > 1) {
+          return `${data} exams`;
+        } else {
+          return `${data} exam`;
+        }
+      },
+    },
+    {
+      targets: 5,
       data: "number_of_students",
+
       render: function (data) {
         if (data > 1) {
           return `${data} students`;
@@ -64,12 +112,11 @@ var class_table = $("#class_table").DataTable({
       },
     },
     {
-      targets: 5,
+      targets: 6,
       data: "id",
       orderable: false,
-      render: function (data) {
+      render: (data) => {
         return `
-        <a href=""><i class="fas fa-edit" title="Edit Class"></i></a>
             <a style="color:red" onClick="del(${data})" title="Delete Class"><i class="fas fa-trash"></i></a>
         `;
       },
@@ -77,58 +124,85 @@ var class_table = $("#class_table").DataTable({
   ],
 });
 
-setInterval(function () {
-  class_table.ajax.reload(null, false);
-  stream_request();
+setInterval(() => {
+  classTable.ajax.reload(null, false);
+  streamFunction();
 }, 1000000);
 
-$("#class_form").on("submit", function (e) {
-  e.preventDefault();
+const classForm = $("#class_form");
 
-  var formData = {
-    ClassName: $("#ClassName").val(),
-    ClassNameNumeric: $("#ClassNameNumeric").val(),
-    stream_id: $("#stream_id").val(),
-  };
+classForm.validate({
+  rules: {
+    ClassName: {
+      required: true,
+    },
+    ClassNameNumeric: {
+      required: true,
+    },
+  },
+  errorClass: "alert alert-danger",
 
-  $.ajax({
-    url: "queries/add_class.php",
-    method: "POST",
-    data: formData,
-  }).done(function (response) {
-    var arr = JSON.parse(response);
-    if (arr.success === true) {
-      iziToast.success({
-        title: "Success",
-        position: "topRight", // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
-        message: arr.message,
-        onClosed: function () {
-          class_table.ajax.reload(null, false);
-          $("#class_form").each(function () {
-            this.reset();
-          });
-        },
-      });
+  invalidHandler: function (event, validator) {
+    var errors = validator.numberOfInvalids();
+    if (errors) {
+      var message =
+        errors == 1 ? "You missed 1 field" : `You missed ${errors} fields`;
+      $("div.error span").html(message);
+      $("div.error").show();
     } else {
-      iziToast.error({
-        title: "Error",
-        position: "topRight",
-        message: arr.message,
-      });
+      $("div.error").hide();
     }
-  });
+  },
+
+  submitHandler: function (form) {
+    $.ajax({
+      url: "queries/add_class.php",
+      method: "POST",
+      data: $(form).serialize(),
+    })
+      .done(function (response) {
+        let arr = JSON.parse(response);
+        if (arr.success === true) {
+          iziToast.success({
+            title: "Success",
+            position: "topRight", // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+            message: arr.message,
+            transitionIn: "bounceInLeft",
+            onClosed: () => {
+              classTable.ajax.reload(null, false);
+              classForm.each(() => {
+                this.reset();
+              });
+            },
+          });
+        } else {
+          iziToast.error({
+            title: "Error",
+            position: "topRight",
+            message: arr.message,
+          });
+        }
+      })
+      .fail(() => {
+        iziToast.error({
+          title: "Error",
+          position: "topRight", // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+          message: "POST URI not found. ",
+        });
+      });
+  },
 });
 
-$("#add_class").on("click", function (e) {
+$("#add_class").click((e) => {
   e.preventDefault();
-  $("#class_main_content").toggle();
-  $("#class_add_card").show();
+  mainContent.toggle();
+  classAddContent.show();
 });
 
-$("#cancel_add_class").on("click", function (e) {
+$("#cancel_add_class").click((e) => {
   e.preventDefault();
-  $("#class_main_content").show();
-  $("#class_add_card").toggle();
+  mainContent.show();
+  classAddContent.toggle();
 });
 
 $('[data-toggle="datepicker"]').datepicker({
@@ -136,9 +210,9 @@ $('[data-toggle="datepicker"]').datepicker({
   autoHide: true,
 });
 
-var toast = {
-  question: function () {
-    return new Promise(function (resolve) {
+let toast = {
+  question: () => {
+    return new Promise((resolve) => {
       iziToast.question({
         title: "Question",
         message: "Are you Sure?",
@@ -166,7 +240,7 @@ var toast = {
   },
 };
 
-function del(data) {
+const del = (data) => {
   toast.question().then(function () {
     $.ajax({
       url: "./queries/delete_class.php",
@@ -180,9 +254,11 @@ function del(data) {
         if (s.success === true) {
           iziToast.success({
             type: "Success",
+            position: "topRight",
+            transitionIn: "bounceInLeft",
             message: s.message,
             onClosing: function () {
-              class_table.ajax.reload(null, false);
+              classTable.ajax.reload(null, false);
             },
           });
         } else {
@@ -199,4 +275,5 @@ function del(data) {
         });
       });
   });
-}
+};
+// });
