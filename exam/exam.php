@@ -1,8 +1,8 @@
 <?php 
-session_start();
+include "../layouts/utils/redirect.php";
 
-if(strlen($_SESSION['alogin'])==""){
-  header("Location: /login.php");
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500){
+  redirectToHomePage();
 }else{
 ?>
 
@@ -51,64 +51,82 @@ if(strlen($_SESSION['alogin'])==""){
 
                     <nav aria-label="breadcrumb mb-3">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/index">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">All Exams</li>
                         </ol>
                     </nav>
 
 
-                        <div class="row">
-                            <div class="col-lg-7">
-                                <div class="card mb-4 shadow ">
-                                    <div class="card-header">
-                                        All Examinations
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped" id="exam_table" width="100%"
-                                                cellspacing="0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Created At</th>
-                                                        <th>Created By</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Use this window to manage all the exams in the school.</strong>
+                        <hr>
+                        <p class="mb-0">All Exams are attached with an out of associated attribute .</p>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
-                                            </table>
-                                        </div>
-                                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="card mb-4 shadow ">
+                                <div class="card-header text-primary">
+                                    All Examinations
                                 </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="exam_table" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Publish Date</th>
+                                                    <th>Exam Name</th>
+                                                    <th>Out of</th>
+                                                    <th>Created By</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
 
-                            </div>
-
-                            <div class="col-lg-5">
-                                <div class="card shadow mb-4">
-                                    <div class="card-header">
-                                        Add Examination
-                                    </div>
-                                    <div class="card-body">
-                                        <form id="exam_form" class="user">
-                                            <div class="form-group row">
-                                                <div class="col-sm-12 mb-3 mb-sm-0">
-                                                    <input type="text" id="exam_name" class="form-control"
-                                                        placeholder="Enter Exam Name">
-                                                </div>
-                                            </div>
-
-                                            <div class="btn-group">
-                                                <button class="btn btn-primary" name="submit"
-                                                    type="submit">Save</button>
-                                            </div>
-
-                                        </form>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-
 
                         </div>
+
+                        <div class="col-lg-5">
+                            <div class="card shadow mb-4">
+                                <div class="card-header text-primary">
+                                    <span><i class="fas fa-edit"></i></span> Add Examination
+                                </div>
+                                <div class="card-body">
+                                    <form for="exam_form" class="user">
+                                        <label for="exam_name" class="text-primary">Enter exam Name: </label>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12 mb-3 mb-sm-0">
+                                                <input type="text" id="exam_name" class="form-control"
+                                                    placeholder="Enter exam name">
+                                            </div>
+                                        </div>
+                                        <label for="exam_out_of" class="text-primary">Enter exam Out of: </label>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12 mb-3 mb-sm-0">
+                                                <input type="text" id="exam_out_of" class="form-control"
+                                                    placeholder="Enter exam out of marks">
+                                            </div>
+                                        </div>
+
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary" name="submit" id="submit"
+                                                type="submit">Save</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
 
 
                 </div>
@@ -118,13 +136,7 @@ if(strlen($_SESSION['alogin'])==""){
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2019</span>
-                    </div>
-                </div>
-            </footer>
+            <?php include "../layouts/footer.php";?>
             <!-- End of Footer -->
 
         </div>
@@ -132,35 +144,11 @@ if(strlen($_SESSION['alogin'])==""){
 
     </div>
     <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="../login.php">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <?php require_once('../layouts/utils/logout_modal.html')?>
 
     <script src="/dist/js/main.min.js"></script>
     <script src="/dist/js/exams/exam.js"></script>
-
+    <script src="/dist/js/utils/utils.js"></script>
 </body>
 
 </html>

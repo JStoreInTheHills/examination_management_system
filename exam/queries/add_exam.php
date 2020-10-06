@@ -1,11 +1,18 @@
 <?php
+
+    session_start();
+
     include "../../config/config.php";
 
     $exam_name = $_POST['exam_name'];
-    $created_by = "Administrator";
+    $created_by = $_SESSION['uuid'];
+    $add_exam = $_POST['exam_out_of'];
 
     if (empty($exam_name))
         $errors['ClassName'] = 'Name is required.';
+
+    if(empty($add_exam))
+        $errors['add_exam'] = "Exam out of is required";
 
     // if there are any errors in our errors array, return a success boolean of false
     if (!empty($errors)) {
@@ -15,10 +22,13 @@
         $data['errors'] = $errors;
     }else {
 
-        $sql = "INSERT INTO exam(exam_name, created_at, created_by) VALUES (:exam,CURRENT_TIMESTAMP,:created_by)";
+        $sql = "INSERT INTO exam(exam_name, created_at, creator_id, exam_out_of) 
+                VALUES (:exam,CURRENT_TIMESTAMP,:created_by,:exam_out_of)";
+
         $query = $dbh->prepare($sql);
 
         $query->bindParam(':exam', $exam_name, PDO::PARAM_STR);
+        $query->bindParam(':exam_out_of', $add_exam, PDO::PARAM_STR);
         $query->bindParam(':created_by', $created_by, PDO::PARAM_STR);
 
         $query->execute();
