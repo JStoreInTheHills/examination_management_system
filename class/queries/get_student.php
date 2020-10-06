@@ -1,6 +1,6 @@
-<?php
-include('../../config/config.php');
+<?php include('../../config/config.php');
 
+$errors = array();
 
 if (!empty($_GET["classid"])) {
 
@@ -8,19 +8,26 @@ if (!empty($_GET["classid"])) {
 
     if (!is_numeric($cid)) {
 
-        echo htmlentities("Class cannot be an non numeric value");
+        $errors['message'] = "Class cannot be an non numeric value";
+        echo json_encode($errors);
         exit;
 
     } else {
-        $stmt = $dbh->prepare("SELECT StudentName,StudentId,RollId FROM tblstudents WHERE ClassId= :id order by StudentName");
+        
+        $sql = "SELECT FirstName,OtherNames,LastName,StudentId,RollId 
+                FROM tblstudents WHERE ClassId=:id 
+                ORDER BY FirstName, OtherNames";
+
+        $stmt = $dbh->prepare($sql);
         $stmt->execute(array(':id' => $cid));
         ?>
-        <option value="">Select Student </option>
+        <option value="">Select a Student </option>
+
         <?php
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            ?>
+          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        ?>
             <option value="<?php echo htmlentities($row['StudentId']); ?>">
-                <?php echo htmlentities($row['StudentName']) .' ~  Roll Id: ' . $row['RollId'] ;  ?>
+        <?php   echo htmlentities($row['FirstName']) . ' '. $row['OtherNames']  . ' '. $row['LastName'] .' ~  Roll Id: (' . $row['RollId'] . ')' ;?>
             </option>
         <?php   }
     }
@@ -36,17 +43,21 @@ if (!empty($_GET["classid1"])) {
     } else {
         $status = 0;
 
-        $stmt = $dbh->prepare("SELECT t.SubjectName, t.subject_id FROM tblsubjectcombination c 
-                               JOIN tblsubjects t on c.SubjectId = t.subject_id 
-                                        WHERE c.ClassId =:cid AND c.status !=:stts ORDER BY t.SubjectName");
+        $sql = "SELECT t.SubjectName, t.SubjectCode, t.subject_id 
+                FROM tblsubjectcombination c 
+                JOIN tblsubjects t on c.SubjectId = t.subject_id 
+                WHERE c.ClassId =:cid AND c.status !=:stts 
+                ORDER BY t.subject_id";
+
+        $stmt = $dbh->prepare($sql);
         $stmt->execute(array(':cid' => $cid1, ':stts' => $status));
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { ?>
 
-            <label class="text-primary"> <?php echo htmlentities($row['SubjectName']); ?> </label>
+            <label class="h5 text-primary"> <?php echo htmlentities($row['SubjectName'] . ' ('  . $row['SubjectCode'] . ')'  ); ?> </label>
 
-                <input type="text" name="marks[]" class="form-control marks"  placeholder="Enter Marks Out Of 100" autocomplete="off">
-
+                <input type="text" name="marks[]" class="form-control marks"  
+                 autocomplete="off">
             <hr>
         <?php  }
     }
@@ -59,7 +70,8 @@ if (!empty($_GET["class_exam_id"]) && !empty($_GET['clid']) && !empty($_GET['val
     $val = $_GET['val'];
 
     $sql = "SELECT students_id, class_id FROM result 
-            WHERE students_id=:id1 and class_id=:id and class_exam_id =:cid";
+            WHERE students_id=:id1 AND class_id=:id 
+            AND class_exam_id =:cid";
     
     $query = $dbh->prepare($sql);
 
@@ -75,11 +87,7 @@ if (!empty($_GET["class_exam_id"]) && !empty($_GET['clid']) && !empty($_GET['val
     if ($query->rowCount() > 0) { ?>
         <p>
             <?php
-            echo "
-                
-        <span style='color:red'> Result Already Declare for this Student.</span>
-        
-        ";
+            echo "<span class='badge badge-pill badge-danger'> Result Already Declare for this Student.</span>";
             echo "<script>$('#submit').prop('disabled',true);</script>";
             ?>
         </p>

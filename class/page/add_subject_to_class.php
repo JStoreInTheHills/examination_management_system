@@ -135,7 +135,7 @@ if(strlen($_SESSION['alogin'])==""){
     <script src="/dist/js/main.min.js"></script>
 
     <script>
-        let subject_id = $('#teacher_id');
+        
 
         function getSubjectTeacher(val) {
             $.ajax({

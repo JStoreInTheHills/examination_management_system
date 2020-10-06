@@ -3,8 +3,12 @@
 $cid = $_GET['cid'];
 $class_exam_id = $_GET['class_exam_id'];
 
-$sql = "SELECT id, exam_name FROM class_exams JOIN exam ON class_exams.exam_id = exam.exam_id 
-        WHERE class_exams.class_id =:class_id AND class_exams.id =:class_exam_id";
+$sql = "SELECT ce.id AS class_exam_id, ce.created_at, status, exam_name, ClassName, exam_out_of
+        FROM class_exams ce 
+        JOIN exam e ON e.exam_id = ce.exam_id 
+        JOIN tblclasses c on c.id = ce.class_id 
+        WHERE ce.class_id =:class_id 
+        AND ce.id =:class_exam_id";
 
 $query = $dbh -> prepare($sql);
 $query->bindParam(':class_id', $cid, PDO::PARAM_STR);

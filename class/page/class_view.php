@@ -1,10 +1,10 @@
-<?php include '../../config/config.php';
+<?php 
 
-session_start();
+include '../../config/config.php';
+include "../../layouts/utils/redirect.php";
 
-if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 900){
-    header("Location: /login.php");
-    exit;
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500){
+    redirectToHomePage();
 }else{
       $_SESSION['last_login_timestamp'] = time();
   ?>
@@ -47,61 +47,73 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                 <div class="container-fluid">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800" id="heading">Manage ~ </h1>
-                        <div class="dropdown no-arrow">
+                        <h1 class="h3 mb-0 text-gray-800" id="heading"></h1>
+
+                        <div class="dropdown">
+
                             <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm dropdown-toggle"
                                 type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
-                                <span> <i class="fas fa-plus"></i> </span> Quick Add
+                                <span><i class="fas fa-plus"> </i> Quick Add </span>
                             </button>
+
+                            <button class="d-none d-sm-inline-block btn btn-sm btn-outline-primary" type="button"
+                                data-toggle="modal" data-target="#edit_this_class">
+                                <span>Edit this Stream </span>
+                            </button>
+
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <div class="dropdown-header">Tools:</div>
                                 <div class="dropdown-divider"></div>
 
                                 <a href="#" data-toggle="modal" data-target="#add_class_exam" class="dropdown-item">
-                                    <span><i class="fas fa-users"></i> </span> Add Class Exam</a>
+                                    Add Class Exam</a>
 
-                                <a href="./add_subject_to_class.php" target="_blank" class="dropdown-item">
-                                    <span><i class="fas fa-certificate"></i> </span> Add Subject To Class</a>
+                                <a href="#" data-toggle="modal" data-target="#add_subject_to_stream"
+                                    class="dropdown-item">
+                                    Add Subject To Stream</a>
 
-                                <a href="/students/student.php" target="_blank" class="dropdown-item">
-                                    <span><i class="fas fa-users"></i> </span> Add Students To Class</a>
+                                <a href="/students/student" target="_blank" class="dropdown-item">
+                                    Add Students To Stream</a>
                             </div>
+
                         </div>
+
                     </div>
 
-                    <div class="row">
-                        <!-- Result Declared
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Result
-                                                Declared(Students)
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"
-                                                id="result_declared_count">
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-map fa-2x text-primary"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                        <h5 class="h5 mb-0 " id="class_teacher"><span><i class="text-gray-800"> Class Name :
+                                    <a id="stream2_name" href=""></a> </i></span> </h1>
 
+                            <h5 class="h5 mb-0 " id="creation_date"> Date Exam Was Created : <span><i
+                                        class="text-gray-800" id="creationdate"></i></span> </h1>
+                    </div>
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h5 class="h5 mb-0" id="class_teacher">Class Teachers Name : <span><i><a
+                                        id="classTeacher"></a></i></span> </h1>
+
+                    </div>
+
+                    <nav aria-label="breadcrumb mb-3">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/class/class">Streams</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><a id="bread_list"></a></li>
+                        </ol>
+                    </nav>
+
+                    <div class="row">
                         <!-- Total Students -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Students
+                                            <div class="text-xs text-primary font-weight-bold text-uppercase mb-1">Total
+                                                Students
                                             </div>
-                                            <a class="h5 mb-0 font-weight-bold text-gray-800" href="#view_class_student"
+                                            <a class="h4 mb-0 font-weight-bold text-gray-800" href="#view_class_student"
                                                 id="total_students_in_class"></a>
                                         </div>
                                         <div class="col-auto">
@@ -118,9 +130,10 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Exams
+                                            <div class="text-xs text-primary font-weight-bold text-uppercase mb-1">Total
+                                                Exams
                                             </div>
-                                            <a class="h5 mb-0 font-weight-bold text-gray-800"
+                                            <a class="h4 mb-0 font-weight-bold text-gray-800"
                                                 id="total_exams_in_class"></a>
                                         </div>
                                         <div class="col-auto">
@@ -137,9 +150,10 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Subjects
+                                            <div class="text-xs text-primary font-weight-bold text-uppercase mb-1">Total
+                                                Subjects
                                             </div>
-                                            <a class="h5 mb-0 font-weight-bold text-gray-800"
+                                            <a class="h4 mb-0 font-weight-bold text-gray-800"
                                                 id="total_subjects_in_class"></a>
                                         </div>
                                         <div class="col-auto">
@@ -154,13 +168,13 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                     <nav class="mb-4">
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-                                role="tab" aria-controls="nav-home" aria-selected="true"> <span><i
+                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#exams"
+                                role="tab" aria-controls="exams" aria-selected="true"> <span><i
                                         class="fas fa-chalkboard "></i></span> Exams </a>
-                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
-                                role="tab" aria-controls="nav-profile" aria-selected="false"> <span><i
+                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#students"
+                                role="tab" aria-controls="students" aria-selected="false"> <span><i
                                         class="fas fa-users"></i></span> All Students</a>
-                            <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact"
+                            <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#subjects"
                                 role="tab" aria-controls="nav-contact" aria-selected="false"> <span><i
                                         class="fas fa-address-book"></i></span> All Subjects and Teachers </a>
                         </div>
@@ -168,36 +182,44 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                     <!-- Content Row -->
                     <div class="row">
-                        <div class="col-lg-8">
+                        <div class="col-lg-12">
                             <div class="tab-content" id="nav-tabContent">
-                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                                <div class="tab-pane fade show active" id="exams" role="tabpanel"
                                     aria-labelledby="nav-home-tab">
+
+                                    <div class="card shadow mb-2">
+                                        <div class="card-header py-3">
+                                            <h6 class="m-0 font-weight-bold text-primary">Class Exam Charts</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <canvas id="exams_charts" height="60"></canvas>
+                                        </div>
+                                    </div>
                                     <div class="card shadow mb-2">
                                         <div class="card-header py-3">
                                             <h6 class="m-0 font-weight-bold text-primary">All Class Exams</h6>
                                         </div>
                                         <div class="card-body">
                                             <div class="table-responsive">
-                                                <table class="table table-striped" id="view_class" width="100%"
+                                                <table class="table table-striped" id="view_class_exams" width="100%"
                                                     cellspacing="0">
                                                     <thead>
                                                         <tr>
-                                                            <th>Exam Name</th>
-                                                            <th>Exam Period</th>
                                                             <th>Published At</th>
-                                                            <th class="text-center sorting_disabled"
-                                                                aria-label="Actions">
-                                                                Actions
-                                                            </th>
+                                                            <th>Exam Name</th>
+                                                            <th>Term Name</th>
+                                                            <th>Exam Period</th>
+                                                            <th>Status</th>
+                                                            <th>Actions</th>
                                                         </tr>
                                                     </thead>
-
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
-                                <div class="tab-pane fade" id="nav-profile" role="tabpanel"
+                                <div class="tab-pane fade" id="students" role="tabpanel"
                                     aria-labelledby="nav-profile-tab">
                                     <div class="card mb-4 shadow">
                                         <div class="card-header text-primary">
@@ -211,12 +233,11 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                                     <thead>
                                                         <tr>
                                                             <th>Student Name</th>
-                                                            <th>RollId</th>
+                                                            <th>Adm No</th>
                                                             <th>Reg Date</th>
                                                             <th>Gender</th>
                                                             <th>Status</th>
-                                                            <th class="text-center sorting_disabled" rowspan="1"
-                                                                colspan="1" aria-label="Actions">Actions</th>
+                                                            <th>Actions</th>
                                                         </tr>
                                                     </thead>
 
@@ -226,7 +247,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                     </div>
 
                                 </div>
-                                <div class="tab-pane fade" id="nav-contact" role="tabpanel"
+                                <div class="tab-pane fade" id="subjects" role="tabpanel"
                                     aria-labelledby="nav-contact-tab">
                                     <div class="card border-left-primary shadow h-100 py-2">
                                         <div class="card-body">
@@ -239,7 +260,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                                             <th>Subject Code</th>
                                                             <th>Subject Teacher</th>
                                                             <th>Status</th>
-                                                            <th class="text-center" aria-label="Actions">Actions</th>
+                                                            <th>Actions</th>
                                                         </tr>
                                                     </thead>
 
@@ -247,20 +268,6 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                             </div>
                                         </div>
 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="card shadow mb-2">
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Female : Male ~ Students ratio</h6>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="chart-pie pt-2">
-                                        <canvas id="myPieChart" width="200" height="200"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -282,13 +289,14 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
     <!-- End of Page Wrapper -->
 
     <?php include '../../layouts/utils/logout_modal.html'; ?>
+
     <!-- Exam Modal-->
     <div class="modal fade" id="add_class_exam" data-backdrop="static" tabindex="-1" role="dialog"
         aria-labelledby="exam_modal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-gray-800" id="exam_modal">
+                    <h5 class="modal-title text-primary" id="exam_modal">
                         <span><i class="fas fa-users"></i></span> Add Exam To Class</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -298,10 +306,28 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                 <div class="modal-body">
 
                     <form id="view_class_form" class="user">
+
                         <div class="form-group row">
                             <div class="col-sm-12 mb-3 mb-sm-0">
-                                <label for="exam_id">Choose an Exam:</label>
+                                <label class="text-primary" for="year_id">Choose academic year:</label>
+                                <select name="year_id" id="year_id" class="form-control" onClick="getAcademicTerms(value)">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-12 mb-3 mb-sm-0">
+                                <label class="text-primary" for="term_id">Add Appropriate Term:</label>
+                                <select name="term_id" id="term_id" class="form-control ">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-12 mb-3 mb-sm-0">
+                                <label class="text-primary" for="exam_id">Choose an Exam:</label>
                                 <select name="exam_id" id="exam_id" class="form-control ">
+                                    <option readonly value="">Select An Exam</option>
                                     <?php
                                                     $sql = "SELECT exam_id, exam_name from exam";
                                                     $query = $dbh->prepare($sql);
@@ -317,38 +343,158 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                             </div>
                         </div>
 
-                        <div class="form-group row">
-                            <div class="col-sm-12 mb-3 mb-sm-0">
-                                <label for="exam_id">Choose The Appropriate Exam Year:</label>
-                                <select name="year_id" id="year_id" class="form-control ">
-                                    <?php
-                                                    $sql = "SELECT year_id, year_name from year";
-                                                    $query = $dbh->prepare($sql);
-                                                    $query->execute();
-                                                    $results = $query->fetchAll(PDO::FETCH_OBJ);
-                                                    if ($query->rowCount() > 0) {
-                                                        foreach ($results as $result) {   ?>
-                                    <option value="<?php echo htmlentities($result->year_id); ?>">
-                                        <?php echo htmlentities($result->year_name); ?>
-                                    </option>
-                                    <?php }
-                                                    } ?>
-                                </select>
-                            </div>
-                        </div>
+
+
+                       
                     </form>
                 </div>
 
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary" type="submit" id="view_class_submit">Save</button>
+                <div class="modal-footer btn-group">
+                    <button class="btn btn-dark" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" type="submit" id="view_class_submit">
+                        Save
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Add Subject Modal-->
+    <div class="modal fade" id="add_subject_to_stream" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="add_subject_to_stream" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-primary" id="add_subject_to_stream">
+                        <span id="class_to_add_subject"></span></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form id="add_teacher_form" action="" method="post">
+                        <div class="form-group">
+                            <label class="text-primary" for="subject_id">Choose Subject to add Class:</label>
+                            <select name="subject_id" id="subject_id" class="form-control"
+                                onClick="getSubjectTeacher(this.value);">
+                                <?php 
+                                            $sql = "SELECT subject_id, SubjectName FROM tblsubjects";
+                                            $query = $dbh->prepare($sql);
+                                            $query->execute();
+                                            $results = $query->fetchAll(PDO::FETCH_OBJ);
+
+                                            foreach($results as $result){
+                                                ?>
+                                <option class="form-control form-control-user"
+                                    value="<?php echo htmlentities($result->subject_id); ?>">
+                                    <?php echo htmlentities($result->SubjectName); ?>
+                                </option>
+                                <?php }
+                                           
+                                           ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="text-primary" for="subject_id">Assign Subject Teacher: </label>
+                            <select name="teacher_id" id="teacher_id" class="form-control"></select>
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="modal-footer btn-group">
+                    <button class="btn btn-dark" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="subject_add">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="edit_this_class" tabindex="-1" role="dialog" data-backdrop="static"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-primary" id="exampleModalLongTitle">Edit this Stream</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" id="edit_this_class_form" method="post">
+                        <div class="form-group">
+                            <label for="class_name" class="text-primary">Stream Name: </label>
+                            <input type="text" class="form-control" id="edit_class_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="class_name" class="text-primary">Stream Name Numerics: <i><span
+                                        class="text-danger">(Class Code cannot be changed)</span></i> </label>
+                            <input type="text" disabled class="form-control" id="edit_class_name_numeric">
+                        </div>
+                        <div class="form-group">
+                            <label class="text-primary" for="edit_stream_id">Choose a Stream:</label>
+                            <select name="edit_stream_id" id="edit_stream_id" class="form-control">
+                                <option class="form-control form-control-user" value="">Select a stream</option>
+                                <?php
+                                $sql = "SELECT stream_id, name FROM stream";
+                                $query = $dbh->prepare($sql);
+                                $query->execute();
+                                $results = $query->fetchAll(PDO::FETCH_OBJ);
+
+                                foreach($results as $result){
+                                    ?>
+                                <option class="form-control form-control-user"
+                                    value="<?php echo htmlentities($result->stream_id); ?>">
+                                    <?php echo htmlentities($result->name); ?>
+                                </option>
+                                <?php }
+
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="date" class="text-primary">Date of publishing</label>
+                            <input type="date" data-toggle="datepicker" name="dob" id="edit_date" class="form-control"
+                                autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label class="text-primary" for="edit_teacher">Choose a class teacher:</label>
+                            <select name="edit_teacher" id="edit_teacher" class="form-control">
+                                <?php
+                                $sql = "SELECT teacher_id, name FROM tblteachers ORDER BY name ASC";
+                                $query = $dbh->prepare($sql);
+                                $query->execute();
+                                $results = $query->fetchAll(PDO::FETCH_OBJ);
+
+                                foreach($results as $result){
+                                    ?>
+                                <option class="form-control form-control-user"
+                                    value="<?php echo htmlentities($result->teacher_id); ?>">
+                                    <?php echo htmlentities($result->name); ?>
+                                </option>
+                                <?php }
+
+                                ?>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="edit_class_form_submit">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="/dist/js/main.min.js"></script>
     <script src="/dist/js/classes/view_class.js"></script>
+    <script src="/dist/js/utils/utils.js"></script>
 </body>
 
 

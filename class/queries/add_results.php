@@ -54,15 +54,15 @@
             $query->bindParam(':marks', $mar);
             $query->execute();
 
+            $er = $query->errorInfo();
+
              $lastInsertId = $dbh->lastInsertId();
 
             if($lastInsertId) {
                 $data['success'] = true;
                 $data['message'] = 'Result Added Successfully';
             }else{
-
-                $er = $query->errorInfo();
-
+              
                 $data['success'] = false;
                 $data['message'] = ($er[2]);
             }
