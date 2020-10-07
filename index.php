@@ -1,9 +1,12 @@
 <?php
 
-include "./layouts/utils/redirect.php";
+session_start();
+
+// include "./layouts/utils/redirect.php";
 
 if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500){
-  redirectToHomePage();
+  header("Location: /login");
+  exit;
 }else{
       $_SESSION['last_login_timestamp'] = time();
   ?>
