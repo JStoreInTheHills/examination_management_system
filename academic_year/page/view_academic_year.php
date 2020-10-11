@@ -118,6 +118,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                                             <th>Date Added</th>
                                                             <th>Term Name</th>
                                                             <th>Created By</th>
+                                                            <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>

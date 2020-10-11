@@ -1,6 +1,8 @@
 // $(document).ready(() => {
 // Official js page for the year file.
 
+// const { default: iziToast } = require("izitoast");
+
 // variable holding the year input form field.
 const year_form = $("#year_form");
 
@@ -52,11 +54,33 @@ const year_table = $("#year_table").DataTable({
     },
     {
       targets: 2,
-      orderable: false,
-      data: "year_id",
+      data: {
+        status: "status",
+      },
       render: function (data) {
-        var string = `<a style = "color:red"  onClick="deleteAcademicYear(${data})"><i class="fas fa-trash"></i></a>`;
-        return string;
+        if (data.status == "1") {
+          return `<span class="badge badge-pill badge-success">Active</span>`;
+        } else {
+          return `<span class="badge badge-pill badge-danger">Closed</span>`;
+        }
+      },
+    },
+    {
+      targets: 3,
+      orderable: false,
+      data: {
+        year_id: "year_id",
+        status: "status",
+      },
+      render: function (data) {
+        return ` 
+                <a class="text-primary" onClick="makeYearInactive(${data.year_id}, ${data.status})">
+                  <i class="fas fa-edit"></i>
+                </a>
+
+                <a style = "color:red" onClick="deleteAcademicYear(${data.year_id})">
+                    <i class="fas fa-trash"></i>
+                </a>`;
       },
     },
   ],
@@ -104,6 +128,88 @@ const toast = {
       });
     });
   },
+  warning: function () {
+    return new Promise(function (resolve) {
+      iziToast.error({
+        title: "WARNING",
+        icon: "fa fa-exclamation-triangle",
+        message: "Are you Sure you want to change the status of this year?",
+        timeout: 20000,
+        close: false,
+        transitionIn: "bounceInLeft",
+        position: "center",
+        buttons: [
+          [
+            "<button><b>YES</b></button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide(
+                {
+                  transitionOut: "fadeOut",
+                },
+                toast,
+                "button"
+              );
+              resolve();
+            },
+            false,
+          ],
+          [
+            "<button>NO</button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide(
+                {
+                  transitionOut: "fadeOut",
+                },
+                toast,
+                "button"
+              );
+            },
+          ],
+        ],
+      });
+    });
+  },
+};
+
+const makeYearInactive = (year_id, status) => {
+  let s;
+
+  if (status == 1) {
+    s = 0;
+  } else {
+    s = 1;
+  }
+
+  toast.warning().then(function () {
+    $.ajax({
+      url: "./queries/makeYearInactive.php",
+      type: "POST",
+      data: {
+        year_id: year_id,
+        status: s,
+      },
+    }).done((response) => {
+      const l = JSON.parse(response);
+
+      if (l.success == true) {
+        iziToast.success({
+          type: "success",
+          message: l.message,
+          onClosing: () => {
+            year_table.ajax.reload(null, false);
+          },
+        });
+      } else {
+        iziToast.danger({
+          type: "danger",
+          message: l.message,
+          onClosing: () => {
+            year_table.ajax.reload(null, false);
+          },
+        });
+      }
+    });
+  });
 };
 
 const deleteAcademicYear = (data) => {
