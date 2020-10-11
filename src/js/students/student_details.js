@@ -6,7 +6,10 @@ $(document).ready(() => {
 
   const queryString = window.location.search; // points to the url and store the value in a constiable
   const urlParams = new URLSearchParams(queryString); // the url is passed as an argurment to the search
-  const students_id = urlParams.get("sid");
+  // const stdid = urlParams.get("sid");
+
+  const stdid = sessionStorage.getItem("students_id");
+  const class_id = sessionStorage.getItem("class_id");
 
   // Edit student button
   const edit_students = $("#edit_students");
@@ -14,7 +17,7 @@ $(document).ready(() => {
 
   const populate_exam = () => {
     const formData = {
-      sid: students_id,
+      sid: stdid,
     };
 
     $("#overrall_exam_table").DataTable({
@@ -28,9 +31,15 @@ $(document).ready(() => {
       columnDefs: [
         {
           targets: 0,
-          data: "exam_name",
+          data: {
+            exam_name: "exam_name",
+            id: "id",
+          },
           render: function (data) {
-            return `<a href="">${data}</a>`;
+            return `
+            <a target="_blank" href="/reports/students/report_card?sid=${stdid}&cid=${class_id}&ceid=${data.id}">
+              ${data.exam_name}
+            </a>`;
           },
         },
         {
@@ -63,7 +72,7 @@ $(document).ready(() => {
   function get_details() {
     var stat;
     var formData = {
-      sid: students_id,
+      sid: stdid,
     };
     $.ajax({
       url: "../queries/get_students_details.php",
@@ -137,12 +146,13 @@ $(document).ready(() => {
       );
     });
   }
+
   get_details();
 
   const populateChart = () => {
     var ctx = document.getElementById("myAreaChart");
     const formData = {
-      sid: students_id,
+      sid: stdid,
     };
     $.ajax({
       url: "../queries/populate_students_area_chart.php",

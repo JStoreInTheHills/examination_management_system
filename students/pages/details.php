@@ -34,7 +34,11 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-        <?php include "./../../layouts/sidebar.php"; ?>
+        <?php  
+            if(isset($_SESSION['role_id'])){
+                include "../layouts/sidebar.php"; 
+            }
+         ?>
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -48,20 +52,40 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800" id="heading"> </h1>
 
-                        <button class="btn btn-primary btn-md" id="edit_students">
-                        </button>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-primary btn-md" id="edit_students">
+                            </button>
+
+                            <?php
+                                if(isset($_SESSION['role_id'])){
+                                    echo  "<button class='btn btn-primary btn-md id='makeStudentInactive'>
+                                                Make Student Inactive
+                                          </button>";
+                                }
+                                
+                            ?>
+                        </div>
+                        
                     </div>
 
-                    <span id="alert"></span>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Use this page to view name, admission number and class of the students.</strong>
+                        <hr>
+                            <p class="mb-0">Active students are denoted by <span class="badge badge-pill badge-success">Active</span> while In Active students are denoted by <span class="badge badge-pill badge-danger">Inactive</span> </p>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
                     <nav class="mb-4">
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
                                 role="tab" aria-controls="nav-home" aria-selected="true"> <span><i class="fas fa-user-graduate"></i></span> Students Performance</a>
-                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                            <!-- <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
                                 role="tab" aria-controls="nav-profile" aria-selected="false"> <span><i class="fas fa-chalkboard"></i></span>  Exams</a>
                             <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact"
                                 role="tab" aria-controls="nav-contact" aria-selected="false"> <span><i class="fas fa-address-book"></i></span>  Contact</a>
+                            -->
                         </div>
                     </nav>
 

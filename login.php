@@ -18,7 +18,7 @@ if(isset($_SESSION['alogin'])){
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Munawwarah || Login</title>
+  <title>Teacher || Munawwarah</title>
 
   <!-- Custom fonts for this template-->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -33,7 +33,7 @@ if(isset($_SESSION['alogin'])){
 
 <body>
 
-  <div class="container">
+  <div class="container ">
 
     <!-- Outer Row -->
     <div class="row justify-content-center">
@@ -55,19 +55,27 @@ if(isset($_SESSION['alogin'])){
                     <h1 class="h4 text-gray-900 mb-4">Al Madrasatul Munawarah Al Islamiyyah</h1>
                     
 
-                    <h1 class="h4 text-primary mb-4">Please Sign In</h1>
+                    <h1 class="h4 text-primary mb-4">Teachers Portal.</h1>
+                    
+                    
                   </div>
 
                   <span id="toast"></span>
                   
                   <form class="user mb-1" id="login_form">
+
                     <div class="form-group">
-                      <label class="text-gray-900" id="email_label" for="">Email Address:</label>
+                      <label class="text-gray-900" id="email_label" for="">
+                        Email Address:
+                      </label>
                       <input type="email" required class="form-control form-control-user" id="exampleInputEmail"
                         aria-describedby="emailHelp" placeholder="Enter your Email Address...">
                     </div>
+
                     <div class="form-group">
-                      <label class="text-gray-900" id="pass_label" for="exampleInputPassword">Password:</label>
+                      <label class="text-gray-900" id="pass_label" for="exampleInputPassword">
+                        Password:
+                      </label>
                       <input type="password" required class="form-control form-control-user" id="exampleInputPassword"
                         placeholder="Enter you password...">
                     </div>
@@ -76,10 +84,14 @@ if(isset($_SESSION['alogin'])){
                     </button>
                   </form>
 
-                  <div class="text-center">
-                    <a class="small" href="forgot-password"">Forgot your password?</a>
-                  </div>
+                <hr>
 
+                <div class="text-center">
+                    <a href="./students/login">
+                          <i class="fas fa-user-graduate"></i> Login As Student
+                    </a>
+                </div>
+                
                 </div>
               </div>
             </div>
@@ -91,6 +103,8 @@ if(isset($_SESSION['alogin'])){
     </div>
 
   </div>
+
+  <?php include './layouts/footer.php'; ?>
 
   <script src="/dist/js/main.min.js"></script>
 
