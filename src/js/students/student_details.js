@@ -6,9 +6,15 @@ $(document).ready(() => {
 
   const queryString = window.location.search; // points to the url and store the value in a constiable
   const urlParams = new URLSearchParams(queryString); // the url is passed as an argurment to the search
-  // const stdid = urlParams.get("sid");
 
-  const stdid = sessionStorage.getItem("students_id");
+  const _token = sessionStorage.getItem("_token");
+
+  if (_token == "Administrator") {
+    var stdid = urlParams.get("sid");
+  } else {
+    var stdid = sessionStorage.getItem("students_id");
+  }
+
   const class_id = sessionStorage.getItem("class_id");
 
   // Edit student button
@@ -98,25 +104,19 @@ $(document).ready(() => {
       });
 
       $("#title").append(
-        `${pupil.FirstName.concat(
-          " " + pupil.OtherNames + " " + pupil.LastName
-        )} || Details`
+        `${pupil.FirstName} ${pupil.OtherNames} ${pupil.LastName}`
       );
 
       $("#heading").append(
-        `${pupil.FirstName.concat(
-          " " + pupil.OtherNames + " " + pupil.LastName
-        )}`
+        `${pupil.FirstName} ${pupil.OtherNames} ${pupil.LastName}`
       );
       $("#nav").append(
-        `${pupil.FirstName.concat(
-          " " + pupil.OtherNames + " " + pupil.LastName
-        )}`
+        `${pupil.FirstName} ${pupil.OtherNames} ${pupil.LastName}`
       );
+
       $("#students_name").append(
-        `<span class="text-gray-900"> ${pupil.FirstName.concat(
-          " " + pupil.OtherNames + " " + pupil.LastName
-        )}</span>`
+        `<span class="text-gray-900"> ${pupil.FirstName} ${pupil.OtherNames} ${pupil.LastName}
+        </span>`
       );
 
       $("#Gender").append(
