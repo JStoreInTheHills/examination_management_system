@@ -1,4 +1,7 @@
 // $(document).ready(() => {
+
+// const { default: iziToast } = require("izitoast");
+
 // Declaration of a string holding the URI location values.
 const class_subject_teacher_query = window.location.search;
 
@@ -166,11 +169,21 @@ const getYear = () => {
     type: "GET",
   }).done((resp) => {
     const arr = JSON.parse(resp);
-    arr.forEach((item) => {
-      year_id.append(
-        `<option value="${item.year_id}">${item.year_name}</option>`
-      );
-    });
+    if (arr.length == 0) {
+      iziToast.error({
+        type: "Warning",
+        title: "Warning",
+        icon: "fas fa-exclamation",
+        // position: "center",
+        message: "No year has been declared yet. Kindly contact Administrator.",
+      });
+    } else {
+      arr.forEach((item) => {
+        year_id.append(
+          `<option value="${item.year_id}">${item.year_name}</option>`
+        );
+      });
+    }
   });
 };
 
