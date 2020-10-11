@@ -113,8 +113,7 @@ if(isset($_SESSION['alogin'])){
   <script src="/dist/js/main.min.js"></script>
 
   <script>
-    sessionStorage.removeItem('students_id');
-    sessionStorage.removeItem('class_id');
+    sessionStorage.clear();
 
     $('#login_form').validate({
 

@@ -110,8 +110,7 @@ if(isset($_SESSION['alogin'])){
 
   <script>
 
-    sessionStorage.removeItem('teachers_token');
-    sessionStorage.removeItem('_token');
+    sessionStorage.clear();
     
     $('#login_form').submit((e) => {
 
