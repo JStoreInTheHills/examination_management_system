@@ -389,7 +389,7 @@ try{
             $pdf->Cell($width_cell[4] ,7, $subject_result[$i]['total_subject_marks'], $border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
     }
 
-    $averages = ($total_marks__ / $total_students_sat__);
+    $averages = round(($total_marks__ / $total_students_sat__),1);
 
     $pdf->Cell($width_cell[4], 7, $total_marks__, $border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
     $pdf->Cell($width_cell[4], 7, "$averages", $border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
