@@ -315,6 +315,9 @@ try{
 
     }
 
+    $x = $pdf->getX();
+
+    $pdf->Cell($x-100);
     $pdf->Cell($width_cell[4], 7, 'Total',$border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
     $pdf->Cell($width_cell[4], 7, 'Average',$border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
     $pdf->Cell($width_cell[4], 7, 'Out Of',$border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
@@ -354,6 +357,8 @@ try{
             for($i=0; $i < count($integerIDs); $i++){
                     $pdf->Cell($width_cell[4], 7, $integerIDs[$i] ,$border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
             }
+
+        $pdf->Cell($x-100);
        
         $pdf->Cell($width_cell[4], 7, $row['m'], $border=1,$ln=0,'C',$fill=$fill, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
         $pdf->Cell($width_cell[4], 7, $average , $border=1,$ln=0,'C',$fill=$fill, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
@@ -389,7 +394,9 @@ try{
             $pdf->Cell($width_cell[4] ,7, $subject_result[$i]['total_subject_marks'], $border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
     }
 
-    $averages = round(($total_marks__ / $total_students_sat__),1);
+    $averages = round(($total_marks__ / $total_students_sat__),2);
+
+    $pdf->Cell($x-100);
 
     $pdf->Cell($width_cell[4], 7, $total_marks__, $border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
     $pdf->Cell($width_cell[4], 7, "$averages", $border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
@@ -430,7 +437,8 @@ try{
        }
 
     $classMean = round($total_marks__ / $all_students, 1);
-
+    
+    $pdf->Cell($x-100);
     $pdf->Cell($width_cell[4], 7, $classMean ,$border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');  
 
     
