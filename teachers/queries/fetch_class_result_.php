@@ -6,7 +6,7 @@
     $subject_id = $_GET['subject_id'];
     $status = 1;
 
-    $query = "SELECT class_exams.id as exam_id, exam_name, result.subject_id, tblstudents.RollId,result.result_id, students_id, tblstudents.FirstName, tblstudents.OtherNames, tblstudents.LastName, marks 
+    $query = "SELECT result.created_at, class_exams.id as exam_id, exam_name, result.subject_id, tblstudents.RollId,result.result_id, students_id, tblstudents.FirstName, tblstudents.OtherNames, tblstudents.LastName, marks 
               FROM `result` 
               JOIN class_exams ON result.class_exam_id = class_exams.id 
               JOIN tblstudents ON tblstudents.StudentId = students_id

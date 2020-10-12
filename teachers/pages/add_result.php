@@ -78,10 +78,9 @@
                     <div class="row">
 
                         <div class="col-lg-12 mb-1">
-                            <div id="add_result" class="card mb-2">
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 text-primary"> Add Result
+                            <div id="add_result" class="card shadow mb-2">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary"> Add Result
                                     </h6>
                                 </div>
                                 <div class="card-body">
@@ -119,7 +118,7 @@
                                             <div class="form-group col-md-8">
                                                 <label class="m-0 font-weight-bold text-primary"
                                                     for="students_id">Choose a Student: </label>
-                                                    <select class="custom-select form-control"" id="students_id">
+                                                    <select class="custom-select form-control" id="students_id">
                                                      </select>
                                                 <small class="text-muted">Check the Admission number inside the bracket
                                                     to choose the right student
@@ -164,6 +163,7 @@
                                                     <th>Student Name</th>
                                                     <th>Admin#</th>
                                                     <th>Exam Name</th>
+                                                    <th>Publish Date</th>
                                                     <th>Subject Performance</th>
                                                     <th>Actions</th>
                                                 </tr>

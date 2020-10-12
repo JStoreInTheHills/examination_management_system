@@ -1,7 +1,3 @@
-// $(document).ready(() => {
-
-// const { default: iziToast } = require("izitoast");
-
 // Declaration of a string holding the URI location values.
 const class_subject_teacher_query = window.location.search;
 
@@ -269,7 +265,7 @@ const teachers_subject_table = $("#teachers_subject_table").DataTable({
   columnDefs: [
     {
       width: "10%",
-      targets: 3,
+      targets: 4,
     },
     {
       targets: 0,
@@ -297,10 +293,14 @@ const teachers_subject_table = $("#teachers_subject_table").DataTable({
     },
     {
       targets: 3,
-      data: "marks",
+      data: "created_at",
     },
     {
       targets: 4,
+      data: "marks",
+    },
+    {
+      targets: 5,
       data: {
         result_id: "result_id",
         students_id: "students_id",
@@ -387,4 +387,3 @@ students_id.change((e) => {
 setInterval(() => {
   teachers_subject_table.ajax.reload(null, false);
 }, 1000000000);
-// });
