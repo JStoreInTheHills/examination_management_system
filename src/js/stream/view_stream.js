@@ -1,3 +1,4 @@
+// ------ Start of variable declaration --------------------------------
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
@@ -6,6 +7,10 @@ const class_id = urlParams.get("stream_id"); // pointer to hold the class_id
 const streamTitle = $("#stream_title");
 const pageHeader = $("#page_header");
 const activeBreadCrumb = $("#active_breadcrumb");
+
+// DOM element referencing the archive button.
+const archiveClassButton = $("#editClassActive");
+archiveClassButton.hide();
 
 const studentsCount = $("#all_students");
 
@@ -23,9 +28,17 @@ const edit_this_class_submit_btn = $("#edit_this_class_submit_btn");
 
 var class_name;
 
+// Variable to check if the class is active.
+var classStatus;
+
+// Object holding the form used in the class.
 const formData = {
   class_id: class_id,
 };
+
+const alert = $("#alert");
+
+// ------ End of Variable Declaration --------------------------------
 
 const toggleSideBar = () => {
   $("body").toggleClass("sidebar-toggled");
@@ -36,6 +49,7 @@ const toggleSideBar = () => {
 };
 toggleSideBar();
 
+// Function to get the class details =.
 const get_class_details = () => {
   $.ajax({
     url: "../queries/get_class_details.php",
@@ -53,7 +67,10 @@ const get_class_details = () => {
       edit_class_name.val(i.name);
       edit_class_desc.val(i.description);
       exampleModalLongTitle.html(`Edit Class : ${i.name}`);
+      classStatus = i.status;
     });
+    archiveClassButton.show();
+    checkIfClassIsArchived();
   });
 };
 
@@ -133,6 +150,7 @@ const class_stream_table = $("#class_stream_table").DataTable({
   ],
 });
 
+// Datatables for the class exam Datatables.
 const class_exam_table = $("#class_exam_table").DataTable({
   order: [[0, "desc"]],
   ajax: {
@@ -151,11 +169,12 @@ const class_exam_table = $("#class_exam_table").DataTable({
       data: {
         exam_name: "exam_name",
         exam_id: "exam_id",
-        year_name: "year_name",
+        year_id: "year_id",
+        term_id: "term_id",
       },
       render: function (data) {
         return `
-        <a href="./view_class_stream_exam_performance?cid=${class_id}&eid=${data.exam_id}">
+        <a href="./view_class_stream_exam_performance?cid=${class_id}&eid=${data.exam_id}&yid=${data.year_id}&tid=${data.term_id}">
           ${data.exam_name}
         </a>`;
       },
@@ -288,9 +307,169 @@ const get_exam_count = () => {
 };
 // get_exam_count();
 
+const toast = {
+  question: function () {
+    return new Promise(function (resolve) {
+      iziToast.info({
+        title: "WARNING",
+        icon: "fa fa-exclamation-triangle",
+        message: `You are about to delete a Students Result! 
+                  Are you sure of this command?`,
+        timeout: 20000,
+        close: false,
+        transitionIn: "bounceInLeft",
+        position: "center",
+        buttons: [
+          [
+            "<button><b>YES</b></button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide(
+                {
+                  transitionOut: "fadeOut",
+                },
+                toast,
+                "button"
+              );
+              resolve();
+            },
+            false,
+          ],
+          [
+            "<button>NO</button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide(
+                {
+                  transitionOut: "fadeOut",
+                },
+                toast,
+                "button"
+              );
+            },
+          ],
+        ],
+      });
+    });
+  },
+  warning: function () {
+    return new Promise(function (resolve) {
+      iziToast.error({
+        title: "WARNING",
+        icon: "fa fa-exclamation-triangle",
+        message: `You are about to archive this class.  
+                  Are you sure of this command?`,
+        timeout: 20000,
+        close: false,
+        transitionIn: "bounceInLeft",
+        position: "center",
+        buttons: [
+          [
+            "<button><b>YES</b></button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide(
+                {
+                  transitionOut: "fadeOut",
+                },
+                toast,
+                "button"
+              );
+              resolve();
+            },
+            false,
+          ],
+          [
+            "<button>NO</button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide(
+                {
+                  transitionOut: "fadeOut",
+                },
+                toast,
+                "button"
+              );
+            },
+          ],
+        ],
+      });
+    });
+  },
+};
+
 const deleteStream = (stream_id) => {
   console.log(stream_id);
 };
+
+const checkIfClassIsArchived = () => {
+  if (classStatus == 0) {
+    alert.html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>This Class has been archived from editing. It is read only.</strong>
+    <hr>
+        <p class="mb-0">Either all results have been declared or the exam is no longer available for editing. 
+        Kindly Contact Administrator</p>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>`);
+
+    archiveClassButton
+      .html("Make Active")
+      .removeClass("btn-danger")
+      .addClass("btn-success");
+  } else {
+    alert.html(`<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Use this page to view this class streams, exams and students.</strong>
+    <hr>
+        <p class="mb-0">View all streams registered in the class. You can add new stream here,
+        view students and the exams the class has sat for. </p>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>`);
+    archiveClassButton
+      .html("Archive Class")
+      .removeClass("btn-success")
+      .addClass("btn-danger");
+  }
+};
+
+archiveClassButton.click((e) => {
+  toast.warning().then(() => {
+    let s;
+    if (classStatus == 0) {
+      s = 1;
+    } else {
+      s = 0;
+    }
+
+    $.ajax({
+      url: "../queries/editMakeClassInactive.php",
+      type: "POST",
+      data: {
+        class_id: class_id,
+        status: s,
+      },
+    }).done((response) => {
+      const resp = JSON.parse(response);
+      if (resp.success == true) {
+        iziToast.success({
+          type: "success",
+          message: resp.message,
+          position: "topRight",
+          onClosing: () => {
+            get_class_details();
+          },
+        });
+      } else {
+        iziToast.error({
+          type: "error",
+          message: resp.message,
+          position: "topRight",
+        });
+      }
+    });
+  });
+
+  e.preventDefault();
+});
 
 edit_this_class_submit_btn.click((e) => {
   const formData = {
@@ -333,11 +512,11 @@ edit_this_class_submit_btn.click((e) => {
 });
 
 setInterval(() => {
-  class_student_table();
-  class_stream_table();
-  class_exam_table();
+  class_student_table.ajax.reload(null, false);
+  class_stream_table.ajax.reload(null, false);
+  class_exam_table.ajax.reload(null, false);
   get_students_count();
   get_exam_count();
   get_stream_count();
   get_teachers_count();
-}, 100000);
+}, 1000000);

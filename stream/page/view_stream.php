@@ -1,7 +1,7 @@
 <?php
     session_start();
 
-    if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp'] ) > 1000 ){
+    if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500 || !isset($_SESSION['role_id'])){
         header("Location: /login");
         exit;
     }else{
@@ -49,9 +49,14 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800" id="page_header">
                         </h1>
-                        <button class="btn btn-md btn-primary" data-toggle="modal" data-target="#edit_class">
-                            Edit this Class
-                        </button>
+                        <div class="btn-group">
+                            <button id="editClass" class="btn btn-md btn-primary" data-toggle="modal" data-target="#edit_class">
+                               <span><i class="fas fa-edit"></i>  </span>  Edit this Class
+                            </button>
+                            <button class="btn btn-md btn-danger" id="editClassActive">
+                               <span><i class="fas fa-trash"></i></span> 
+                            </button>
+                        </div>
                     </div>
 
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -66,7 +71,7 @@
                     <div class="row">
 
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border-bottom-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
@@ -83,7 +88,7 @@
                         </div>
 
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border-bottom-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
@@ -101,7 +106,7 @@
                         </div>
 
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border-bottom-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
@@ -147,27 +152,25 @@
                         </ol>
                     </nav>
 
+                    <div id="alert"></div>
+
+                    <nav class="mb-4">
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#subjects"
+                                role="tab" aria-controls="exams" aria-selected="true"> <span><i
+                                        class="fas fa-chalkboard "></i></span> Associated Streams </a>
+                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#exams"
+                                role="tab" aria-controls="students" aria-selected="false"> <span><i
+                                        class="fas fa-users"></i></span> Class Examination</a>
+                            <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#students"
+                                role="tab" aria-controls="nav-contact" aria-selected="false"> <span><i
+                                        class="fas fa-address-book"></i></span> All Students in class </a>
+                        </div>
+                    </nav>
+
                     <!-- Content Row -->
                     <div class="row">
-
-                        <div class=col-lg-2>
-                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
-                                aria-orientation="vertical">
-                                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#subjects"
-                                    role="tab" aria-controls="v-pills-home" aria-selected="true"><span><i
-                                            class="fas fa-door-open"></i></span> Associated Streams</a>
-                                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#exams" role="tab"
-                                    aria-controls="v-pills-profile" aria-selected="false">
-                                    <span><i class="fas fa-chalkboard"></i></span>
-                                    Class Examination</a>
-                                <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#students"
-                                    role="tab" aria-controls="v-pills-messages" aria-selected="false"><span><i
-                                            class="fas fa-users"></i></span> All Students in class</a>
-
-                            </div>
-                        </div>
-
-                        <div class="col-lg-10 mb-4">
+                        <div class="col-lg-12 mb-4">
                             <div class="tab-content" id="nav-tabContent">
                                 <div class="tab-pane fade show active" id="subjects" role="tabpanel"
                                     aria-labelledby="nav-stream-tab">

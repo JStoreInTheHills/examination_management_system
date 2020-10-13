@@ -3,6 +3,8 @@ const urlParams = new URLSearchParams(queryString);
 
 const class_id = urlParams.get("cid");
 const class_exam_id = urlParams.get("eid");
+const year_id = urlParams.get("yid");
+const term_id = urlParams.get("tid");
 
 const reportUrl = `/reports/stream/class_stream_exam_report?class_id=${class_id}&eid=${class_exam_id}`;
 
@@ -24,6 +26,8 @@ const init = () => {
   const formData = {
     class_id: class_id,
     class_exam_id: class_exam_id,
+    year_id: year_id,
+    term_id: term_id,
   };
   $.ajax({
     url: "../queries/get_class_stream_details.php",

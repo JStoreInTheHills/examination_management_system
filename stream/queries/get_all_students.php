@@ -2,7 +2,7 @@
 
 $class_id = $_GET['class_id'];
 
-$sql = "SELECT StudentId, FirstName, OtherNames, LastName, RollId,RegDate,DOB, Status
+$sql = "SELECT StudentId, FirstName, OtherNames, LastName, RollId,RegDate,DOB, tblstudents.Status
         FROM tblclasses JOIN tblstudents 
         ON tblclasses.id = tblstudents.ClassId 
         JOIN stream ON stream.stream_id = tblclasses.stream_id 
