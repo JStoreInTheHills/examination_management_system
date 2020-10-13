@@ -3,7 +3,7 @@
 include '../config/config.php';
 session_start();
 
-if(strlen($_SESSION['alogin'])==""){
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500 || !isset($_SESSION['role_id'])){
   header("Location: /login.php");
 }else{
 ?>
@@ -80,21 +80,11 @@ if(strlen($_SESSION['alogin'])==""){
                                         <th>Admission #</th>
                                         <th>Class Name</th>
                                         <th>Marks</th>
-                                        <th>Grade</th>
-                                        <th>Action</th>
+                                      
+                                   
                                     </tr>
                                     </thead>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Student Name</th>
-                                        <th>Admission #</th>
-                                        <th>Class Name</th>
-                                        <th>Marks</th>
-                                        <th>Grade</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    </tfoot>
-
+  
                                 </table>
                             </div>
                         </div>
@@ -216,7 +206,48 @@ if(strlen($_SESSION['alogin'])==""){
 </div>
 
 <script src="/dist/js/main.min.js"></script>
-<script src="/dist/js/results/result.js"></script>
+<script >
+   
+        $("#result_table").DataTable({
+            ajax : {
+                url : "./queries/get_all_results.php",
+                type : "GET",
+                dataSrc : "",
+            },
+            columnDefs : [
+                {
+                    targets : 0,
+                    data : {
+                        FirstName : "FirstName",
+                        LastName : "LastName",
+                        OtherNames : "OtherNames",
+                    },
+                    render : (data) => {
+                        return ` ${data.FirstName} ${data.OtherNames} ${data.LastName}`;
+                    }
+                },
+                {
+                    targets : 1,
+                    data : {
+                        RollId : "RollId",
+                        StudentId : "StudentId",
+                    },
+                    render : (data) => {
+                        return ` <a href="../students/pages/details?sid=${data.StudentId}">${data.RollId}</a> `;
+                    },
+                },
+                {
+                    targets : 2,
+                    data : "ClassName",
+                },
+                {
+                    targets : 3,
+                    data : "score",
+                }
+            ]
+        });
+   
+</script>
 </body>
 
 </html>

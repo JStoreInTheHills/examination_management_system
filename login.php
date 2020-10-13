@@ -65,21 +65,21 @@ if(isset($_SESSION['alogin'])){
                   <form class="user mb-1" id="login_form">
 
                     <div class="form-group">
-                      <label class="text-gray-900" id="email_label" for="">
+                      <label class="text-gray-900" id="email_label" for="exampleInputEmail">
                         Email Address:
                       </label>
-                      <input type="email" required class="form-control form-control-user" id="exampleInputEmail"
-                        aria-describedby="emailHelp" placeholder="Enter your Email Address...">
+                      <input type="email" class="form-control form-control-user" id="exampleInputEmail"
+                        aria-describedby="emailHelp" name="email" placeholder="Enter your Email Address...">
                     </div>
 
                     <div class="form-group">
                       <label class="text-gray-900" id="pass_label" for="exampleInputPassword">
                         Password:
                       </label>
-                      <input type="password" required class="form-control form-control-user" id="exampleInputPassword"
-                        placeholder="Enter you password...">
+                      <input type="password" class="form-control form-control-user" id="exampleInputPassword"
+                        placeholder="Enter you password..." name="password">
                     </div>
-                    <button name="submit" id="submit" class="btn btn-primary btn-user btn-block">
+                    <button id="submit" class="btn btn-primary btn-user btn-block">
                       Login
                     </button>
                   </form>
@@ -112,63 +112,91 @@ if(isset($_SESSION['alogin'])){
 
     sessionStorage.clear();
     
-    $('#login_form').submit((e) => {
+    $('#login_form').validate({
+        rules : {
+          email : {
+            required : true,
+            email : true,
+          },
+          password : "required"
+        },
 
-        const email = $('#exampleInputEmail').val();
-        const password = $('#exampleInputPassword').val();
+        messages : {
+          email :{
+            required : "Your email is required to login to the system.",
+            email: "Your email address must be in the format of name@almunnawarah.ac.ke",
+          },
+          password : "Use the password assigned to you by the Examination officer.",
+        },
 
-        const formData = {
-          email_address: email,
-          password: password,
-        }
+        errorClass : "alert alert-danger",
 
-        $.ajax({
-          "url": "/admin/login_attempt.php",
-          "type": "POST",
-          "data": formData,
-        }).done((resp) => {
-          const s = JSON.parse(resp);
-          if (s.success === true) {
-            const last_page = sessionStorage.getItem("last_page");
-            const role = sessionStorage.setItem('_token', s.role);
-
-            $('#toast').empty().append(`<div class="alert alert-success" role="alert">${s.message}.</div>`);
-
-            if (s.role === "Teacher") {
-              $.ajax({
-                url : "/admin/queries/get_login_teacher.php",
-                type : "GET",
-                data : {
-                    uuid : s.uuid,
-                }
-              }).done((response)=>{
-                const arr = JSON.parse(response);
-                let id;
-                arr.forEach(item => {
-                    id = item.teacher_id
-                });    
-                // const new_teachers_id = sessionStorage.setItem('teachers_token', id);
-
-                document.location = `./teachers/pages/view_teacher?teachers_id=${id}`;
-              });
-            } else if (last_page == null) {
-              document.location = './index';
-            } else {
-              document.location = last_page;
-            }
-          } else {
-            $('#toast').empty().append(
-              `<div class="alert alert-danger" role="alert">
+        invaidHandler : (event, validator) =>{
+          const errors = validator.numberOfInvalids();
+          if(errors){
+            var message =  errors == 1 ? `You missed 1 field` : `You missed ${errors} fields`;
+            $("#toast").html(`<div class="alert alert-danger" role="alert">
                 <h4 class="alert-heading"><span><i class="fas fa-exclamation-triangle"></i></span>
-                 User Not Found.
+                ${message}
                  </h4>
                 <hr>
-                <p class="mb-0">Contact the Examination Officer for assistance</p>
+                <p class="mb-0">${message}</p>
               </div>`);
+          $("#toast").show();
+          }else{
+            $("#toast").hide();
           }
-        });
-        
-      e.preventDefault();
+        },
+
+        submitHandler : (form)=>{
+          $.ajax({
+          "url": "/admin/login_attempt.php",
+          "type": "POST",
+          "data": $(form).serialize(),
+          dataSrc : "",
+          }).done((resp) => {
+            const s = JSON.parse(resp);
+            if (s.success === true) {
+              const last_page = sessionStorage.getItem("last_page");
+              const role = sessionStorage.setItem('_token', s.role);
+
+              $('#toast').empty().append(`<div class="alert alert-success" role="alert">${s.message}.</div>`);
+
+              if (s.role === "Teacher") {
+                $.ajax({
+                  url : "/admin/queries/get_login_teacher.php",
+                  type : "GET",
+                  data : {
+                      uuid : s.uuid,
+                  }
+                }).done((response)=>{
+                  const arr = JSON.parse(response);
+                  let id;
+                  arr.forEach(item => {
+                      id = item.teacher_id
+                  });    
+                  // const new_teachers_id = sessionStorage.setItem('teachers_token', id);
+
+                  document.location = `./teachers/pages/view_teacher?teachers_id=${id}`;
+                });
+              } else if (last_page == null) {
+                document.location = './index';
+              } else {
+                document.location = last_page;
+              }
+            } else {
+              $('#toast').empty().append(
+                `<div class="alert alert-danger" role="alert">
+                  <h4 class="alert-heading"><span><i class="fas fa-exclamation-triangle"></i></span>
+                  User Not Found.
+                  </h4>
+                  <hr>
+                  <p class="mb-0">Contact the Examination Officer for assistance</p>
+                </div>`);
+            }
+          });
+        }
+
     });
   </script>
 

@@ -2,7 +2,7 @@
 
 session_start();
 
-if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 900){
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500 || !isset($_SESSION['role_id'])){
     header("Location: /login");
     exit;
   }else{

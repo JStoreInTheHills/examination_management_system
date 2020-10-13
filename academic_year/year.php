@@ -2,7 +2,7 @@
 
 include "../layouts/utils/redirect.php";
 
-if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500){
+if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500 || !isset($_SESSION['role_id'])){
   redirectToHomePage();
   }else{
       $_SESSION['last_login_timestamp'] = time();

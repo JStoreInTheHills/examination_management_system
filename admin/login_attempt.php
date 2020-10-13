@@ -31,7 +31,7 @@
 //    // Asynchronous call and store them in a local variable for execution.
 //    }else{
 
-        $email_address = $_POST['email_address'];
+        $email_address = $_POST['email'];
         $password = $_POST['password'];
 
         // Get the id, Password, UserName, role_name of the user trying to login to the
