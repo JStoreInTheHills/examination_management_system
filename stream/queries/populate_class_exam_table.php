@@ -4,7 +4,7 @@
         $class_id = $_GET['class_id'];
 
         $sql = "SELECT ce.created_at, e.exam_name, y.year_name, e.exam_id, term.name,
-                COUNT(e.exam_id) as exam_count, y.year_id. term_year.term_id
+                COUNT(e.exam_id) as exam_count, y.year_id, term_year.term_id
                 FROM class_exams ce 
                 JOIN exam e ON e.exam_id = ce.exam_id
                 JOIN tblclasses c ON c.id = ce.class_id
