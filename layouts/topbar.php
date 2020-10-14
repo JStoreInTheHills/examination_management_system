@@ -34,8 +34,8 @@
                     <a class="dropdown-item d-flex align-items-center" href="#">
                         
                         <div class="font-weight-bold">
-                            <div>Hi there! I am wondering if you can help me with a problem I've been
-                                having.</div>
+                            <div>Hi there! <?php echo htmlentities($_SESSION['alogin']); ?>. Welcome to 
+                        Al Madrasatul Munawwarah Al Islamiyyah </div>
                             <div class="small text-gray-500">Emily Fowler · 58m</div>
                         </div>
                     </a>

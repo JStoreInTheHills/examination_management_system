@@ -2,8 +2,9 @@ node_modules
 dist
 vendor
 package-lock.json
-reports
+# reports
 .idea
-dashboard
+# dashboard
 google_maps
 utils
+test.html

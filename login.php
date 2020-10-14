@@ -86,11 +86,11 @@ if(isset($_SESSION['alogin'])){
 
                 <hr>
 
-                <div class="text-center">
+                <!-- <div class="text-center">
                     <a href="./students/login">
                           <i class="fas fa-user-graduate"></i> Login As Student
                     </a>
-                </div>
+                </div> -->
                 
                 </div>
               </div>

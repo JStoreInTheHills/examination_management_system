@@ -8,7 +8,7 @@
                FROM term_year
                JOIN term 
                ON term_year.term_id = term.id
-               WHERE year_id =:year_id";
+               WHERE year_id =:year_id AND term_year.status = 1";
                
        $query = $dbh->prepare($sql);
        $query->bindParam(":year_id", $year_id, PDO::PARAM_STR);

@@ -11,21 +11,21 @@ $(document).ready(() => {
 
   if (_token == "Administrator") {
     var stdid = urlParams.get("sid");
+    var class_id;
   } else {
     var stdid = sessionStorage.getItem("students_id");
+    var class_id = sessionStorage.getItem("class_id");
   }
-
-  const class_id = sessionStorage.getItem("class_id");
 
   // Edit student button
   const edit_students = $("#edit_students");
+
   edit_students.html("Edit Student");
 
   const populate_exam = () => {
     const formData = {
       sid: stdid,
     };
-
     $("#overrall_exam_table").DataTable({
       order: [[3, "desc"]],
       ajax: {
@@ -101,6 +101,7 @@ $(document).ready(() => {
         pupil["Status"] = item.Status;
         pupil["StreamName"] = item.name;
         pupil["ClassName"] = item.ClassName;
+        class_id = item.id;
       });
 
       $("#title").append(
