@@ -400,6 +400,8 @@ const deleteStream = (stream_id) => {
 
 const checkIfClassIsArchived = () => {
   if (classStatus == 0) {
+    $("#badge").html(`<i class="badge badge-danger"> Archived </i>`);
+
     alert.html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
     <strong>This Class has been archived from editing. It is read only.</strong>
     <hr>
@@ -411,10 +413,11 @@ const checkIfClassIsArchived = () => {
     </div>`);
 
     archiveClassButton
-      .html("Make Active")
+      .html(`<i class="fas fa-check">Make Active</i>`)
       .removeClass("btn-danger")
       .addClass("btn-success");
   } else {
+    $("#badge").html(`<i class="badge badge-success"> Active </i>`);
     alert.html(`<div class="alert alert-success alert-dismissible fade show" role="alert">
     <strong>Use this page to view this class streams, exams and students.</strong>
     <hr>
@@ -425,7 +428,7 @@ const checkIfClassIsArchived = () => {
     </button>
     </div>`);
     archiveClassButton
-      .html("Archive Class")
+      .html(`<i class="fas fa-trash">Archive Class</i>`)
       .removeClass("btn-success")
       .addClass("btn-danger");
   }

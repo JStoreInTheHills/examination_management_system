@@ -54,7 +54,7 @@
                                <span><i class="fas fa-edit"></i>  </span>  Edit this Class
                             </button>
                             <button class="btn btn-md btn-danger" id="editClassActive">
-                               <span><i class="fas fa-trash"></i></span> 
+                               <span></span> 
                             </button>
                         </div>
                     </div>
@@ -66,7 +66,17 @@
                         </h1>
                     </div>
 
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h3><span id="badge"></span></h3>
+                    </div>
 
+                    <nav aria-label="breadcrumb mb-4">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/index">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/stream/stream">All Classes</a></li>
+                            <li id="active_breadcrumb" class="breadcrumb-item active" aria-current="page"></li>
+                        </ol>
+                    </nav>
 
                     <div class="row">
 
@@ -125,7 +135,7 @@
                         </div>
 
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border-bottom-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
@@ -144,14 +154,7 @@
                         </div>
                     </div>
 
-                    <nav aria-label="breadcrumb mb-4">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/index">Home</a></li>
-                            <li class="breadcrumb-item"><a href="/stream/stream">All Classes</a></li>
-                            <li id="active_breadcrumb" class="breadcrumb-item active" aria-current="page"></li>
-                        </ol>
-                    </nav>
-
+                 
                     <div id="alert"></div>
 
                     <nav class="mb-4">
