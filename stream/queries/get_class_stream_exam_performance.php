@@ -3,7 +3,7 @@
 $class_id = $_GET['class_id'];
 $exam_id = $_GET['class_exam_id'];
 
-$sql = "SELECT ClassName, StudentId, FirstName, OtherNames, LastName, RollId, SUM(marks)AS total,
+$sql = "SELECT r.created_at, ClassName, StudentId, FirstName, OtherNames, LastName, RollId, SUM(marks)AS total,
         GROUP_CONCAT(subject_id ORDER BY subject_id DESC) 
             AS subject_count, 
             RANK () OVER (ORDER BY SUM(marks) DESC) AS r,

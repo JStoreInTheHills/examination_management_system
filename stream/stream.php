@@ -169,8 +169,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
     <?php require_once '../layouts/utils/logout_modal.html' ?>
 
     <script src="/dist/js/main.min.js"></script>
-    <script src="/dist/js/streams/stream.js"></script>
     <script src="/dist/js/utils/utils.js"></script>
+    <script src="/dist/js/streams/stream.js"></script>
     
 </body>
 

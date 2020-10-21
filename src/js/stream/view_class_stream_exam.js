@@ -22,6 +22,8 @@ const classCreationDate = $("#class_creation_date");
 
 var class_name;
 
+var exam_out_of;
+
 const init = () => {
   const formData = {
     class_id: class_id,
@@ -37,12 +39,16 @@ const init = () => {
     const arr = JSON.parse(response);
     const navLink = $("#nav_link");
     arr.forEach((item) => {
+      exam_out_of = item.exam_out_of;
+      $("#MarksOutOf").html(`Marks Out of ${exam_out_of}`);
       navLink.html(item.stream_name);
       classCreationDate.html(item.year_name);
       classStreamTitle.html(
         ` ${item.stream_name} || ${item.exam_name} Performance`
       );
-      pageHeader.html(`${item.stream_name} ~ ${item.exam_name} Performance`);
+      pageHeader.html(
+        `${item.stream_name} ~ ${item.exam_name} Performance ~ Exam Out Of : ${exam_out_of}`
+      );
       activeBreadCrumb.html(item.exam_name);
       class_exam_term.html(item.term_name);
       navLink.attr("href", `view_stream?stream_id=${item.stream_id}`);
@@ -94,21 +100,25 @@ const classTable = $("#class_table").DataTable({
     {
       targets: 3,
       data: "ClassName",
-      width: "20%",
+      width: "15%",
     },
     {
       targets: 4,
-      data: "number_of_subjects",
-      width: "10%",
+      data: "created_at",
     },
     {
       targets: 5,
-      data: "total",
-      width: "10%",
+      data: "number_of_subjects",
+      width: "6%",
     },
     {
       targets: 6,
-      width: "10%",
+      data: "total",
+      width: "6%",
+    },
+    {
+      targets: 7,
+      width: "6%",
       data: {
         total: "total",
         subject_count: "subject_count",
@@ -121,15 +131,15 @@ const classTable = $("#class_table").DataTable({
 
         let tt = t / l.length;
         if (l.length == data.number_of_subjects) {
-          return tt;
+          return Math.round(tt, 2);
         } else {
           return "__";
         }
       },
     },
     {
-      targets: 7,
-      width: "10%",
+      targets: 8,
+      width: "6%",
       data: {
         total: "total",
         subject_count: "subject_count",
@@ -139,23 +149,35 @@ const classTable = $("#class_table").DataTable({
         let d = data.subject_count;
         let l = d.split(",");
 
-        let tt = Math.round(t / l.length);
+        let x = l.length * getExamOutOf();
 
-        if (tt >= 96) {
-          return "Excellent";
-        } else if ((tt <= 95) & (tt >= 86)) {
-          return "Very Good";
-        } else if ((tt <= 85) & (tt >= 70)) {
-          return "Good";
-        } else if ((tt >= 69) & (tt <= 50)) {
-          return "Pass";
-        } else {
-          return "Fail";
-        }
+        let tt = (t / x) * 100;
+
+        let exam_out_of_total = getExamOutOf() / 100;
+
+        let result = Math.round(tt * exam_out_of_total);
+
+        return `${result}`;
+
+        // if (result >= 96) {
+        //   return "Excellent";
+        // } else if ((result <= 95) & (result >= 86)) {
+        //   return "Very Good";
+        // } else if ((result <= 85) & (result >= 70)) {
+        //   return "Good";
+        // } else if ((result >= 69) & (result <= 50)) {
+        //   return "Pass";
+        // } else {
+        //   return "Fail";
+        // }
       },
     },
   ],
 });
+
+const getExamOutOf = () => {
+  return exam_out_of;
+};
 
 $("#print_overall_result").click((e) => {
   e.preventDefault();

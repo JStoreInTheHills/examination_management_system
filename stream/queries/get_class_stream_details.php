@@ -5,7 +5,7 @@ $class_exam_id = $_GET['class_exam_id'];
 $year_id = $_GET['year_id'];
 $term_id = $_GET['term_id'];
 
-$query = "SELECT s.name as stream_name, s.stream_id, ce.created_at, e.exam_name, y.year_name, e.exam_id, term.name as term_name 
+$query = "SELECT e.exam_out_of, s.name as stream_name, s.stream_id, ce.created_at, e.exam_name, y.year_name, e.exam_id, term.name as term_name 
           FROM class_exams ce 
           JOIN exam e ON e.exam_id = ce.exam_id 
           JOIN tblclasses c ON c.id = ce.class_id 

@@ -90,10 +90,12 @@
                                             <th>Students Name</th>
                                             <th>Roll ID</th>
                                             <th>Stream Name</th>
-                                            <th>Subjects</th>
+                                            <th>Published At</th>
+                                            <th>Total Subjects Sat for</th>
+                                            
                                             <th>Total Score</th>
                                             <th>Mean Score</th>
-                                            <th>Grade</th>
+                                            <th id="MarksOutOf"></th>
                                         </tr>
                                     </thead>
 
