@@ -24,27 +24,8 @@ include "../../config/config.php";
 
         $status = 1;
 
-        $checkExam = "SELECT class_id, exam_id, year_id, term_id
-                      FROM class_exams
-                      WHERE exam_id=:exam_id AND class_id =:class_id
-                      AND year_id =:year_id AND term_id=:term_id";
-
-                      
-        $ExamQuery = $dbh->prepare($checkExam);
-        $ExamQuery->bindParam(':exam_id', $exam_id, PDO::PARAM_STR);
-        $ExamQuery->bindParam(':class_id', $class_id, PDO::PARAM_STR);
-        $ExamQuery->bindParam(':year_id', $year_id, PDO::PARAM_STR);
-        $ExamQuery->bindParam(':term_id', $term_id, PDO::PARAM_STR);
-
-        $ExamQuery->execute();
-        $ExamResult = $ExamQuery->fetchAll();
-
-        if($ExamQuery->rowCount() > 0){
-            $data['success'] = false;
-            $data['message'] = "Exam already assigned to Class";
-        }else{
-            $sql = "INSERT INTO class_exams(class_id,exam_id,year_id,created_at,term_id,status)
-                    VALUES(:class_id,:exam_id,:year_id,CURRENT_TIMESTAMP,:term_id, :status)";
+        $sql = "INSERT INTO class_exams(class_id,exam_id,year_id,created_at,term_id,status)
+                VALUES(:class_id,:exam_id,:year_id,CURRENT_TIMESTAMP,:term_id, :status)";
 
             $query=$dbh->prepare($sql);
             $query->bindParam(':class_id', $class_id, PDO::PARAM_STR);
@@ -65,7 +46,6 @@ include "../../config/config.php";
                 $data['success'] = false;
                 $data['message'] = $er[2];
             }
-        }
     }
 
     echo json_encode($data);
