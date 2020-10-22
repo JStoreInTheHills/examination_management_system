@@ -1,8 +1,8 @@
 <?php
     require_once "../../config/config.php";
 
-    $class_id = $_GET['class_id'];
-    $term_id = $_GET['term_id'];
+    $class_id = $_POST['class_id'];
+    $term_id = $_POST['term_id'];
     
     $query = "SELECT class_exams.id, exam.exam_id, exam_name, year_name, exam_out_of
               FROM class_exams JOIN exam 
@@ -18,7 +18,16 @@
     $sql->bindParam(":term_id", $term_id, PDO::PARAM_STR);
     $sql->execute();
 
-    $result = $sql->fetchAll(PDO::FETCH_OBJ);
+    $result = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-    echo json_encode($result);
+    $data = array();
+
+    foreach ($result as  $exam) {
+        $data[] = array(
+            "id" => $exam['id'],
+            "text" => $exam['exam_name']
+        );
+    }
+
+    echo json_encode($data);
 ?>

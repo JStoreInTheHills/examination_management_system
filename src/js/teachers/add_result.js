@@ -12,16 +12,13 @@ const class_id = class_id_param.get("class_id");
 const subject_id = class_id_param.get("subject_id");
 
 const teachers_id = class_id_param.get("teacher_id");
+
+$("#subject_id").val(subject_id);
+$("#class_id").val(class_id);
+
 // -----------------------------------------------------------------
 
-// variable holding the teachers datatables.
-
-// Variable holding the students input field.
-const students_id = $("#students_id");
-students_id.select2({
-  theme: "bootstrap4",
-  placeholder: "Select a Student",
-});
+console.log(sessionStorage.getItem("token_number"));
 
 const class_teacher_modal_title = $("#class_teacher_modal_title");
 
@@ -30,6 +27,13 @@ const Subject_Taught = $("#Subject_Taught");
 const exam_id = $("#exam_id");
 
 const marks = $("#marks");
+
+const students_id = $("#students_id");
+//------------------------------------------------------------------------------------------
+
+// variable holding the teachers datatables.
+
+// Variable holding the students input field.
 
 // ----------------------------------------------------------------------------------------------
 // Adding the href attribute to the HTML dom for navigation purposes.
@@ -74,7 +78,6 @@ const init = () => {
       $("#active_class").html(item.ClassName);
     });
     getSubject();
-    getStudents();
 
     $("#toast").html(`
       <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -95,21 +98,33 @@ const init = () => {
 
 init();
 
-const getStudents = () => {
-  $.ajax({
-    url: "/class/queries/get_class_students",
-    data: formData,
-    type: "GET",
-    dataSrc: "",
-  }).done((resp) => {
-    const r = JSON.parse(resp);
-    r.forEach((item) => {
-      students_id.append(
-        `<option value="${item.StudentId}">${item.FirstName} ${item.OtherNames} ${item.LastName} (${item.RollId})</option>`
-      );
-    });
-  });
-};
+$("#students_id").select2({
+  placeholder: "Type to search student",
+  theme: "bootstrap4",
+  ajax: {
+    url: "../queries/get_class_students",
+    type: "POST",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        searchTerm: params.term,
+        class_id: class_id, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
+
+$("#students_id").on("select2:select", function (e) {
+  $("#btnSubmit").prop("disabled", false);
+  $("#errror").fadeOut();
+});
 
 const getSubject = () => {
   $.ajax({
@@ -142,82 +157,116 @@ const getSubject = () => {
   });
 };
 
-const getExam = (term_id) => {
+const getExam = () => {
   $.ajax({
     url: "../queries/get_class_specific_exam.php",
     type: "GET",
     data: {
       class_id: class_id,
-      term_id: term_id,
+      term_id: term_name.val(),
     },
   }).done((resp) => {
     const r = JSON.parse(resp);
     r.forEach((item) => {
       exam_id.append(`<option value="${item.id}">${item.exam_name}</option>`);
       exam_out_of = item.exam_out_of;
-    });
-  });
-};
-
-const getYear = () => {
-  $.ajax({
-    url: "/academic_year/queries/fetch_all_academic_years.php",
-    type: "GET",
-  }).done((resp) => {
-    const arr = JSON.parse(resp);
-    if (arr.length == 0) {
-      iziToast.error({
-        type: "Warning",
-        title: "Warning",
-        icon: "fas fa-exclamation",
-        // position: "center",
-        message: "No year has been declared yet. Kindly contact Administrator.",
-      });
-    } else {
-      arr.forEach((item) => {
-        year_id.append(
-          `<option value="${item.year_id}">${item.year_name}</option>`
-        );
-      });
-    }
-  });
-};
-
-getYear();
-
-const getterms = (year_id) => {
-  $.ajax({
-    url: "../queries/get_year_terms.php",
-    type: "GET",
-    data: {
-      year_id: year_id,
-    },
-  }).done((resp) => {
-    const arr = JSON.parse(resp);
-    arr.forEach((item) => {
-      term_name.append(
-        `<option value="${item.term_year_id}"> ${item.name}</option>`
+      $("#exam_out_of_badge").html(
+        `<span><i>Exam out of : ${exam_out_of}<i></span>`
       );
     });
   });
 };
 
-subject_teachers_form.submit((e) => {
-  e.preventDefault();
+year_id.select2({
+  theme: "bootstrap4",
+  placeholder: "Select a year",
+  ajax: {
+    url: "../queries/fetch_academic_year.php",
+    type: "GET",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        searchTerm: params.term,
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
 
-  const formData = {
-    class_exam_id: exam_id.val(),
-    students_id: students_id.val(),
-    marks: marks.val(),
-    subject_id: subject_id,
-    class_id: class_id,
-  };
+term_name.select2({
+  theme: "bootstrap4",
+  placeholder: "Type to search for term",
+  ajax: {
+    url: "../queries/get_year_terms.php",
+    type: "POST",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        searchTerm: params.term,
+        year_id: year_id.val(),
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
 
-  if (formData.marks <= exam_out_of) {
+term_name.on("select2:select", function (e) {
+  exam_id.select2({
+    theme: "bootstrap4",
+    placeholder: "Select An Exam",
+    ajax: {
+      url: "../queries/get_class_specific_exam.php",
+      type: "POST",
+      dataType: "json",
+      delay: 250,
+      data: function (params) {
+        return {
+          searchTerm: params.term,
+          class_id: class_id,
+          term_id: term_name.val(),
+        };
+      },
+      processResults: function (response) {
+        return {
+          results: response,
+        };
+      },
+      cache: true,
+    },
+  });
+});
+
+subject_teachers_form.validate({
+  rules: {
+    year_id: "required",
+    term_name: "required",
+    exam_id: "required",
+    students_id: "required",
+    marks: {
+      required: true,
+      range: [0, 20],
+    },
+  },
+
+  errorClass: "text-danger",
+
+  submitHandler: (form) => {
     $.ajax({
       url: "../queries/add_students_result_for_stream.php",
       type: "POST",
-      data: formData,
+      data: $(form).serialize(),
     }).done((resp) => {
       const arr = JSON.parse(resp);
       if (arr.success == true) {
@@ -236,23 +285,38 @@ subject_teachers_form.submit((e) => {
       } else {
         $("#errror")
           .html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                  <strong>${arr.message}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-        </div>`);
+                        <strong>${arr.message}</strong>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+              </div>`);
+        $("#errror").fadeIn();
+        $("#btnSubmit").prop("disabled", true);
+        iziToast.error({
+          type: "Error",
+          icon: "fas fa-exclamation",
+          position: "center",
+          transitionIn: "bounceInLeft",
+          message: arr.message,
+        });
       }
     });
-  } else {
-    marks.css("border-color", "red");
-    $("#label_for_marks").removeClass("text-primary").addClass("text-danger");
-    $("#year_label").removeClass("text-primary").addClass("text-danger");
-    $(".label_error").html(`Subject Marks Is Out of ${exam_out_of}`);
-  }
+  },
+
+  invalidHandler: (event, validator) => {
+    let error = validator.numberOfInvalids();
+    if (error) {
+      let message = error == 1 ? "You missed" : `You missed ${error} fields`;
+      $("#errror").html(message).addClass(`alert alert-danger`);
+      $("#errror").show();
+    } else {
+      $("#errror").hide();
+    }
+  },
 });
 
 const teachers_subject_table = $("#teachers_subject_table").DataTable({
-  order: [[3, "desc"]],
+  order: [[4, "desc"]],
   ajax: {
     url: "../queries/fetch_class_result_.php",
     type: "GET",
@@ -264,7 +328,7 @@ const teachers_subject_table = $("#teachers_subject_table").DataTable({
   },
   columnDefs: [
     {
-      width: "10%",
+      width: "6%",
       targets: 4,
     },
     {
@@ -301,6 +365,7 @@ const teachers_subject_table = $("#teachers_subject_table").DataTable({
     },
     {
       targets: 5,
+      width: "5",
       data: {
         result_id: "result_id",
         students_id: "students_id",
@@ -310,11 +375,79 @@ const teachers_subject_table = $("#teachers_subject_table").DataTable({
       render: (data) => {
         return `<a onClick="editResult(${data.result_id}, ${data.students_id}, ${data.exam_id})">
                   <span><i class="text-primary fas fa-edit"></i></span>
-                </a>`;
+                </a>
+                <a onClick="deleteResult(${data.result_id})">
+                  <span><i class="text-danger fas fa-trash"></i></span>
+                </a>
+                `;
       },
     },
   ],
 });
+
+const toast = {
+  question: () => {
+    return new Promise((resolve) => {
+      iziToast.error({
+        title: "WARNING.",
+        icon: "fas fa-exclamation",
+        message:
+          "Are you Sure you want to delete this result!! This operation is irreversible",
+        timeout: 20000000,
+        close: false,
+        position: "center",
+        buttons: [
+          [
+            "<button><b>YES</b></button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+              resolve();
+            },
+            false,
+          ],
+          [
+            "<button>NO</button>",
+            function (instance, toast, button, e, inputs) {
+              instance.hide({ transitionOut: "fadeOut" }, toast, "button");
+            },
+          ],
+        ],
+      });
+    });
+  },
+};
+
+const deleteResult = (result_id) => {
+  toast.question().then(() => {
+    $.ajax({
+      url: "../queries/delete_students_result.php",
+      type: "POST",
+      data: {
+        result_id: result_id,
+      },
+    }).done((response) => {
+      const arr = JSON.parse(response);
+      if (arr.success == true) {
+        iziToast.success({
+          type: "Success",
+          position: "topRight",
+          transitionIn: "bounceInLeft",
+          message: arr.message,
+          onClosing: () => {
+            teachers_subject_table.ajax.reload(null, false);
+          },
+        });
+      } else {
+        iziToast.error({
+          type: "Error",
+          position: "topRight",
+          transitionIn: "bounceInLeft",
+          message: arr.message,
+        });
+      }
+    });
+  });
+};
 
 const editResult = (result_id, students_id, exam_id) => {
   // console.log(result_id, students_id, exam_id);

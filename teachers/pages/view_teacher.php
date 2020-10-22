@@ -96,7 +96,7 @@
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <strong>Choose the class you teach and click on it to enter marks for the subject.</strong>
                         <hr>
-                        <p class="mb-0">Click on the Edit Teacher to edit this teacher.</p>
+                        <p class="mb-0">Click on the <span><a href="" data-toggle="modal" data-target="#edit_teacher">Edit Teacher</a></span>  to edit this teacher.</p>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -109,7 +109,7 @@
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h5 class="m-0 font-weight-bold text-primary"> <span><i
                                                 class="fas fa-users"></i></span>
-                                        Classes and their respective subjects that you teach
+                                        Classes and the respective subjects that you teach
                                     </h5>
                                 </div>
                                 <div class="card-body">
@@ -157,7 +157,7 @@
             </div>
             <!-- End of Main Content -->
 
-            <?php include '../layouts/footer.php'; ?>
+            <?php include '../../layouts/footer.php'; ?>
         </div>
         <!-- End of Content Wrapper -->
 
@@ -281,8 +281,8 @@
     </div>
 
     <script src="/dist/js/main.min.js"></script>
-    <script src="/dist/js/teachers/view_teacher.js"></script>
     <script src="/dist/js/utils/utils.js"></script>
+    <script src="/dist/js/teachers/view_teacher.js"></script>
 </body>
 
 </html>
