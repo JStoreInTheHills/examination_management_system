@@ -7,29 +7,20 @@
         
         // GLOBAL VARIABLES --------------------------------------------------------------
         $stream_id; // variable of the stream that the student belongs to. 
-    $stream_id; // variable of the stream that the student belongs to. 
-        $stream_id; // variable of the stream that the student belongs to. 
-            
-        $student_id =$_GET['sid']; // variable holding the students id. 
-    $student_id =$_GET['sid']; // variable holding the students id. 
+      
         $student_id =$_GET['sid']; // variable holding the students id. 
         $class_id = $_GET['cid']; // variable holding the class id of the student.
-        $class_exam_id = $_GET['ceid']; // variable holding the id of the exam being outputted. 
-    $class_exam_id = $_GET['ceid']; // variable holding the id of the exam being outputted. 
+       
         $class_exam_id = $_GET['ceid']; // variable holding the id of the exam being outputted. 
 
         $exam_name; // variable holding the name of the exam. 
-    $exam_name; // variable holding the name of the exam. 
-        $exam_name; // variable holding the name of the exam. 
+   
         $year_name; // variable holding the academic year of the exam. 
-    $year_name; // variable holding the academic year of the exam. 
-        $year_name; // variable holding the academic year of the exam. 
+  
         $exam_id; // variable holding the exam id for the result.
 
         $className; // variable holding the name of the class. 
-    $className; // variable holding the name of the class. 
-        $className; // variable holding the name of the class. 
-
+  
         $name; 
 
         $students_stream_position;
@@ -56,6 +47,12 @@
             include '../../config/config.php'; // Include the Database Config File. 
         }else{
             throw new Exception("Error Processing Request. Database File not Found", 1);
+        }
+        
+        if(file_exists('../../utils/functions/getClassTeacher.php')){
+            include ('../../utils/functions/getClassTeacher.php'); // Include the template file
+        }else{
+            throw new Exception("Get Class Teacher file not found. Try again", 1);
         }
     }catch(Exception $e){
         echo 'Exception Caught ',  $e->getMessage() , "\n";
@@ -310,7 +307,7 @@
         $pdf->Cell(75);
         $pdf->Cell(30,2,  $student_name ." ". $other_name. " " . $last_name. " ~ " .$rollId   , 0, 1,'C', '', false, 'B', 'T');
 
-        $pdf->Cell(165, 0, "Student's Name: ______________________________________________________________ ", 0,0,'',false);
+        $pdf->Cell(165, 0, "Student's Name: __________________________________________________________________ ", 0,0,'',false);
         $pdf->setRTL(true);
         $pdf->Cell(0, 0, ' ‫اسم‬ الطالب‫ / الطالبة‬: ', 0,1, '',false);
        
@@ -319,16 +316,16 @@
         $pdf->Cell(75, 0);
 
         $pdf->Cell(30,2,  $className,  0, 1,'C', '', false, 'C', 'C');
-        $pdf->Cell(165, 0, 'Class:__________________________________________________________________________________', 0,0,'',false);
+        $pdf->Cell(165, 0, 'Class:__________________________________________________________________________________________', 0,0,'',false);
         
         $pdf->setRTL(true);
         $pdf->Cell(0, 0, '‫الفصل‬: ', 0,1, '',false);
         $pdf->setRTL(false);
     
-        $out_of = count($subject_ids) * $exam_out_of_value;
+        $out_of = getNumberOfSubjects($class_id) * $exam_out_of_value;
         $percentage =number_format((($sum_of_total /$out_of) * 100), 0);
         
-        $pdf->Ln(3);
+        $pdf->Ln(5);
         // $pdf->SetFont('timesI', 'I', 12);
         $pdf->Cell(110,0,  $percentage ,  0, 1,'C', '', false, 'C', 'C');
         // $pdf->SetFont('aefurat', '', 12);
@@ -481,28 +478,33 @@
 
     $pdf->Ln(2);
 
-    $pdf->Cell(147, 5, 'Class Teacher"s Remarks: ', 0,0);
-    $pdf->Cell(0, 5, '‫ ملاحظات ‫مشرف‬ الفصل‬:  ‫‬', 0, 1 );   
-
-    $pdf->Cell(0, 5, '___________________________________________________________________________________________', 0, 1);
+    $pdf->SetXY(200, 238);
 
     $pdf->Rect(10, 250, 60, 30);
-    $pdf->Cell(10);
+   
+    $pdf->Cell(0, 10, "", 0, 1);
 
-    // $pdf->Cell(10, 10, 'Official Stamp');
-    $pdf->Cell(190, 5, '‫الختم‫الرسمي‬‬');
+    $classTeacher = getClassTeacher($class_id);
+
+    $pdf->SetFont('dejavusanscondensed', '', 10);
+
+    $pdf->Cell(100);
+    $pdf->Cell(85, 0,  $classTeacher , 0, 1);
+    $pdf->Cell(95);
+    $pdf->Cell(80, 0, '_________________________________:(Class Teacher)', 0, 0);
+    $pdf->Cell(5, 5, ' ‫ مشرف الفصل‬ ‫‬', 0, 1);
+
     $pdf->Ln(1);
 
-    $pdf->Cell(70);
-    $pdf->Cell(0, 10, '___________________________________________________', 0, 1);
-
-    $pdf->Cell(70);
-    $pdf->Cell(100, 5, '_________________________________:(Class Teacher)', 0, 0);
-    $pdf->Cell(0, 5, ' ‫ مشرف الفصل‬ ‫‬', 0, 1);
-
-    $pdf->Cell(70);
-    $pdf->Cell(100, 10, '___Hassan Faraj Awadh____:(Principal)', 0, 0);
-    $pdf->Cell(0, 10, '‫المدیر‬', 0, 1);
+    $pdf->Cell(100);
+    $pdf->Cell(20, 0,  "Hassan Faraj Awadh" , 0, 1);
+    $pdf->Cell(95);
+    $pdf->Cell(80, 0, '_________________________________:(Principal)', 0, 0);
+    $pdf->Cell(5, 5, '‫المدیر‬', 0, 1);
+    
+    
+    $pdf->Cell(27);
+    $pdf->Cell(0, 5, '‫الختم‫الرسمي‬‬');
 
     //Close and output PDF document
-    $pdf->Output("SRMSS" .PDF_CREATOR." ", 'I');
+    $pdf->Output($student_name ." ". $other_name. " " . $last_name. " ~ " .$rollId .'.pdf', 'I');
