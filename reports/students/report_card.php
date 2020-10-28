@@ -4,6 +4,45 @@
     // this is the report card for the students. 
     // It holds the students exam performance. 
 
+        
+        // GLOBAL VARIABLES --------------------------------------------------------------
+        $stream_id; // variable of the stream that the student belongs to. 
+    $stream_id; // variable of the stream that the student belongs to. 
+        $stream_id; // variable of the stream that the student belongs to. 
+            
+        $student_id =$_GET['sid']; // variable holding the students id. 
+    $student_id =$_GET['sid']; // variable holding the students id. 
+        $student_id =$_GET['sid']; // variable holding the students id. 
+        $class_id = $_GET['cid']; // variable holding the class id of the student.
+        $class_exam_id = $_GET['ceid']; // variable holding the id of the exam being outputted. 
+    $class_exam_id = $_GET['ceid']; // variable holding the id of the exam being outputted. 
+        $class_exam_id = $_GET['ceid']; // variable holding the id of the exam being outputted. 
+
+        $exam_name; // variable holding the name of the exam. 
+    $exam_name; // variable holding the name of the exam. 
+        $exam_name; // variable holding the name of the exam. 
+        $year_name; // variable holding the academic year of the exam. 
+    $year_name; // variable holding the academic year of the exam. 
+        $year_name; // variable holding the academic year of the exam. 
+        $exam_id; // variable holding the exam id for the result.
+
+        $className; // variable holding the name of the class. 
+    $className; // variable holding the name of the class. 
+        $className; // variable holding the name of the class. 
+
+        $name; 
+
+        $students_stream_position;
+
+        $sum_of_total;
+        // ------------------------------------------------------------------------------
+
+        // Variable holding the exams out of value
+
+        $exam_out_of_value;
+
+
+
     // We check the config file which holds the database configuration settings.
     try{
 
@@ -22,36 +61,16 @@
         echo 'Exception Caught ',  $e->getMessage() , "\n";
     }
     // ------------------------------------------------------------------------------
-    
-   // GLOBAL VARIABLES --------------------------------------------------------------
-    $stream_id; // variable of the stream that the student belongs to. 
-    
-    $student_id =$_GET['sid']; // variable holding the students id. 
-    $class_id = $_GET['cid']; // variable holding the class id of the student.
-    $class_exam_id = $_GET['ceid']; // variable holding the id of the exam being outputted. 
-
-    $exam_name; // variable holding the name of the exam. 
-    $year_name; // variable holding the academic year of the exam. 
-    $exam_id; // variable holding the exam id for the result.
-
-    $className; // variable holding the name of the class. 
- 
-    $students_stream_position;
-
-    $sum_of_total;
-    // ------------------------------------------------------------------------------
-
-    // Variable holding the exams out of value
-
-    $exam_out_of_value;
 
     // Query to fetch the exam of the result card. 
     try{
 
-        $sql = "SELECT exam_name, year_name, class_exams.exam_id, exam_out_of
-                FROM exam JOIN class_exams 
-                ON exam.exam_id = class_exams.exam_id
-                JOIN year ON year.year_id = class_exams.year_id
+        $sql = "SELECT  exam_name, year_name, class_exams.exam_id, exam_out_of,name   
+                FROM exam 
+                JOIN class_exams ON exam.exam_id = class_exams.exam_id
+                LEFT JOIN term_year ON class_exams.term_id = term_year.term_year_id 
+                LEFT JOIN term ON term.id = term_year.term_id
+                JOIN year   ON year.year_id = class_exams.year_id
                 WHERE class_exams.id =:class_exam_id";
 
         $query = $dbh->prepare($sql);
@@ -63,6 +82,7 @@
      
         foreach($exam_result as $exam_result_item){
             $exam_name = $exam_result_item['exam_name'];
+            $name = $exam_result_item['name'];
             $year_name = $exam_result_item['year_name'];
             $exam_id = $exam_result_item['exam_id'];
             $exam_out_of_value = $exam_result_item['exam_out_of'];
@@ -122,7 +142,12 @@
                                 class_exam_id, class_id, t.subject_id, t.subjectNames,
                                 t.marks, t.total, t.query 
                         FROM(
-                                SELECT class_exam_id, r.class_id, students_id, stream_id, ce.exam_id,
+                                SELECT
+                                class_exam_id,
+                                r.class_id,
+                                students_id,
+                                stream_id,
+                                ce.exam_id,
                                 GROUP_CONCAT(r.subject_id) AS subject_id,
                                 GROUP_CONCAT(SubjectName) as subjectNames,
                                 GROUP_CONCAT(SubjectNameAr) as SubjectNamesAr,
@@ -130,14 +155,16 @@
                                 SUM(marks) as total,
                                 RANK() OVER (PARTITION BY c.stream_id, ce.exam_id ORDER BY SUM(marks) DESC)AS o_r,
                                 RANK() OVER (PARTITION BY class_exam_id, class_id ORDER BY SUM(marks) DESC) AS query 
-                                FROM result r JOIN tblsubjectcombination ts ON ts.id = r.subject_id 
+                                FROM result r 
+                                LEFT JOIN tblsubjectcombination ts ON ts.id = r.subject_id 
                                 JOIN tblsubjects s ON s.subject_id = ts.SubjectId 
                                 JOIN tblclasses c ON c.id = r.class_id 
                                 JOIN class_exams ce ON ce.id = r.class_exam_id 
                                 GROUP BY students_id, class_exam_id
                                 )AS t 
                             WHERE students_id =:students_id 
-                            AND class_id=:class_id AND class_exam_id =:class_exam_id
+                            AND class_id=:class_id 
+                            AND class_exam_id =:class_exam_id
                             GROUP BY students_id";
 
         $result_prepare_statement = $dbh->prepare($result_query);
@@ -178,12 +205,14 @@
         // ---------------------------------------------------------------------------------------
         // Stream Position. -------------------------------------
         
-        $query_for_total_number_of_students = "SELECT COUNT(DISTINCT StudentId) AS students_number 
-                                               FROM tblstudents WHERE ClassId =:class_id 
-                                               AND Status =1";
+        $query_for_total_number_of_students = "SELECT COUNT(DISTINCT students_id) AS students_number 
+                                               FROM result 
+                                               WHERE class_id =:class_id 
+                                               AND class_exam_id =:class_exam_id";
 
         $query_rank = $dbh->prepare($query_for_total_number_of_students);
         $query_rank->bindParam(':class_id', $class_id, PDO::PARAM_STR);
+        $query_rank->bindParam(':class_exam_id', $class_exam_id, PDO::PARAM_STR);
 
         $query_rank->execute();
 
@@ -263,13 +292,9 @@
        
         $pdf->SetTextColor(255,255,255);
         // $pdf->Cell($width_cell[1], 5, 'Total',1,0,'C','B');
-        $pdf->Cell(0, 10, "STUDENT'S EXAMINATION REPORT CARD ", 0, 1, 'C', 'B');
+        $pdf->Cell(0, 10, "Student's Report For " . $exam_name. " ".  $name . " For Academic Year " . $year_name . " / 2021", 0, 1, 'C', 'B');
 
-        $pdf->Cell(100, 10, "Exam: ". $exam_name. " " , 1, 0, 'C', 'B');
-        $pdf->Cell(0, 10, "Academic Year: ". $year_name. " " , 1, 1, 'C', 'B');
-
-
-        $pdf->SetTextColor(0,0,0);
+        $pdf->SetTextColor(0,0,0);  
     }catch(Exception $e){
         echo "Uncaught Exception " , $e->getMessage() , "\n";
     }
@@ -283,7 +308,7 @@
         $pdf->Ln(5);
 
         $pdf->Cell(75);
-        $pdf->Cell(30,0,  $student_name ." ". $other_name. " " . $last_name. " ~ " .$rollId   , 0, 1,'C', '', false, 'B', 'T');
+        $pdf->Cell(30,2,  $student_name ." ". $other_name. " " . $last_name. " ~ " .$rollId   , 0, 1,'C', '', false, 'B', 'T');
 
         $pdf->Cell(165, 0, "Student's Name: ______________________________________________________________ ", 0,0,'',false);
         $pdf->setRTL(true);
@@ -293,8 +318,8 @@
         $pdf->Ln(3);
         $pdf->Cell(75, 0);
 
-        $pdf->Cell(30,0,  $className,  0, 1,'C', '', false, 'C', 'C');
-        $pdf->Cell(165, 0, 'Stream:__________________________________________________________________________________', 0,0,'',false);
+        $pdf->Cell(30,2,  $className,  0, 1,'C', '', false, 'C', 'C');
+        $pdf->Cell(165, 0, 'Class:__________________________________________________________________________________', 0,0,'',false);
         
         $pdf->setRTL(true);
         $pdf->Cell(0, 0, '‫الفصل‬: ', 0,1, '',false);
@@ -345,7 +370,7 @@
         $pdf->Cell(90, 10, '  ‫  _________________________‫من‬ ‫العدد‬:',  0,0,'',false);
       
         $pdf->setRTL(true);
-        $pdf->Cell(90, 10, '  ‫ ا‫لترتیب  ‫الصفي‬ ‬',  0,1,'',false);
+        $pdf->Cell(90, 10, '  ‫ ا‫لترتیب  ‫العل م‬ ‬',  0,1,'',false);
         $pdf->setRTL(false); 
     }catch(Exception $e){
         echo "Uncaught Exception" , $e->getMessage(), "\n";
@@ -357,15 +382,12 @@
 
         $pdf->Ln(2);
 
-        $width_cell = array(50,20,60,40,15,8,30,25,10,54,24,22,9,);
+        $width_cell = array(50,20,60,40,15,8,30,25,10,54,24,22,9,45);
 
-        // $pdf->SetMargins(6, 2, 6);
-        // $pdf->SetFont('aefurat', 'B', 12);
-        $pdf->Cell($width_cell[9], 10, 'SUBJECTS',1,0,'C');
-        $pdf->Cell($width_cell[6], 10, ' ‫المجموع ‬(١٠٠)',1,0,'C');
-        $pdf->Cell($width_cell[6], 10, '‫  ا‫لفصل‬ الدراسي‬',1,0,'C');
-        $pdf->Cell($width_cell[6], 10, ' ‫‫الفصل الدراسي‬ ‬',1,0,'C');
-        $pdf->Cell($width_cell[9], 10, ' ‫‫المواد الدراسیة‬ ‬',1,1,'C');
+        $pdf->Cell($width_cell[9], 10, 'SUBJECTS',1,0,'L');
+        $pdf->Cell($width_cell[13], 10, ' Marks Obtained',1,0,'C');
+        $pdf->Cell($width_cell[13], 10, 'Out of (Marks) ‬',1,0,'C');
+        $pdf->Cell($width_cell[9], 10, ' ‫‫المواد الدراسیة‬ ‬',1,1,'R');
         $count = 1;
         
         
@@ -374,9 +396,8 @@
     
                 $pdf->Cell(10, 7, $count, 1,0,'C');
                 $pdf->Cell(44, 7, $subjects_names[$x],1,0,'L');
-                $pdf->Cell($width_cell[6], 7, $marks[$x],1,0,'C');
-                $pdf->Cell($width_cell[6], 7, $exam_out_of_value,1,0,'C');
-                $pdf->Cell($width_cell[6], 7, $exam_out_of_value,1,0,'C');
+                $pdf->Cell($width_cell[13], 7, $marks[$x],1,0,'C');
+                $pdf->Cell($width_cell[13], 7, $exam_out_of_value,1,0,'C');
                 $pdf->Cell($width_cell[9], 7, $subjectAr[$x], 1,1,'R');
                 
                 $count++;
@@ -387,39 +408,41 @@
     }
 
     // ------ Subjects Result Total -------------------------------------------------------
-    $pdf->Ln(1);
+    $pdf->Ln(3);
 
     $subject_count = count($subjects_names);
     $overal_total = $subject_count * $exam_out_of_value;
 
     $pdf->SetTextColor(255,255,255);
-    $pdf->Cell($width_cell[11], 5, 'Total',1,0,'C','B');
+    $pdf->Cell($width_cell[11], 8, 'Total',1,0,'C','B');
     $pdf->SetTextColor(0,0,0);
-    $pdf->Cell($width_cell[11], 5, $sum_of_total,1,0,'C');
+    $pdf->Cell($width_cell[11], 8, $sum_of_total,1,0,'C');
     $pdf->SetTextColor(255,255,255);
-    $pdf->Cell($width_cell[11], 5, 'Out Of',1,0,'C','B');
+    $pdf->Cell($width_cell[11], 8, 'Out Of',1,0,'C','B');
     $pdf->SetTextColor(0,0,0);
-    $pdf->Cell($width_cell[11], 5, $overal_total,1,0,'C');
+    $pdf->Cell($width_cell[11], 8, $overal_total,1,0,'C');
     $pdf->SetTextColor(255,255,255);
 
-    $pdf->Cell($width_cell[11], 5, '',1,0,'C', 'B');
+    $pdf->Cell($width_cell[11], 8, '',1,0,'C', 'B');
     $pdf->SetTextColor(0,0,0);
 
-    $pdf->Cell($width_cell[11], 5, $overal_total,1,0,'C');
+    $pdf->Cell($width_cell[11], 8, $overal_total,1,0,'C');
     $pdf->SetTextColor(255,255,255);
-    $pdf->Cell($width_cell[11], 5, 'من ',1,0,'C','B');
+    $pdf->Cell($width_cell[11], 8, 'من ',1,0,'C','B');
     $pdf->SetTextColor(0,0,0);
-    $pdf->Cell($width_cell[11], 5, $sum_of_total,1,0,'C');
+    $pdf->Cell($width_cell[11], 8, $sum_of_total,1,0,'C');
     $pdf->SetTextColor(255,255,255);
-    $pdf->Cell($width_cell[11], 5, 'المجموع',1,1,'C','B');
+    $pdf->Cell($width_cell[11], 8, 'المجموع',1,1,'C','B');
     $pdf->SetTextColor(0,0,0);
 
-    $pdf->Ln(1);
+    $pdf->Ln(3);
 
     // ----------------------------- Start Of Grade Section ----------------------------------------------------
     try{
-        $pdf->Cell(74, 5, 'GRADES', 'LTB',0,'C',);
-        $pdf->Cell(124, 5,'‫التقدیرات‬', 'TRB',1,'C');
+        $pdf->SetTextColor(255,255,255);
+        $pdf->Cell(74, 5, 'GRADES', 'LTB',0,'C', 1);
+        $pdf->Cell(124, 5,'‫التقدیرات‬', 'TRB',1,'C', 1);
+        $pdf->SetTextColor(0,0,0);
     
         $pdf->Cell($width_cell[12], 5, '1', 1, 0, 'C');
         $pdf->Cell($width_cell[2], 5, 'Excellent', 1, 0, 'C');
@@ -478,7 +501,7 @@
     $pdf->Cell(0, 5, ' ‫ مشرف الفصل‬ ‫‬', 0, 1);
 
     $pdf->Cell(70);
-    $pdf->Cell(100, 10, '______________________________________:(Principal)', 0, 0);
+    $pdf->Cell(100, 10, '___Hassan Faraj Awadh____:(Principal)', 0, 0);
     $pdf->Cell(0, 10, '‫المدیر‬', 0, 1);
 
     //Close and output PDF document
