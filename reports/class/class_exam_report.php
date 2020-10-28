@@ -233,7 +233,7 @@ try{
         // $pdf->SetMargins(5, 3, 5, $keepmargins=true);
         $pdf->SetFont('aefurat', '', 17);
         $pdf->Cell(20);
-        $pdf->Cell(0,10,'AL-MADRASATUL MUNAWWARAH AL-ISLAMIYA',$border=0,$ln=1,'C',$fill=false, $link='', $stretch=0, $ignore_min_height=true, $calign='T', $valign='B');
+        $pdf->Cell(0,10,'MADRASATUL MUNAWWARAH AL ISLAMIYYA',$border=0,$ln=1,'C',$fill=false, $link='', $stretch=0, $ignore_min_height=true, $calign='T', $valign='B');
             
         $pdf->SetFont('aefurat', 'B', 12);
 
@@ -242,7 +242,7 @@ try{
         $pdf->Cell(0,5,'Email: info@almunawwarah.ac.ke', 0, 1, 'C');
 
         $pdf->Cell(35);
-        $pdf->Cell(150,5,'Tel No: 0720 211 495/ 0733 806 60', 0, 0, 'C');
+        $pdf->Cell(150,5,'Tel No: 0720 211 495/ 0733 806 604', 0, 0, 'C');
         $pdf->Cell(0,5,'Website : www.almunawwarah.ac.ke',$border=0,$ln=1,'C',$fill=false, $link='/index.php', $stretch=0, $ignore_min_height=true, $calign='T', $valign='B');
         $pdf->Ln(5);
 

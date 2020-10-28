@@ -323,7 +323,7 @@
         $pdf->setRTL(false);
     
         $out_of = getNumberOfSubjects($class_id) * $exam_out_of_value;
-        $percentage =number_format((($sum_of_total /$out_of) * 100), 0);
+        $percentage =number_format((($sum_of_total /$out_of) * 100), 1);
         
         $pdf->Ln(5);
         // $pdf->SetFont('timesI', 'I', 12);
@@ -417,13 +417,13 @@
     $pdf->SetTextColor(255,255,255);
     $pdf->Cell($width_cell[11], 8, 'Out Of',1,0,'C','B');
     $pdf->SetTextColor(0,0,0);
-    $pdf->Cell($width_cell[11], 8, $overal_total,1,0,'C');
+    $pdf->Cell($width_cell[11], 8, getNumberOfSubjects($class_id) * $exam_out_of_value,1,0,'C');
     $pdf->SetTextColor(255,255,255);
 
     $pdf->Cell($width_cell[11], 8, '',1,0,'C', 'B');
     $pdf->SetTextColor(0,0,0);
 
-    $pdf->Cell($width_cell[11], 8, $overal_total,1,0,'C');
+    $pdf->Cell($width_cell[11], 8, getNumberOfSubjects($class_id) * $exam_out_of_value,1,0,'C');
     $pdf->SetTextColor(255,255,255);
     $pdf->Cell($width_cell[11], 8, 'من ',1,0,'C','B');
     $pdf->SetTextColor(0,0,0);

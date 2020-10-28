@@ -56,6 +56,6 @@ class PDF extends TCPDF{
         $this->SetFont('aefurat','',10);
 
         $this->Cell(0, 5, 'Printed on: '.date("F j, Y, g:i a").' ~ By: '.$_SESSION["alogin"].' ( Examination Officer )' ,$border=0,$ln=0,'L',$fill=false, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='C');
-        $this->Cell(0, 5, 'Page '.$this->getAliasNumPage().' of '.$this->getAliasNbPages(), 0,0, 'C');
+        // $this->Cell(0, 5, 'Page '.$this->getAliasNumPage().' of '.$this->getAliasNbPages(), 0,0, 'C');
     }
 }
