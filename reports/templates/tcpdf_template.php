@@ -38,14 +38,14 @@ class PDF extends TCPDF{
 
         $this->SetFont('aefurat', 'U', 17);
         $this->Cell(20);
-        $this->Cell(0,10,'AL MADRASATUL MUNAWWARAH AL-ISLAMIYA',$border=0,$ln=1,'C',$fill=false, $link='', $stretch=0, $ignore_min_height=true, $calign='T', $valign='B');
+        $this->Cell(0,10,'MADRASATUL MUNAWWARAH AL ISLAMIYYA',$border=0,$ln=1,'C',$fill=false, $link='', $stretch=0, $ignore_min_height=true, $calign='T', $valign='B');
             
         $this->SetFont('aefurat', 'B', 12);
 
         $this->Cell(135,5,'P.O.Box: 98616-80100 Mombasa-Kenya', 0, 0, 'C');
         $this->Cell(0,5,'Email: info@almunawwarah.ac.ke', 0, 1, 'C');
 
-        $this->Cell(130,5,'Tel No: 0720 211 495/ 0733 806 60', 0, 0, 'C');
+        $this->Cell(130,5,'Tel No: 0720 211 495/ 0733 806 604', 0, 0, 'C');
         $this->Cell(0,5,'Website : www.almunawwarah.ac.ke', 0, 1, 'C');
 
     }
