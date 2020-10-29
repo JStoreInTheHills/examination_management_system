@@ -278,7 +278,7 @@
         $pdf->Cell(90, 10, '  ‫  _________________________‫من‬ ‫العدد‬:',  0,0,'',false);
       
         $pdf->setRTL(true);
-        $pdf->Cell(90, 10, '  ‫ ا‫لترتیب  ‫العل م‬ ‬',  0,1,'',false);
+        $pdf->Cell(90, 10, 'التر تيب الغا م‫‬',  0,1,'',false);
         $pdf->setRTL(false); 
     }catch(Exception $e){
         echo "Uncaught Exception" , $e->getMessage(), "\n";
