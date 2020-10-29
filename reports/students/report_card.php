@@ -3,37 +3,6 @@
     session_start();
     // this is the report card for the students. 
     // It holds the students exam performance. 
-
-        
-        // GLOBAL VARIABLES --------------------------------------------------------------
-        $stream_id; // variable of the stream that the student belongs to. 
-      
-        $student_id =$_GET['sid']; // variable holding the students id. 
-        $class_id = $_GET['cid']; // variable holding the class id of the student.
-       
-        $class_exam_id = $_GET['ceid']; // variable holding the id of the exam being outputted. 
-
-        $exam_name; // variable holding the name of the exam. 
-   
-        $year_name; // variable holding the academic year of the exam. 
-  
-        $exam_id; // variable holding the exam id for the result.
-
-        $className; // variable holding the name of the class. 
-  
-        $name; 
-
-        $students_stream_position;
-
-        $sum_of_total;
-        // ------------------------------------------------------------------------------
-
-        // Variable holding the exams out of value
-
-        $exam_out_of_value;
-
-
-
     // We check the config file which holds the database configuration settings.
     try{
 
@@ -57,12 +26,35 @@
     }catch(Exception $e){
         echo 'Exception Caught ',  $e->getMessage() , "\n";
     }
-    // ------------------------------------------------------------------------------
+            
+        // GLOBAL VARIABLES --------------------------------------------------------------
+        $stream_id; // variable of the stream that the student belongs to. 
+      
+        $student_id =$_GET['sid']; // variable holding the students id. 
+        $class_id = $_GET['cid']; // variable holding the class id of the student.
+       
+        $class_exam_id = $_GET['ceid']; // variable holding the id of the exam being outputted. 
+
+        $exam_name; // variable holding the name of the exam. 
+   
+        $year_name; // variable holding the academic year of the exam. 
+  
+        $exam_id; // variable holding the exam id for the result.
+
+        $className; // variable holding the name of the class. 
+  
+        $name; 
+
+        // Variable holding the exams out of value
+
+        $exam_out_of_value;
+
+        $sum_of_total =getTotalSumOfStudent($student_id);
 
     // Query to fetch the exam of the result card. 
     try{
 
-        $sql = "SELECT  exam_name, year_name, class_exams.exam_id, exam_out_of,name   
+        $sql = "SELECT exam_name, year_name, class_exams.exam_id, exam_out_of,name   
                 FROM exam 
                 JOIN class_exams ON exam.exam_id = class_exams.exam_id
                 LEFT JOIN term_year ON class_exams.term_id = term_year.term_year_id 
@@ -89,40 +81,6 @@
         echo "Uncaught Exception" , $e->getMessage() , "\n";
     }
 
-    // End of Query to get the exam result. 
-    
-    // Query to get the students personal details. 
-    try{
-
-        $sql = "SELECT FirstName, OtherNames, LastName, ClassName, RollId 
-                FROM tblstudents s 
-                JOIN tblclasses c 
-                ON s.ClassId = c.id 
-                WHERE s.StudentId =:student_id";
-
-        $query = $dbh->prepare($sql);
-        $query->bindParam(':student_id', $student_id, PDO::PARAM_STR);
-        
-        $query->execute();
-        $results = $query->fetchAll();
-
-        if($query->rowCount() > 0){
-            foreach($results as $result){
-                $student_name = ($result['FirstName']);
-                $other_name = ($result['OtherNames']);
-                $last_name = ($result['LastName']);
-                $className = ($result['ClassName']);
-                $rollId = $result['RollId'];
-            }
-        }else{
-            throw new Exception("Data Fields Empty. ", 1);
-        }
-        
-    }catch(Exception $e){
-        echo 'Uncaught Exception', $e->getMessage(), "\n";
-    }
-
-    // ------ Query to fetch students result -------------------------------------------------------
     try{
 
         // ------------------------------------------------------------------------------------------
@@ -137,7 +95,7 @@
         // -------------------------------------------------------------------------------------
         $result_query = "SELECT t.SubjectNamesAr, t.o_r, students_id, 
                                 class_exam_id, class_id, t.subject_id, t.subjectNames,
-                                t.marks, t.total, t.query 
+                                t.marks, t.total
                         FROM(
                                 SELECT
                                 class_exam_id,
@@ -150,19 +108,20 @@
                                 GROUP_CONCAT(SubjectNameAr) as SubjectNamesAr,
                                 GROUP_CONCAT(marks) as marks,
                                 SUM(marks) as total,
-                                RANK() OVER (PARTITION BY c.stream_id, ce.exam_id ORDER BY SUM(marks) DESC)AS o_r,
-                                RANK() OVER (PARTITION BY class_exam_id, class_id ORDER BY SUM(marks) DESC) AS query 
+                                RANK() OVER (PARTITION BY c.stream_id, ce.exam_id ORDER BY SUM(marks) DESC)AS o_r
                                 FROM result r 
                                 LEFT JOIN tblsubjectcombination ts ON ts.id = r.subject_id 
                                 JOIN tblsubjects s ON s.subject_id = ts.SubjectId 
                                 JOIN tblclasses c ON c.id = r.class_id 
                                 JOIN class_exams ce ON ce.id = r.class_exam_id 
                                 GROUP BY students_id, class_exam_id
+                                ORDER BY ts.id asc
                                 )AS t 
                             WHERE students_id =:students_id 
                             AND class_id=:class_id 
                             AND class_exam_id =:class_exam_id
-                            GROUP BY students_id";
+                            GROUP BY students_id
+                            ORDER BY t.subject_id ASC";
 
         $result_prepare_statement = $dbh->prepare($result_query);
         $result_prepare_statement->bindParam(':students_id',$student_id, PDO::PARAM_STR);
@@ -181,8 +140,6 @@
             $subjects_names = explode(',', $result_subjects_name);
             // var_dump($subjects_names);
                      
-            $students_stream_position = $result_item['query'];
-
             $result_subject_marks = $result_item['marks'];
             $marks = explode(',', $result_subject_marks);
             // var_dump($marks);
@@ -191,7 +148,7 @@
             $subject_ids = explode(',', $result_subject_id);
             // var_dump($subject_ids);
             $result_total = $result_item['total'];
-            $sum_of_total = $result_total;
+          
 
             $o_r = $result_item['o_r'];
 
@@ -199,41 +156,9 @@
             $subjectAr = explode(',', $subject_name_in_ar_array);
         }
 
-        // ---------------------------------------------------------------------------------------
-        // Stream Position. -------------------------------------
-        
-        $query_for_total_number_of_students = "SELECT COUNT(DISTINCT students_id) AS students_number 
-                                               FROM result 
-                                               WHERE class_id =:class_id 
-                                               AND class_exam_id =:class_exam_id";
-
-        $query_rank = $dbh->prepare($query_for_total_number_of_students);
-        $query_rank->bindParam(':class_id', $class_id, PDO::PARAM_STR);
-        $query_rank->bindParam(':class_exam_id', $class_exam_id, PDO::PARAM_STR);
-
-        $query_rank->execute();
-
-        $stream_total = $query_rank->fetchAll();
-
-        foreach($stream_total as $stream_total_item){
-            $stream_overal_total = $stream_total_item['students_number'];
-        }
-
         // ---------------------------------------------------------------------------------------------
         // Overall Position -----------------------------
 
-        $overal_query = $dbh->prepare("SELECT COUNT(*) as stream_total_item FROM tblstudents s JOIN tblclasses c ON c.id = s.ClassId WHERE c.stream_id =:stream_id AND s.Status = 1");
-        $overal_query->bindParam(':stream_id', $stream_id, PDO::PARAM_STR);
-
-        $overal_query->execute();
-
-        $total_overal_students;
-        $stream_total = $overal_query->fetchAll();
-
-        foreach($stream_total as $stream_total_item){
-            $total_overal_students = $stream_total_item['stream_total_item'];
-        }
-        // ----------------------------------------------------------------------------------------
 
     }catch(Exception $e){
         echo 'Uncaught Exception', $e->getMessage(), "\n";
@@ -296,6 +221,8 @@
         echo "Uncaught Exception " , $e->getMessage() , "\n";
     }
 
+    $arr = getStudentsDetails($student_id);
+
     //Students Details 
     try{
        
@@ -305,7 +232,7 @@
         $pdf->Ln(5);
 
         $pdf->Cell(75);
-        $pdf->Cell(30,2,  $student_name ." ". $other_name. " " . $last_name. " ~ " .$rollId   , 0, 1,'C', '', false, 'B', 'T');
+        $pdf->Cell(30,2,  $arr[0]['firstname'] . " ". $arr[0]['second_name'] . " ". $arr[0]['last_name'] . " (" . $arr[0]['rollId']. ")", 0, 1,'C', '', false, 'B', 'T');
 
         $pdf->Cell(165, 0, "Student's Name: __________________________________________________________________ ", 0,0,'',false);
         $pdf->setRTL(true);
@@ -315,7 +242,7 @@
         $pdf->Ln(3);
         $pdf->Cell(75, 0);
 
-        $pdf->Cell(30,2,  $className,  0, 1,'C', '', false, 'C', 'C');
+        $pdf->Cell(30,2,  $arr[0]['class_name'],  0, 1,'C', '', false, 'C', 'C');
         $pdf->Cell(165, 0, 'Class:__________________________________________________________________________________________', 0,0,'',false);
         
         $pdf->setRTL(true);
@@ -323,7 +250,7 @@
         $pdf->setRTL(false);
     
         $out_of = getNumberOfSubjects($class_id) * $exam_out_of_value;
-        $percentage =number_format((($sum_of_total /$out_of) * 100), 1);
+        $percentage = number_format((($sum_of_total /$out_of) * 100), 1);
         
         $pdf->Ln(5);
         // $pdf->SetFont('timesI', 'I', 12);
@@ -332,30 +259,14 @@
         $pdf->Cell(100, 0, 'Percentage(%):_______________________________(%) ', 0,0,'',false);
         $pdf->Cell(20, 0, ' النسبة ‫المئویة', 0,0,'',false);
     
-        try{
-            if($percentage >= 96){
-                $grade = "Excellent";
-            }elseif ( $percentage >= 86 && $percentage <= 95) {
-                $grade = "Very Good";
-            }elseif ($percentage >= 70 && $percentage <=85) {
-                $grade = "Good";
-            }elseif ($percentage >= 50 && $percentage <= 69) {
-                $grade = "Pass";
-            }else{
-                $grade = "Fail";
-            }
-        }catch(Exception $e){
-            echo 'Uncaught Exception' , $e->getMessage() , "\n";
-        }
-    
         // $pdf->SetFont('timesI', 'I', 12);
-        $pdf->Cell(0, 5, '  Grade:______ '.$grade.' _____', 0,0,'',false);
+        $pdf->Cell(0, 5, '  Grade:______ '.getStudentsGrade($percentage).' _____', 0,0,'',false);
         // $pdf->SetFont('aefurat', '', 12);
         $pdf->setRTL(true);
         $pdf->Cell(0, 5, '  ‫التقدیر‬: ',  0,1,'',false);
         $pdf->setRTL(false);
     
-        $pdf->Cell(100, 12, 'Stream Position:  ____'. $students_stream_position.' ____  Out Of:   ___ '.$stream_overal_total.' ___ ', 0,0,'',false);
+        $pdf->Cell(100, 12, 'Stream Position:  ____'. getStudentsPosition($class_id, $class_exam_id, $student_id).' ____  Out Of:   ___ '.getAllStudentsSatForExam($class_id, $class_exam_id).' ___ ', 0,0,'',false);
         
         $pdf->Cell(90, 12, '  ‫  _________________________‫من‬ ‫العدد‬:',  0,0,'',false);
       
@@ -363,7 +274,7 @@
         $pdf->Cell(90, 10, '  ‫ ا‫لترتیب  ‫الصفي‬ ‬',  0,1,'',false);
         $pdf->setRTL(false);
     
-        $pdf->Cell(100, 10, 'Overal Position: ____'. $o_r. '_ Out Of: ___'. $total_overal_students .'___', 0,0,'',false);
+        $pdf->Cell(100, 10, 'Overal Position: ____'. $o_r. '_ Out Of: ___'. getTotalOveralNumberOfStudents($stream_id) .'___', 0,0,'',false);
         $pdf->Cell(90, 10, '  ‫  _________________________‫من‬ ‫العدد‬:',  0,0,'',false);
       
         $pdf->setRTL(true);
@@ -387,6 +298,7 @@
         $pdf->Cell($width_cell[9], 10, ' ‫‫المواد الدراسیة‬ ‬',1,1,'R');
         $count = 1;
         
+        $sub = getSubjectNames($class_id);
         
         for($x=0; $x < count($subjects_names); $x++){
             for($i=0; $i < 1; $i++){
@@ -406,9 +318,6 @@
 
     // ------ Subjects Result Total -------------------------------------------------------
     $pdf->Ln(3);
-
-    $subject_count = count($subjects_names);
-    $overal_total = $subject_count * $exam_out_of_value;
 
     $pdf->SetTextColor(255,255,255);
     $pdf->Cell($width_cell[11], 8, 'Total',1,0,'C','B');
@@ -484,12 +393,10 @@
    
     $pdf->Cell(0, 10, "", 0, 1);
 
-    $classTeacher = getClassTeacher($class_id);
-
     $pdf->SetFont('dejavusanscondensed', '', 10);
 
     $pdf->Cell(100);
-    $pdf->Cell(85, 0,  $classTeacher , 0, 1);
+    $pdf->Cell(85, 0,  getClassTeacher($class_id) , 0, 1);
     $pdf->Cell(95);
     $pdf->Cell(80, 0, '_________________________________:(Class Teacher)', 0, 0);
     $pdf->Cell(5, 5, ' ‫ مشرف الفصل‬ ‫‬', 0, 1);
@@ -504,7 +411,7 @@
     
     
     $pdf->Cell(27);
-    $pdf->Cell(0, 5, '‫الختم‫الرسمي‬‬');
+    $pdf->Cell(0, 5, '‫الختم ‫الرسمي‬‬');
 
     //Close and output PDF document
-    $pdf->Output($student_name ." ". $other_name. " " . $last_name. " ~ " .$rollId .'.pdf', 'I');
+    $pdf->Output($arr[0]['firstname'] . " ". $arr[0]['second_name'] . " ". $arr[0]['last_name'] . " (" . $arr[0]['rollId']. ").pdf", 'I');

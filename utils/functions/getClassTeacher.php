@@ -1,7 +1,5 @@
 <?php
 
-   
-
     function getClassTeacher($class_id){
        
         global $dbh;
@@ -38,6 +36,159 @@
         return $numberOfSubjects;
     }
 
-   
+    function getSubjectNames($class_id){
+
+        global $dbh;
+
+        $query = "SELECT SubjectName,SubjectNameAr 
+                  FROM tblsubjectcombination 
+                  LEFT JOIN tblsubjects 
+                  ON tblsubjects.subject_id = tblsubjectcombination.SubjectId 
+                  WHERE ClassId =:class_id
+                  ORDER BY subject_id DESC";
+                  
+        $sql = $dbh->prepare($query);
+        
+        $sql->bindParam(":class_id", $class_id, PDO::PARAM_STR);
+        $sql->execute();
+
+        $data = array();
+
+        $Subjects = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+
+        return ($Subjects);
+    }
+
+
+    function getStudentsPosition($class_id, $class_exam_id, $students_id){
+
+        global $dbh;
+
+        $query = "SELECT r FROM(SELECT students_id, SUM(marks),
+                 RANK() OVER (PARTITION BY class_exam_id, class_id ORDER BY SUM(marks) DESC) as r
+                 FROM result  WHERE class_id =:class_id AND class_exam_id=:class_exam_id
+                 GROUP BY students_id) AS t
+                 WHERE students_id=:students_id";
+
+
+        $sql = $dbh->prepare($query);
+        $sql->bindParam(":class_id", $class_id,PDO::PARAM_STR);
+        $sql->bindParam(":class_exam_id", $class_exam_id, PDO::PARAM_STR);
+        $sql->bindParam(":students_id", $students_id, PDO::PARAM_STR);
+
+        $sql->execute();
+
+        $performance = $sql->fetchColumn();
+
+        return $performance;
+    }
+
+    function getAllStudentsSatForExam($class_id, $class_exam_id){
+        global $dbh;
+
+        $query_for_total_number_of_students = "SELECT COUNT(DISTINCT students_id) AS students_number 
+                                               FROM result 
+                                               WHERE class_id =:class_id 
+                                               AND class_exam_id =:class_exam_id";
+
+        $query_rank = $dbh->prepare($query_for_total_number_of_students);
+        $query_rank->bindParam(':class_id', $class_id, PDO::PARAM_STR);
+        $query_rank->bindParam(':class_exam_id', $class_exam_id, PDO::PARAM_STR);
+
+        $query_rank->execute();
+
+        $stream_total = $query_rank->fetchColumn();
+
+      return $stream_total;
+
+    }
+
+    function getTotalOveralNumberOfStudents($stream_id){
+
+        global $dbh;
+
+        $query = "SELECT COUNT(*) as stream_total_item 
+                  FROM tblstudents s 
+                  JOIN tblclasses c ON c.id = s.ClassId
+                  WHERE c.stream_id =:stream_id 
+                  AND s.Status = 1";
+
+        $overal_query = $dbh->prepare($query);
+        $overal_query->bindParam(':stream_id', $stream_id, PDO::PARAM_STR);
+
+        $overal_query->execute();
+
+        $total_overal_students;
+        $stream_total = $overal_query->fetchColumn();
+
+        return $stream_total;
+    }
+
+    function getStudentsGrade($percentage){
+       
+            if($percentage >= 96){
+                $grade = "Excellent";
+            }elseif ( $percentage >= 86 && $percentage <= 95) {
+                $grade = "Very Good";
+            }elseif ($percentage >= 70 && $percentage <=85) {
+                $grade = "Good";
+            }elseif ($percentage >= 50 && $percentage <= 69) {
+                $grade = "Pass";
+            }else{
+                $grade = "Fail";
+            }
+
+            return $grade;
+    }
+
+    function getStudentsDetails($students_id){
+
+        global $dbh;
+
+        $sql = "SELECT FirstName, OtherNames, LastName, ClassName, RollId 
+                FROM tblstudents s 
+                JOIN tblclasses c 
+                ON s.ClassId = c.id 
+                WHERE s.StudentId =:student_id";
+
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':student_id', $students_id, PDO::PARAM_STR);
+
+        $query->execute();
+        $results = $query->fetchAll();
+
+        $data = array();
+
+        if($query->rowCount() > 0){
+            foreach($results as $result){
+                $data [] = array(
+                    "firstname" => $result['FirstName'],
+                    "second_name" => $result['OtherNames'],
+                    "last_name" => $result['LastName'],
+                    "class_name" => $result['ClassName'],
+                    "rollId" => $result['RollId']
+                );
+            }
+        }else{
+            throw new Exception("Data Fields Empty. ", 1);
+        }
+        return ($data);
+    }
+
+    function getTotalSumOfStudent($students_id){
+
+        global $dbh;
+
+        $query = "SELECT SUM(marks) FROM result WHERE students_id =:students_id";
+
+        $sql = $dbh->prepare($query);
+        $sql->bindParam(":students_id", $students_id, PDO::PARAM_STR);
+        $sql->execute();
+
+        $total_score = $sql->fetchColumn();
+
+        return $total_score;
+    }
 
 ?>
