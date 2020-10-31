@@ -264,7 +264,7 @@
         }else{
         $pdf->Cell(0, 5, '  Grade:______ '.getStudentsGrade($percentage).' _____', 0,0,'',false);
         }
-        
+
         // $pdf->SetFont('aefurat', '', 12);
         $pdf->setRTL(true);
         $pdf->Cell(0, 5, '  ‫التقدیر‬: ',  0,1,'',false);
@@ -350,7 +350,7 @@
 
     // ----------------------------- Start Of Grade Section ----------------------------------------------------
 
-    if($stream_id == 90){
+    if($stream_id == 110 || $stream_id == 109 || $stream_id == 108){
         try{
             $pdf->SetTextColor(255,255,255);
             $pdf->Cell(74, 5, 'GRADES', 'LTB',0,'C', 1);
