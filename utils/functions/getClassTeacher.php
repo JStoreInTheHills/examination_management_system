@@ -108,11 +108,10 @@
 
         global $dbh;
 
-        $query = "SELECT COUNT(*) as stream_total_item 
-                  FROM tblstudents s 
-                  JOIN tblclasses c ON c.id = s.ClassId
-                  WHERE c.stream_id =:stream_id 
-                  AND s.Status = 1";
+        $query = "SELECT COUNT(DISTINCT students_id) as stream_total_item 
+                  FROM result s 
+                  JOIN tblclasses c ON c.id = s.class_id
+                  WHERE c.stream_id =:stream_id";
 
         $overal_query = $dbh->prepare($query);
         $overal_query->bindParam(':stream_id', $stream_id, PDO::PARAM_STR);
