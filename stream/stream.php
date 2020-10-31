@@ -127,7 +127,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                         <div class="form-group row">
                                             <div class="col-sm-12 mb-3 mb-sm-0">
                                                 <label class="text-primary" for="stream_name">Enter Class Name</label>
-                                                <input type="text" id="stream_name" autocomplete="off"
+                                                <input type="text" id="stream_name" name="stream_name" autocomplete="off"
                                                     class="form-control" placeholder="Raudha, Thanawii">
                                                     <small id="emailHelp" class="form-text text-muted">Class Name cannot
                                                         be less than 3 letters or digits.</small>
@@ -137,7 +137,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                         <div class="form-group">
                                             <label class="text-primary" for="desc">Enter Brief Description <span
                                                     class="text-danger">(Optional) </span></label>
-                                            <textarea id="desc" class="form-control"
+                                            <textarea id="desc" class="form-control" name="desc"
                                                 aria-label="With textarea" placeholder="Enter brief description of the class"></textarea>
                                         </div>
 
