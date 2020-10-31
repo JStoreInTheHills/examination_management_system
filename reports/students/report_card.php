@@ -49,7 +49,7 @@
 
         $exam_out_of_value;
 
-        $sum_of_total =getTotalSumOfStudent($student_id);
+        $sum_of_total =getTotalSumOfStudent($student_id, $class_exam_id, $class_id);
 
     // Query to fetch the exam of the result card. 
     try{
@@ -278,7 +278,8 @@
         $pdf->Cell(90, 10, '  ‫  _________________________‫من‬ ‫العدد‬:',  0,0,'',false);
       
         $pdf->setRTL(true);
-        $pdf->Cell(90, 10, 'التر تيب الغا م‫‬',  0,1,'',false);
+        // $pdf->SetFont('dejavusanscondensed', '', 10);
+        $pdf->Cell(90, 10, 'التر تيب العام‫‬',  0,1,'',false);
         $pdf->setRTL(false); 
     }catch(Exception $e){
         echo "Uncaught Exception" , $e->getMessage(), "\n";

@@ -176,14 +176,20 @@
         return ($data);
     }
 
-    function getTotalSumOfStudent($students_id){
+    function getTotalSumOfStudent($students_id, $class_exam_id, $class_id){
 
         global $dbh;
 
-        $query = "SELECT SUM(marks) FROM result WHERE students_id =:students_id";
+        $query = "SELECT SUM(marks) 
+                FROM result 
+                WHERE class_exam_id=:class_exam_id
+                AND students_id =:students_id
+                AND class_id=:class_id";
 
         $sql = $dbh->prepare($query);
         $sql->bindParam(":students_id", $students_id, PDO::PARAM_STR);
+        $sql->bindParam(":class_exam_id", $class_exam_id, PDO::PARAM_STR);
+        $sql->bindParam(":class_id", $class_id, PDO::PARAM_STR);
         $sql->execute();
 
         $total_score = $sql->fetchColumn();
