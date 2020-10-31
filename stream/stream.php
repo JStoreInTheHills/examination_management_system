@@ -95,7 +95,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         <div class="col-lg-8">
                             <div class="card mb-4 shadow">
                                 <div class="card-header">
-                                    <span class="text-primary"> <i class="fas fa-book-reader"></i> All Classes</span>
+                                    <span class="text-primary font-weight-bold"> <i class="fas fa-book-reader"></i> All Classes</span>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -120,7 +120,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         <div class="col-lg-4">
                             <div class="card shadow mb-4">
                                 <div class="card-header">
-                                    <span class="text-primary"> <i class="fas fa-book-reader"></i> Add a Class</span>
+                                    <span class="text-primary font-weight-bold"> <i class="fas fa-book-reader"></i> Add a Class</span>
                                 </div>
                                 <div class="card-body">
                                     <form id="stream_form" class="user">
