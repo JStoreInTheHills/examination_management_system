@@ -254,7 +254,7 @@
         
         $pdf->Ln(5);
         // $pdf->SetFont('timesI', 'I', 12);
-        $pdf->Cell(110,0,  $percentage ,  0, 1,'C', '', false, 'C', 'C');
+        $pdf->Cell(110,0,  $percentage . "%",  0, 1,'C', '', false, 'C', 'C');
         // $pdf->SetFont('aefurat', '', 12);
         $pdf->Cell(100, 0, 'Percentage(%):_______________________________(%) ', 0,0,'',false);
         $pdf->Cell(20, 0, ' النسبة ‫المئویة', 0,0,'',false);
