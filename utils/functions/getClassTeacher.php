@@ -127,13 +127,13 @@
 
     function getStudentsGrade($percentage){
        
-            if($percentage >= 96){
+            if($percentage >= 86){
                 $grade = "Excellent";
-            }elseif ( $percentage >= 86 && $percentage <= 95) {
+            }elseif ( $percentage >= 76 && $percentage <= 85) {
                 $grade = "Very Good";
-            }elseif ($percentage >= 70 && $percentage <=85) {
+            }elseif ($percentage >= 66 && $percentage <= 75) {
                 $grade = "Good";
-            }elseif ($percentage >= 50 && $percentage <= 69) {
+            }elseif ($percentage >= 50 && $percentage <= 65) {
                 $grade = "Pass";
             }else{
                 $grade = "Fail";
@@ -141,6 +141,23 @@
 
             return $grade;
     }
+
+    function getStudentsGradeForRaudhwa($percentage){
+       
+        if($percentage >= 96){
+            $grade = "Excellent";
+        }elseif ( $percentage >= 86 && $percentage <= 95) {
+            $grade = "Very Good";
+        }elseif ($percentage >= 70 && $percentage <=85) {
+            $grade = "Good";
+        }elseif ($percentage >= 50 && $percentage <= 69) {
+            $grade = "Pass";
+        }else{
+            $grade = "Fail";
+        }
+
+        return $grade;
+}
 
     function getStudentsDetails($students_id){
 
