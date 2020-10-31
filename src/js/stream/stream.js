@@ -144,11 +144,19 @@ all_classes();
 const toast = {
   question: () => {
     return new Promise((resolve) => {
-      iziToast.question({
+      iziToast.error({
         title: "Warning! ",
-        message: "Are you Sure you want to delete?",
-        timeout: 20000,
+        message: `Are you Sure you want to delete this Class? Note this will remove all the stream and exam that
+        belong to this class`,
+        timeout: 2000000,
         close: false,
+        titleSize: "50",
+        messageColor: "black",
+        icon: "fas fa-exclamation",
+        overlay: true,
+        displayMode: "once",
+        id: "question",
+        zindex: 999,
         position: "center",
         buttons: [
           [
