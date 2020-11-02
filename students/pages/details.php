@@ -1,12 +1,11 @@
-<?php include '../../config/config.php';
+<?php 
+    include '../../config/config.php';
+    include "../layouts/utils/redirect.php";
 
-session_start();
-
-if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 900){
-    header("Location: /login.php");
-    exit;
-}else{
-      $_SESSION['last_login_timestamp'] = time();
+    if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500){
+        redirectToHomePage();
+    }else{
+        $_SESSION['last_login_timestamp'] = time();
   ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,9 +57,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                             <?php
                                 if(isset($_SESSION['role_id'])){
-                                    echo  "<button class='btn btn-primary btn-md id='makeStudentInactive'>
-                                                Make Student Inactive
-                                          </button>";
+                                    echo  "<button class='btn btn-primary btn-md' id='makeStudentInactive'></button>";
                                 }
                                 
                             ?>
@@ -68,14 +65,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         
                     </div>
 
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Use this page to view name, admission number and class of the students.</strong>
-                        <hr>
-                            <p class="mb-0">Active students are denoted by <span class="badge badge-pill badge-success">Active</span> while In Active students are denoted by <span class="badge badge-pill badge-danger">Inactive</span> </p>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
+                  <div id="alert"></div>
 
                     <nav class="mb-4">
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -122,7 +112,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                                         <tr>
                                                             <th>Exam Name</th>
                                                             <th>Total Marks</th>
-                                                            <th>Grade</th>
+                                                            <!-- <th>Grade</th> -->
                                                             <th>Year</th>
                                                         </tr>
                                                     </thead>
@@ -173,25 +163,32 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
-                                        <li id="students_name" class="list-group-item">Name:</li>
-                                        <li id="RollId" class="list-group-item">Admission Number:</li>
-                                        <li id="age" class="list-group-item">Age:</li>
-                                        <li id="Gender" class="list-group-item">Gender:</li>
-                                        <li id="DOB" class="list-group-item">Date of Birth:</li>
-                                        <li id="status" class="list-group-item">Status</li>
-                                        <li id="RegDate" class="list-group-item">Date of Registration:</li>
+                                        <li id="students_name" class="list-group-item"></li>
+                                        <li id="RollId" class="list-group-item"></li>
+                                        <!-- <li id="age" class="list-group-item"></li> -->
+                                        <li id="Gender" class="list-group-item"></li>
+                                        <!-- <li id="DOB" class="list-group-item"></li> -->
+                                        <li id="status" class="list-group-item"></li>
+                                        <li id="RegDate" class="list-group-item"></li>
                                     </ul>
                                 </div>
                             </div>
 
                             <div class="card mb-4">
-                                <div class="card-header py-3">
+                                <div class="card-header d-sm-flex align-items-center justify-content-between  py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Class Details</h6>
+
+                                    <?php
+                                        if(isset($_SESSION['role_id'])){
+                                            echo  "<button class='btn btn-sm btn-primary' id='moveStudentToDifferentClass'>Move to different class</button>";
+                                        }
+                                    ?>
+                                    
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
-                                        <li id="class_name" class="list-group-item">Class Name:</li>
-                                        <li id="stream_name" class="list-group-item">Stream Name:</li>
+                                        <li id="class_name" class="list-group-item"></li>
+                                        <li id="stream_name" class="list-group-item"></li>
                                     </ul>
                                 </div>
                             </div>
@@ -216,9 +213,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
     <?php include '../../layouts/utils/logout_modal.html'; ?>
 
     <script src="/dist/js/main.min.js"></script>
-    <script src="/dist/js/students/student_details.js"></script>
-    <!-- <script src="/src/js/demo/chart-bar-demo.js"></script> -->
     <script src="/dist/js/utils/utils.js"></script>
+    <script src="/dist/js/students/student_details.js"></script>
 </body>
 
 </html>
