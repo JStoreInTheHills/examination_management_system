@@ -159,16 +159,17 @@ if(isset($_SESSION['alogin'])){
             const students_id = sessionStorage.setItem("students_id", s.uuid);
             const class_id = sessionStorage.setItem("class_id", s.class_id);
 
-              document.location = `./pages/details`;
+
+              document.location = `./pages/details?sid=${s.uuid}`;
            
           } else {
             $('#toast').empty().append(
               `<div class="alert alert-danger" role="alert">
                 <h4 class="alert-heading"><span><i class="fas fa-exclamation-triangle"></i></span>
-                 Student Not Registered In the Portal
+                 Access to the Portal has been restrained
                  </h4>
                 <hr>
-                <p class="mb-0">Contact the Examination Officer for assistance</p>
+                <p class="mb-0">Contact the Examination Officer or your class teacher for assistance</p>
               </div>`);
           }
         });
