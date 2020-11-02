@@ -12,7 +12,8 @@
     $query = "SELECT StudentId, FirstName,LastName,ClassId FROM 
               tblstudents 
               WHERE FirstName LIKE :firstname
-              AND RollId =:rollid";
+              AND RollId =:rollid 
+              AND Status = 1";
 
     $sql = $dbh->prepare($query);
 
