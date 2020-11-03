@@ -86,11 +86,11 @@ if(isset($_SESSION['alogin'])){
 
                 <hr>
 
-                <!-- <div class="text-center">
+                <div class="text-center">
                     <a href="./students/login">
                           <i class="fas fa-user-graduate"></i> Login As Student
                     </a>
-                </div> -->
+                </div>
                 
                 </div>
               </div>
@@ -129,7 +129,7 @@ if(isset($_SESSION['alogin'])){
           password : "Use the password assigned to you by the Examination officer.",
         },
 
-        errorClass : "alert alert-danger",
+        errorClass : "text-danger",
 
         invaidHandler : (event, validator) =>{
           const errors = validator.numberOfInvalids();
