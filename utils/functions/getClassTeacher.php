@@ -17,6 +17,23 @@
         return $teachersName;
 
     }
+    function getClassTeacherGender($class_id){
+       
+        global $dbh;
+
+        $query = "SELECT gender FROM tblclasses LEFT JOIN tblteachers 
+                  ON tblclasses.classTeacher = tblteachers.teacher_id 
+                  WHERE tblclasses.id =:class_id";
+        $sql = $dbh->prepare($query);
+        $sql->bindParam(":class_id", $class_id, PDO::PARAM_STR);
+
+        $sql->execute();
+
+        $teachersGender = $sql->fetchColumn();
+
+        return $teachersGender;
+
+    }
 
     function getNumberOfSubjects($class_id){
 
