@@ -23,7 +23,7 @@ function checkTokenization() {
     var stdid = urlParams.get("sid");
     var class_id;
   } else {
-    var stdid = urlParams.get("sid");
+    var stdid = sessionStorage.getItem("students_id");
     var class_id = sessionStorage.getItem("class_id");
   }
   return { stdid, class_id };

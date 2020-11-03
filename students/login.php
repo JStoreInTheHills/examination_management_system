@@ -113,6 +113,7 @@ if(isset($_SESSION['alogin'])){
   <script src="/dist/js/main.min.js"></script>
 
   <script>
+  
     sessionStorage.clear();
 
     $('#login_form').validate({
@@ -160,7 +161,7 @@ if(isset($_SESSION['alogin'])){
             const class_id = sessionStorage.setItem("class_id", s.class_id);
 
 
-              document.location = `./pages/details?sid=${s.uuid}`;
+              document.location = `./pages/details`;
            
           } else {
             $('#toast').empty().append(
