@@ -448,7 +448,13 @@
     $pdf->Cell(85, 0,  getClassTeacher($class_id) , 0, 1);
     $pdf->Cell(95);
     $pdf->Cell(80, 0, '_________________________________:(Class Teacher)', 0, 0);
-    $pdf->Cell(5, 5, ' ‫ مشرف الفصل‬ ‫‬', 0, 1);
+
+    if(getClassTeacherGender($class_id) == "Male"){
+        $pdf->Cell(5, 5, ' ‫ مشرف الفصل‬ ‫‬', 0, 1);
+    }else{
+        $pdf->Cell(5, 5, ' ‫ مشرفة الفصل‬ ‫‬', 0, 1);
+    }
+
 
     $pdf->Ln(1);
 
