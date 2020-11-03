@@ -250,7 +250,7 @@
         $pdf->setRTL(false);
     
         $out_of = getNumberOfSubjects($class_id) * $exam_out_of_value;
-        $percentage = number_format((($sum_of_total /$out_of) * 100), 1);
+        $percentage = number_format((($sum_of_total /$out_of) * 100));
         
         $pdf->Ln(5);
         // $pdf->SetFont('timesI', 'I', 12);
