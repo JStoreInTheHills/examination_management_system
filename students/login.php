@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 // check to see if the session has been started and unset the active session.
 if(isset($_SESSION['alogin'])){
   unset($_SESSION['alogin']);
