@@ -144,7 +144,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                                         <th>Adm#</th>
                                                         <th>Date Added</th>
                                                         <th>MeanScore</th>
-                                                        <th>Grade</th>
+                                                        <!-- <th>Grade</th> -->
                                                         <th>Subjects</th>
                                                         <th>Total Score</th>
 

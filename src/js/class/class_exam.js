@@ -285,7 +285,7 @@ const class_exam_student_table = $("#class_exam_student_table").DataTable({
       data: "created_at",
     },
     {
-      targets: 7,
+      targets: 6,
       data: "total", // this is the sum of all the marks of the student for that exam.
     },
     {
@@ -309,36 +309,36 @@ const class_exam_student_table = $("#class_exam_student_table").DataTable({
         }
       },
     },
+    // {
+    //   targets: 5,
+    //   data: {
+    //     total: "total",
+    //     subject: "subject",
+    //   },
+    //   render: function (data) {
+    //     var t = data.total;
+    //     var s = data.subject;
+    //     s = s * exam_out_of;
+
+    //     var result = t / s;
+
+    //     result = Math.round(result * 100);
+
+    //     if (result >= 96) {
+    //       return `<span class="text-success">Excellent</span>`;
+    //     } else if ((result <= 95) & (result >= 86)) {
+    //       return `<span class="text-success"> Very Good </span>`;
+    //     } else if ((result <= 85) & (result >= 70)) {
+    //       return `<span class="text-warning">Good</span>`;
+    //     } else if ((result <= 69) & (result >= 50)) {
+    //       return `<span class="text-info">Pass</span>`;
+    //     } else {
+    //       return `<span class="text-danger">Fail</span>`;
+    //     }
+    //   },
+    // },
     {
       targets: 5,
-      data: {
-        total: "total",
-        subject: "subject",
-      },
-      render: function (data) {
-        var t = data.total;
-        var s = data.subject;
-        s = s * exam_out_of;
-
-        var result = t / s;
-
-        result = Math.round(result * 100);
-
-        if (result >= 96) {
-          return `<span class="text-success">Excellent</span>`;
-        } else if ((result <= 95) & (result >= 86)) {
-          return `<span class="text-success"> Very Good </span>`;
-        } else if ((result <= 85) & (result >= 70)) {
-          return `<span class="text-warning">Good</span>`;
-        } else if ((result <= 69) & (result >= 50)) {
-          return `<span class="text-info">Pass</span>`;
-        } else {
-          return `<span class="text-danger">Fail</span>`;
-        }
-      },
-    },
-    {
-      targets: 6,
       data: "subjects",
       render: function (data) {
         let d = data, //get the total subjects sat by the student in form of a string
@@ -348,7 +348,7 @@ const class_exam_student_table = $("#class_exam_student_table").DataTable({
     },
 
     {
-      targets: 8,
+      targets: 7,
       orderable: false,
       data: {
         result_id: "result_id",
@@ -708,7 +708,6 @@ const get_best_performed_subject = () => {
     type: "GET",
     data: formDataForBestStudentAndSubject,
   }).done(function (response) {
-    
     const j = JSON.parse(response);
     j.forEach((i) => {
       best_performed_subject_teacher = i.name;
