@@ -4,7 +4,7 @@
 
     $sid = $_GET['sid'];
 
-    $query = "SELECT FirstName, OtherNames, LastName, c.ClassName, st.name, c.id,
+    $query = "SELECT FirstName, OtherNames, LastName, c.ClassName, st.name, c.id, TelNo, DOB,
             s.Status, RollId, RegDate, DOB, Gender,TIMESTAMPDIFF(YEAR, DOB, CURDATE()) AS age
             FROM tblstudents s 
             JOIN tblclasses c 

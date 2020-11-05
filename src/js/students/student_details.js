@@ -9,6 +9,17 @@ const urlParams = new URLSearchParams(queryString); // the url is passed as an a
 const _token = sessionStorage.getItem("_token");
 // Edit student button
 const edit_students = $("#edit_students").html("Edit Student");
+const editStudentModalTitle = $("#editStudentModalTitle");
+const first_name = $("#first_name");
+const second_name = $("#second_name");
+const last_name = $("#last_name");
+const rollid = $("#rollid");
+const telephone = $("#telephone");
+const gender = $("#gender");
+const classid = $("#classid");
+const edit_student_form = $("#edit_student_form");
+const date = $("#date");
+const students_id = $("#students_id");
 
 const pupil = {};
 
@@ -48,12 +59,14 @@ function get_details() {
       pupil.age = item.age;
       pupil.Gender = item.Gender;
       pupil.DOB = item.DOB;
+      pupil.TelNo = item.TelNo;
       pupil["RegDate"] = item.RegDate;
       pupil["RollId"] = item.RollId;
       pupil["Status"] = item.Status;
       pupil["StreamName"] = item.name;
       pupil["ClassName"] = item.ClassName;
       class_id = item.id;
+      populateModalWithStudentsDetails(item);
     });
 
     checkIfStudentIsInactive();
@@ -78,15 +91,18 @@ function get_details() {
     $("#Gender").html(
       `<span>Gender:</span><span class="text-gray-900"> ${pupil.Gender}</span>`
     );
-    // $("#DOB").html(
-    //   `<span>Date Of Birth:</span><span class="text-gray-900"> ${pupil.DOB}</span>`
-    // );
+    $("#DOB").html(
+      `<span>Date Of Birth:</span><span class="text-gray-900"> ${pupil.DOB}</span>`
+    );
+    $("#TelNo").html(
+      `<span>Telephone Number:</span><span class="text-gray-900"> ${pupil.TelNo}</span>`
+    );
     $("#RegDate").html(
       `<span>Date Of Registration:</span><span class="text-gray-900"> ${pupil.RegDate}</span>`
     );
-    // $("#age").html(
-    //   `<span>Age:</span> <span class="text-gray-900"> ${pupil.age} years</span>`
-    // );
+    $("#age").html(
+      `<span>Age:</span> <span class="text-gray-900"> ${pupil.age} years</span>`
+    );
     $("#RollId").html(
       `<span>Admission Number:</span><span class="text-gray-900"> ${pupil["RollId"]}</span>`
     );
@@ -365,6 +381,103 @@ makeStudentInactive.click(() => {
         console.log("Fail");
       });
   });
+});
+
+edit_students.click(() => {
+  $("#exampleModalCenter").modal("show");
+});
+
+function populateModalWithStudentsDetails(item) {
+  editStudentModalTitle.html(
+    `${item.FirstName} ${item.OtherNames} ${item.LastName}`
+  );
+  first_name.val(item.FirstName);
+  second_name.val(item.OtherNames);
+  last_name.val(item.LastName);
+  rollid.val(item.RollId);
+  telephone.val(item.TelNo);
+  gender.val(item.Gender);
+  classid.val(item.id);
+  date.val(item.DOB);
+  students_id.val(stdid);
+}
+
+edit_student_form.validate({
+  rules: {
+    first_name: "required",
+    telephone_no: "required",
+    second_name: "required",
+    last_name: "required",
+    rollid: "required",
+    telephone: "required",
+    gender: "required",
+    classid: "required",
+    dob: {
+      required: true,
+      dateISO: true,
+    },
+  },
+  errorClass: "text-danger",
+  submitHandler: (form) => {
+    $.ajax({
+      url: "../queries/edit_students_details.php",
+      type: "POST",
+      data: $(form).serialize(),
+    }).done((response) => {
+      const resp = JSON.parse(response);
+      checkIfSuccessIsFalse(resp);
+    });
+  },
+});
+
+function checkIfSuccessIsFalse(resp) {
+  if (resp.success == true) {
+    iziToast.success({
+      message: resp.message,
+      zindex: 999,
+      displayMode: "once",
+      transitionIn: "fadeInUp",
+      position: "topRight",
+      onClosing: () => {
+        updateDetails();
+      },
+    });
+  } else {
+    iziToast.error({
+      message: resp.message,
+      zindex: 999,
+      displayMode: "once",
+      transitionIn: "fadeInUp",
+      position: "topRight",
+    });
+  }
+}
+
+function updateDetails() {
+  get_details();
+  $("#exampleModalCenter").modal("hide");
+}
+
+classid.select2({
+  placeholder: "Type to choose the class to add the student",
+  theme: "bootstrap4",
+  ajax: {
+    url: "../queries/getAllClasses.php",
+    type: "POST",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        searchTerm: params.term,
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
 });
 
 setInterval(() => {

@@ -62,15 +62,16 @@
                                 
                             ?>
                         </div>
-                        
+
                     </div>
 
-                  <div id="alert"></div>
+                    <div id="alert"></div>
 
                     <nav class="mb-4">
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-                                role="tab" aria-controls="nav-home" aria-selected="true"> <span><i class="fas fa-user-graduate"></i></span> Students Performance</a>
+                                role="tab" aria-controls="nav-home" aria-selected="true"> <span><i
+                                        class="fas fa-user-graduate"></i></span> Students Performance</a>
                             <!-- <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
                                 role="tab" aria-controls="nav-profile" aria-selected="false"> <span><i class="fas fa-chalkboard"></i></span>  Exams</a>
                             <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact"
@@ -88,7 +89,9 @@
                                     <!-- Area Chart -->
                                     <div class="card shadow mb-4">
                                         <div class="card-header py-3">
-                                            <h6 class="m-0 font-weight-bold text-primary"><span><i class="fas fa-user-graduate"></i></span>  Students Performance Curve
+                                            <h6 class="m-0 font-weight-bold text-primary"><span><i
+                                                        class="fas fa-user-graduate"></i></span> Students Performance
+                                                Curve
                                             </h6>
                                         </div>
                                         <div class="card-body">
@@ -105,9 +108,9 @@
                                                 <span><i class="fas fa-users"></i></span> Overall Exam Performance</h6>
                                         </div>
                                         <div class="card-body">
-                                        <div class="table-responsive">
-                                                <table class="table table-striped " id="overrall_exam_table" width="100%"
-                                                    cellspacing="0">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped " id="overrall_exam_table"
+                                                    width="100%" cellspacing="0">
                                                     <thead>
                                                         <tr>
                                                             <th>Exam Name</th>
@@ -125,7 +128,8 @@
                                 <div class="tab-pane fade" id="nav-profile" role="tabpanel"
                                     aria-labelledby="nav-profile-tab">
                                     <div class="card shadow mb-4">
-                                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <div
+                                            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                             <h6 class="mx font-weight-bold text-primary">Exams</h6>
                                         </div>
                                         <div class="card-body">
@@ -159,17 +163,20 @@
                             <!--Students Details -->
                             <div class="card mb-2">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary"><span><i class="fas fa-user"></i></span>  Students Details</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary"><span><i
+                                                class="fas fa-user"></i></span> Students Details</h6>
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
                                         <li id="students_name" class="list-group-item"></li>
                                         <li id="RollId" class="list-group-item"></li>
-                                        <!-- <li id="age" class="list-group-item"></li> -->
+                                        <li id="age" class="list-group-item"></li>
                                         <li id="Gender" class="list-group-item"></li>
-                                        <!-- <li id="DOB" class="list-group-item"></li> -->
+                                        <li id="DOB" class="list-group-item"></li>
                                         <li id="status" class="list-group-item"></li>
                                         <li id="RegDate" class="list-group-item"></li>
+                                        <li id="TelNo" class="list-group-item"></li>
+
                                     </ul>
                                 </div>
                             </div>
@@ -183,7 +190,7 @@
                                             echo  "<button class='btn btn-sm btn-primary' id='moveStudentToDifferentClass'>Move to different class</button>";
                                         }
                                     ?>
-                                    
+
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
@@ -199,6 +206,79 @@
                 </div>
                 <!-- /.container-fluid -->
 
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editStudentModalTitle"></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="edit_student_form" class="user">
+
+                                    <input type="hidden" name="students_id" id="students_id">
+                                    <div class="form-group row">
+                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                            <label class="text-primary"  for="first_name">First Name</label>
+                                            <input type="text" name="first_name" class="form-control" id="first_name"
+                                                placeholder="Enter First Name">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="text-primary" for="rollid"> Second Name</label>
+                                            <input type="text" class="form-control" name="second_name" id="second_name"
+                                                placeholder="Enter Second Name">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                            <label class="text-primary"  for="last_name">Last Name</label>
+                                            <input type="text" name="last_name" class="form-control" id="last_name"
+                                                placeholder="Enter Last Name">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="text-primary" for="rollid"> Admission Number</label>
+                                            <input type="text" class="form-control" name="rollid" id="rollid"
+                                                placeholder="Enter Admission Number">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            <label class="text-primary" for="telephone">Telephone Number</label>
+                                            <input type="text" name="telephone_no" class="form-control" id="telephone"
+                                                placeholer="Enter Phone Number">
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <label class="text-primary" for="gender">Choose Gender</label>
+                                            <select name="gender" id="gender" class="form-control">
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="text-primary for="classid">Choose a Class</label>
+                                            <select style="width: 100%" name="classid" id="classid" class="form-control "></select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="text-primary" for="date">Date Of Birth</label>
+                                            <input type="text" data-toggle="datepicker" name="dob" id="date"
+                                                class="form-control" autocomplete="off" placeholder="2002-04-09">
+                                        </div>
+                                    </div>
+                                    <hr>
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary" type="submit">Save</button>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- End of Main Content -->
 
