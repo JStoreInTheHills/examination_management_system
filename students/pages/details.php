@@ -187,7 +187,7 @@
 
                                     <?php
                                         if(isset($_SESSION['role_id'])){
-                                            echo  "<button class='btn btn-sm btn-primary' id='moveStudentToDifferentClass'>Move to different class</button>";
+                                            echo  "<button class='btn btn-sm btn-primary' id='moveStudentToDifferentClass'></button>";
                                         }
                                     ?>
 
@@ -278,6 +278,9 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="modal fade" id="moveToDifferentClass tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"">
                 </div>
             </div>
             <!-- End of Main Content -->
