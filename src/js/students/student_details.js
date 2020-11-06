@@ -434,7 +434,6 @@ function checkIfSuccessIsFalse(resp) {
   if (resp.success == true) {
     iziToast.success({
       message: resp.message,
-      zindex: 999,
       displayMode: "once",
       transitionIn: "fadeInUp",
       position: "topRight",
@@ -445,7 +444,6 @@ function checkIfSuccessIsFalse(resp) {
   } else {
     iziToast.error({
       message: resp.message,
-      zindex: 999,
       displayMode: "once",
       transitionIn: "fadeInUp",
       position: "topRight",
