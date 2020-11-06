@@ -21,6 +21,8 @@ const edit_student_form = $("#edit_student_form");
 const date = $("#date");
 const students_id = $("#students_id");
 
+const moveStudentToDifferentClass = $("#moveStudentToDifferentClass");
+
 const pupil = {};
 
 const makeStudentInactive = $("#makeStudentInactive");
@@ -457,6 +459,11 @@ function updateDetails() {
   get_details();
   $("#exampleModalCenter").modal("hide");
 }
+
+moveStudentToDifferentClass.html(`Move Student To Different Class`);
+moveStudentToDifferentClass.click(() => {
+  $("#moveToDifferentClass").modal("show");
+});
 
 classid.select2({
   placeholder: "Type to choose the class to add the student",
