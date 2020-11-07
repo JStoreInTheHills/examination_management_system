@@ -7,6 +7,7 @@
     $exam_name = $_POST['exam_name'];
     $created_by = $_SESSION['uuid'];
     $add_exam = $_POST['exam_out_of'];
+    $closed = 1;
 
     if (empty($exam_name))
         $errors['ClassName'] = 'Name is required.';
@@ -22,15 +23,16 @@
         $data['errors'] = $errors;
     }else {
 
-        $sql = "INSERT INTO exam(exam_name, created_at, creator_id, exam_out_of) 
-                VALUES (:exam,CURRENT_TIMESTAMP,:created_by,:exam_out_of)";
+        $sql = "INSERT INTO exam(exam_name, created_at, creator_id, exam_out_of, closed) 
+                VALUES (:exam,CURRENT_TIMESTAMP,:created_by,:exam_out_of, :closed)";
 
         $query = $dbh->prepare($sql);
 
         $query->bindParam(':exam', $exam_name, PDO::PARAM_STR);
         $query->bindParam(':exam_out_of', $add_exam, PDO::PARAM_STR);
         $query->bindParam(':created_by', $created_by, PDO::PARAM_STR);
-
+        $query->bindParam(':closed', $closed, PDO::PARAM_STR);
+        
         $query->execute();
 
         $er = $query->errorInfo();
