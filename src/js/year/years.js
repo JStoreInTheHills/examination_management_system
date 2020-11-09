@@ -39,6 +39,10 @@ const year_table = $("#year_table").DataTable({
   },
   columnDefs: [
     {
+      targets: 0,
+      data: "created_at",
+    },
+    {
       targets: 1,
       data: {
         year_id: "year_id",
@@ -48,10 +52,7 @@ const year_table = $("#year_table").DataTable({
         return `<a href="./page/view_academic_year?year_id=${data.year_id}">${data.year_name}</a>`;
       },
     },
-    {
-      targets: 0,
-      data: "created_at",
-    },
+  
     {
       targets: 2,
       data: {
