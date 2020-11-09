@@ -1,11 +1,10 @@
 <?php
     include "../layouts/utils/redirect.php";
 
-if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500 || !isset($_SESSION['role_id'])){
-    redirectToHomePage();
-    // echo ('session is ' . $_SESSION['alogin']);
-}else{
-    $_SESSION['last_login_timestamp'] = time();
+    if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500 || !isset($_SESSION['role_id'])){
+        redirectToHomePage();
+    }else{
+        $_SESSION['last_login_timestamp'] = time();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -248,8 +247,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
     <!-- End of Page Wrapper -->
 
     <script src="/dist/js/main.min.js"></script>
-    <script src="/dist/js/students/student.js"></script>
     <script src="/dist/js/utils/utils.js"></script>
+    <script src="/dist/js/students/student.js"></script>
 </body>
 
 </html>
