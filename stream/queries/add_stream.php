@@ -33,7 +33,7 @@ if (!empty($errors)) {
 
     if ($lastInsertId) {
         $data['success'] = true;
-        $data['message'] = 'Stream Added Successfully';
+        $data['message'] = 'Class Added Successfully';
     } else {
         $data['success'] = false;
         $data['message'] = $er[2];
