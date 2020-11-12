@@ -4,8 +4,9 @@
 
     $eid = $_GET['eid'];
 
-    $query = "SELECT exam_name, exam_out_of, created_at, closed
+    $query = "SELECT exam_name, exam_out_of, created_at, closed, r_style, tbl_rstyle.name
               FROM exam 
+              JOIN tbl_rstyle ON exam.r_style = tbl_rstyle.id
               WHERE exam_id=:exam_id";
 
     $sql=$dbh->prepare($query);

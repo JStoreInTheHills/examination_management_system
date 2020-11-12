@@ -153,6 +153,12 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                     <input type="text" id="exam_out_of_edit" class="form-control" name="exam_out_of_edit">
                                 </div>
                             </div>
+                            <label for="exam_out_of" class="text-primary">Enter Exam Out Of: </label>
+                            <div class="form-group row">
+                                <div class="col-sm-12 mb-3 mb-sm-0">
+                                    <select name="r_style" id="r_style" style="width:100%" class="form-control"></select>
+                                </div>
+                            </div>
                             <button type="submit" class="btn btn-primary">Save changes</button>
                         </form>
                     </div>

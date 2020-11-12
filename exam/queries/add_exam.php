@@ -8,6 +8,7 @@
     $created_by = $_SESSION['uuid'];
     $add_exam = $_POST['exam_out_of'];
     $closed = 1;
+    $r_style = $_POST['r_style'];
 
     if (empty($exam_name))
         $errors['ClassName'] = 'Name is required.';
@@ -23,8 +24,8 @@
         $data['errors'] = $errors;
     }else {
 
-        $sql = "INSERT INTO exam(exam_name, created_at, creator_id, exam_out_of, closed) 
-                VALUES (:exam,CURRENT_TIMESTAMP,:created_by,:exam_out_of, :closed)";
+        $sql = "INSERT INTO exam(exam_name, created_at, creator_id, exam_out_of, closed, r_style) 
+                VALUES (:exam,CURRENT_TIMESTAMP,:created_by,:exam_out_of, :closed, :r_style)";
 
         $query = $dbh->prepare($sql);
 
@@ -32,6 +33,7 @@
         $query->bindParam(':exam_out_of', $add_exam, PDO::PARAM_STR);
         $query->bindParam(':created_by', $created_by, PDO::PARAM_STR);
         $query->bindParam(':closed', $closed, PDO::PARAM_STR);
+        $query->bindParam(':r_style', $r_style, PDO::PARAM_STR);
         
         $query->execute();
 
@@ -50,3 +52,7 @@
 
     }
 echo json_encode($data);
+
+exit();
+
+?>

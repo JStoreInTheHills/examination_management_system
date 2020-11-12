@@ -26,6 +26,8 @@ const edit_exam_form = $("#edit_exam_form");
 
 const exam_id_edit = $("#exam_id_edit");
 
+const r_style = $("#r_style");
+var studentSelect = $("#r_style");
 var isClosed;
 
 const init = () => {
@@ -39,6 +41,7 @@ const init = () => {
     const arr = JSON.parse(response);
 
     let status;
+    let data = {};
 
     arr.forEach((element) => {
       page_heading.html(element.exam_name);
@@ -50,13 +53,27 @@ const init = () => {
       exam_id_edit.val(exam_id);
       exam_out_of.html(`${element.exam_out_of} points`);
       exampleModalCenterTitle.html(element.exam_name);
+      data.name = element.name;
+      data.r_style = element.r_style;
     });
 
+    fillSelect2WithData(data);
     checkIfExamIsClosed(status);
   });
 };
 
 init();
+
+function fillSelect2WithData(data) {
+  var option = new Option(data.name, data.r_style, true, true);
+  studentSelect.append(option).trigger("change");
+  studentSelect.trigger({
+    type: "select2:select",
+    params: {
+      data: data,
+    },
+  });
+}
 
 function checkIfExamIsClosed(status) {
   if (status == 1) {
@@ -210,5 +227,19 @@ edit_exam_form.validate({
         });
       }
     });
+  },
+});
+
+r_style.select2({
+  theme: "bootstrap4",
+  placeholder: "Type to select Report style",
+  ajax: {
+    url: "../queries/fetchReportingStyle",
+    dataType: "json",
+    processResults: function (data) {
+      return {
+        results: data,
+      };
+    },
   },
 });

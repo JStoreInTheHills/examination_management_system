@@ -70,7 +70,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                     <div class="row">
                         <div class="col-lg-7">
                             <div class="card mb-4 shadow ">
-                                <div class="card-header text-primary">
+                                <div class="card-header text-primary font-weight-bold">
                                     All Examinations
                                 </div>
                                 <div class="card-body">
@@ -94,29 +94,36 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         </div>
 
                         <div class="col-lg-5">
-                            <div class="card shadow mb-4">
-                                <div class="card-header text-primary">
+                            <div class="card mb-4">
+                                <div class="card-header text-primary font-weight-bold">
                                     <span><i class="fas fa-edit"></i></span> Add Examination
                                 </div>
                                 <div class="card-body">
-                                    <form for="exam_form" class="user">
-                                        <label for="exam_name" class="text-primary">Enter exam Name: </label>
+                                    <form for="exam_form" class="user" id="exam_form">
+                                        <label for="exam_name" class="text-primary">Exam Name: </label>
                                         <div class="form-group row">
                                             <div class="col-sm-12 mb-3 mb-sm-0">
-                                                <input type="text" id="exam_name" class="form-control"
+                                                <input type="text" name="exam_name" id="exam_name" class="form-control"
                                                     placeholder="Enter exam name">
                                             </div>
                                         </div>
-                                        <label for="exam_out_of" class="text-primary">Enter exam Out of: </label>
+                                        <label for="exam_out_of" class="text-primary">Exam Out of: </label>
                                         <div class="form-group row">
                                             <div class="col-sm-12 mb-3 mb-sm-0">
-                                                <input type="text" id="exam_out_of" class="form-control"
+                                                <input type="text" name="exam_out_of" id="exam_out_of" class="form-control"
                                                     placeholder="Enter exam out of marks">
+                                            </div>
+                                        </div>
+                                        <label for="exam_out_of" class="text-primary">Report Card Style</label>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12 mb-3 mb-sm-0">
+                                                <select class="form-control"width="100%" name="r_style" id="r_style">
+                                                </select>
                                             </div>
                                         </div>
 
                                         <div class="btn-group">
-                                            <button class="btn btn-primary" name="submit" id="submit"
+                                            <button class="btn btn-primary" id="submit"
                                                 type="submit">Save</button>
                                         </div>
 

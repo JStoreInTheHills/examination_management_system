@@ -1,3 +1,6 @@
+const r_style = $("#r_style");
+const exam_form = $("#exam_form");
+
 const exam_table = $("#exam_table").DataTable({
   ajax: {
     url: "./queries/get_all_exams.php",
@@ -22,6 +25,7 @@ const exam_table = $("#exam_table").DataTable({
     {
       targets: 2,
       data: "exam_out_of",
+      width: "10%",
     },
     {
       targets: 3,
@@ -29,6 +33,7 @@ const exam_table = $("#exam_table").DataTable({
     },
     {
       targets: 4,
+      width: "5%",
       orderable: false,
       data: "exam_id",
       render: function (data) {
@@ -38,15 +43,32 @@ const exam_table = $("#exam_table").DataTable({
   ],
 });
 
+r_style.select2({
+  theme: "bootstrap4",
+  placeholder: "Type to choose a Reporting style",
+  ajax: {
+    url: "./queries/fetchReportingStyle",
+    dataType: "json",
+    processResults: function (data) {
+      return {
+        results: data,
+      };
+    },
+  },
+});
+
 const toast = {
   question: function () {
     return new Promise(function (resolve) {
-      iziToast.question({
+      iziToast.error({
         title: "Warning",
         icon: "fas fa-exclamation-triangle",
         message: "Are you sure you want to delete this Exam?",
         timeout: 20000,
         close: false,
+        overlay: true,
+        zindex: 999,
+        transitionIn: "bounceInUp",
         position: "center",
         buttons: [
           [
@@ -83,6 +105,9 @@ function deleteExam(exam_id) {
         icon: "fas fa-certificate",
         position: "bottomRight",
         message: "Exam Deleted Successfully",
+        transitionIn: "bounceInUp",
+        overlay: true,
+        zindex: 999,
         onClosing: function () {
           exam_table.ajax.reload(null, false);
         },
@@ -91,39 +116,48 @@ function deleteExam(exam_id) {
   });
 }
 
-$("#submit").click((e) => {
-  var formData = {
-    exam_name: $("#exam_name").val(),
-    exam_out_of: $("#exam_out_of").val(),
-  };
-  $.ajax({
-    url: "./queries/add_exam.php",
-    method: "POST",
-    data: formData,
-  }).done(function (response) {
-    var arr = JSON.parse(response);
-    if (arr.success === true) {
-      iziToast.success({
-        title: "Success",
-        icon: "fas fa-certificate",
-        position: "topRight",
-        message: arr.message,
-        onClosing: function () {
-          exam_table.ajax.reload(null, false);
-          $("#exam_form").each(function () {
-            this.reset();
-          });
-        },
-      });
-    } else {
-      iziToast.error({
-        title: "Error",
-        position: "topRight",
-        message: arr.message,
-      });
-    }
-  });
-  e.preventDefault();
+exam_form.validate({
+  rules: {
+    exam_name: "required",
+    exam_out_of: "required",
+    r_style: "required",
+  },
+  errorClass: "text-danger",
+  submitHandler: (form) => {
+    $.ajax({
+      url: "./queries/add_exam.php",
+      method: "POST",
+      data: $(form).serialize(),
+    }).done(function (response) {
+      var arr = JSON.parse(response);
+      if (arr.success === true) {
+        iziToast.success({
+          title: "Success",
+          icon: "fas fa-certificate",
+          position: "topRight",
+          overlay: true,
+          zindex: 999,
+          transitionIn: "bounceInUp",
+          message: arr.message,
+          onClosing: function () {
+            exam_table.ajax.reload(null, false);
+            $("#exam_form").each(function () {
+              this.reset();
+            });
+          },
+        });
+      } else {
+        iziToast.error({
+          title: "Error",
+          position: "topRight",
+          transitionIn: "bounceInUp",
+          overlay: true,
+          zindex: 999,
+          message: arr.message,
+        });
+      }
+    });
+  },
 });
 
 setInterval(function () {
