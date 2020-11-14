@@ -17,6 +17,8 @@ const rollid = $("#rollid");
 const telephone = $("#telephone");
 const gender = $("#gender");
 const classid = $("#classid");
+
+const classidInput = $("#classid");
 const edit_student_form = $("#edit_student_form");
 const date = $("#date");
 const students_id = $("#students_id");
@@ -54,6 +56,8 @@ function get_details() {
   }).done(function (response) {
     const arr = JSON.parse(response);
 
+    let data = {};
+
     arr.forEach((item) => {
       pupil.FirstName = item.FirstName;
       pupil.LastName = item.LastName;
@@ -68,8 +72,13 @@ function get_details() {
       pupil["StreamName"] = item.name;
       pupil["ClassName"] = item.ClassName;
       class_id = item.id;
+
+      data.ClassName = item.ClassName;
+      data.id = item.id;
       populateModalWithStudentsDetails(item);
     });
+
+    fillSelect2WithData(data);
 
     checkIfStudentIsInactive();
     populateStudentsDetails();
@@ -124,6 +133,17 @@ function get_details() {
       `<span>Stream Name:</span><span class="text-gray-900"> ${pupil["StreamName"]}</span>`
     );
   }
+}
+
+function fillSelect2WithData(data) {
+  var option = new Option(data.ClassName, data.id, true, true);
+  classidInput.append(option).trigger("change");
+  classidInput.trigger({
+    type: "select2:select",
+    params: {
+      data: data,
+    },
+  });
 }
 
 get_details();
