@@ -8,12 +8,11 @@ include '../../config/config.php';
     $sql = "SELECT FirstName,OtherNames,LastName,RollId,RegDate,Gender,Status,StudentId 
             FROM tblstudents 
             WHERE ClassId =:class_id 
-            AND Status =:status
             ORDER BY FirstName ASC ";
 
     $query = $dbh->prepare($sql);
     $query->bindParam(':class_id', $class_id, PDO::PARAM_STR);
-    $query->bindParam(":status", $status, PDO::PARAM_STR);
+//     $query->bindParam(":status", $status, PDO::PARAM_STR);
 
     $query->execute();
     $result = $query->fetchAll(PDO::FETCH_OBJ);
