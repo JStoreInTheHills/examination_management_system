@@ -22,7 +22,7 @@
     <li class="nav-item">
         <a class="nav-link" href="/index">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
+            <span class="text-white">Dashboard</span></a>
     </li>
 
 
@@ -39,7 +39,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="/academic_year/year" >
             <i class="fas fa-poll-h"></i>
-            <span>Academic Year</span>
+            <span class="text-white">Academic Year</span>
         </a>
     </li>
 
@@ -47,7 +47,7 @@
      <li class="nav-item">
         <a class="nav-link collapsed" href="/terms/terms" >
             <i class="fas fa-calendar"></i>
-            <span>Terms</span>
+            <span class="text-white">Terms</span>
         </a>
     </li>
 
@@ -55,7 +55,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="/stream/stream">
             <i class="fas fa-book-reader"></i>
-            <span>Classes</span>
+            <span class="text-white">Classes</span>
         </a>
     </li>
 
@@ -63,7 +63,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="/class/class">
             <i class="fas fa-glasses"></i>
-            <span>Streams</span>
+            <span class="text-white">Streams</span>
         </a>
     </li>
 
@@ -71,7 +71,7 @@
        <li class="nav-item">
         <a class="nav-link collapsed" href="/subjects/subject">
             <i class="fas fa-street-view"></i>
-            <span>Subjects</span>
+            <span class="text-white">Subjects</span>
         </a>
       </li>
 
@@ -79,7 +79,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="/students/student">
             <i class="fas fa-user-graduate"></i>
-            <span>Students</span>
+            <span class="text-white">Students</span>
         </a>
     </li>
 
@@ -87,7 +87,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="/teachers/teachers">
             <i class="fas fa-users"></i>
-            <span>Teachers</span>
+            <span class="text-white">Teachers</span>
         </a>
       </li>
 
@@ -96,7 +96,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="/exam/exam">
             <i class="fas fa-user-edit"></i>
-            <span>Exams</span>
+            <span class="text-white">Exams</span>
         </a>
     </li>
 
@@ -104,7 +104,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="/grading/grading">
             <i class="fas fa-poll-h"></i>
-            <span>Grading</span>
+            <span class="text-white">Grading</span>
         </a>
     </li>
 
@@ -113,7 +113,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="/reports/reports">
             <i class="fas fa-certificate"></i>
-            <span>Reports</span>
+            <span class="text-white">Reports</span>
         </a>
     </li>
 
@@ -128,7 +128,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="/admin/pages/new_user">
             <i class="fas fa-users"></i>
-            <span>Add System User</span>
+            <span class="text-white">Add System User</span>
         </a>
         
     </li>
@@ -137,7 +137,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="/counties/counties">
             <i class="fas fa-phone"></i>
-            <span>Addresses</span>
+            <span class="text-white">Addresses</span>
         </a>
         
     </li>
