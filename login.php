@@ -113,7 +113,8 @@ if(isset($_SESSION['alogin']) || isset($_SESSION['role_id'])){
 
   <script>
 
-    sessionStorage.clear();
+    sessionStorage.removeItem('school');
+    sessionStorage.removeItem('_token');
     
     $('#login_form').validate({
         rules : {
