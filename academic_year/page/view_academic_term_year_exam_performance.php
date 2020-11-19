@@ -50,20 +50,29 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 id="heading" class="h3 mb-0 text-gray-800"> </h1>
-                        <h5 id="date_added" class="h5 mb-0 text-gray-800"></h5>
                     </div>
 
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h5 id="added_by" class="h5 mb-0 text-gray-800"></h5>
-                        <h5 id="term_status" class="h5 mb-0 text-gray-800"></h5>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                        <h5 id="class_details_name" class="h5 mb-0 text-gray-800"></h5>
+                        <h5 id="class_details_teacher" class="h5 mb-0 text-gray-800"></h5>
                     </div>
 
-                    <span id="alert"></span>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-3">
+                        <h5 id="term_id" class="h5 mb-0 text-gray-800"></h5>
+                        <h5 id="year_id" class="h5 mb-0 text-gray-800"></h5>
+                    </div>
+
+                    <div class="alert alert-info" role="alert">
+                        <p>This page shows the termly performance (combination of Mid and End Term Exam Results) of the class. </p>
+                        <hr>
+                        <p class="mb-0">Select a student to view there end of semester results. </p>
+                    </div>
 
                     <nav aria-label="breadcrumb mb-3">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/index">Home</a></li>
                             <li class="breadcrumb-item"><a href="/academic_year/year">Academic Year</a></li>
+                            <li class="breadcrumb-item"><a id="bread_list_year_name" href=""></a></li>
                             <li class="breadcrumb-item"><a id="bread_list_year" href=""></a></li>
                             <li id="bread_list_term" class="breadcrumb-item active" aria-current="page"></li>
                         </ol>
@@ -73,8 +82,12 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
                                 role="tab" aria-controls="nav-home" aria-selected="true">
-                                <span><i class="fas fa-chalkboard "></i></span> Associative Streams
+                                <span><i class="fas fa-chalkboard "></i></span> Termly Student Reports
                             </a>
+                            <!-- <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                                role="tab" aria-controls="nav-profile" aria-selected="false">
+                                <span><i class="fas fa-book-reader"></i></span> End Year Performance
+                            </a> -->
                         </div>
                     </nav>
 
@@ -91,12 +104,15 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                         <div class="card-body">
                                             <div class="table-responsive">
                                                 <table class="table table-striped" width="100%" cellspacing="0"
-                                                    id="term_year_table">
+                                                    id="students_term_year_table">
                                                     <thead>
                                                         <tr>
-                                                            <th>Class Name</th>
-                                                            <th>Class Code</th>
-                                                            <th>Class Teacher</th>
+                                                            <th>Student Name</th>
+                                                            <th>RollId</th>
+                                                            <th>RegDate</th>
+                                                            <th>Gender</th>
+                                                            <th>Status</th>
+
                                                         </tr>
                                                     </thead>
                                                 </table>
@@ -104,7 +120,33 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="tab-pane fade" id="nav-profile" role="tabpanel"
+                                    aria-labelledby="nav-profile-tab">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header text-primary">
+                                            End Year Stream Performance
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped" width="100%" cellspacing="0"
+                                                    id="class_end_year_table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Stream Name</th>
+                                                            <th>Stream Code</th>
+                                                            <th>Class</th>
+                                                            <th>Total Marks</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
+
                         </div>
                     </div>
                     <!-- /.container-fluid -->
@@ -119,9 +161,9 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
         <!-- End of Page Wrapper -->
 
 
-        <script src="/../dist/js/main.min.js"></script>
+        <script src="/dist/js/main.min.js"></script>
         <script src="/dist/js/utils/utils.js"></script>
-        <script src="/../dist/js/years/view_academic_year_term_performance.js"></script>
+        <script src="/dist/js/years/view_academic_term_year_exam_performance.js"></script>
 </body>
 
 </html>

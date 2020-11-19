@@ -4,10 +4,11 @@
     $year_id = $_GET['year_id'];
     $term_id = $_GET['term_id'];
 
-    $query = "SELECT name, year_name 
+    $query = "SELECT name, year_name, term_year.created_at as created_at, username, term_year.status
               FROM term_year 
               JOIN year ON year.year_id = term_year.year_id
               JOIN term ON term.id = term_year.term_id
+              LEFT JOIN tbl_user ON term_year.created_by = tbl_user.id
               WHERE term_year.year_id =:year_id 
               AND term_year.term_year_id=:term_id";
 

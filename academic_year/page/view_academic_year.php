@@ -63,8 +63,6 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         </ol>
                     </nav>
 
-
-
                     <div class="row">
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-primary shadow h-100 py-2">
@@ -84,7 +82,6 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                             </div>
                         </div>
                     </div>
-
 
                     <span id="alert"></span>
 
@@ -161,9 +158,6 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                 <div class="card-header text-primary">
                                     Add Terms to Academic Year
                                 </div>
-
-                                
-
                                 <div class="card-body">
                                 <span id="card_alert"></span>
                                     <form id="year_form" class="user">

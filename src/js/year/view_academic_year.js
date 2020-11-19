@@ -31,7 +31,7 @@ const init = () => {
       $("#year_title").append(`Academic Year - ${items.year_name}`);
       $("#heading").html(`Academic Year ~ ${items.year_name}`);
       $("#bread_list").html(`${items.year_name}`);
-      edit_academic_year.html(`Edit Academic Year`);
+      edit_academic_year.html(`Edit Academic Year ${items.year_name}`);
 
       const alert = $("#alert").html(`
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -300,6 +300,10 @@ function get_all_exams_this_year() {
     });
   });
 }
+
+edit_academic_year.click(() => {
+  console.log("Hi There");
+});
 
 get_all_exams_this_year();
 

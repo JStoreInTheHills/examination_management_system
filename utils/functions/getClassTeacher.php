@@ -17,6 +17,7 @@
         return $teachersName;
 
     }
+
     function getClassTeacherGender($class_id){
        
         global $dbh;
@@ -76,7 +77,6 @@
 
         return ($Subjects);
     }
-
 
     function getStudentsPosition($class_id, $class_exam_id, $students_id){
 
@@ -173,7 +173,7 @@
         }
 
         return $grade;
-}
+    }
 
     function getStudentsDetails($students_id){
 
@@ -228,6 +228,29 @@
         $total_score = $sql->fetchColumn();
 
         return $total_score;
+    }
+
+    function getExamDetails($class_exam_id){
+
+        global $dbh;
+
+        $sql = "SELECT exam_name, year_name, class_exams.exam_id, exam_out_of, name, 
+                exam.r_style  
+                FROM exam 
+                JOIN class_exams ON exam.exam_id = class_exams.exam_id
+                LEFT JOIN term_year ON class_exams.term_id = term_year.term_year_id 
+                LEFT JOIN term ON term.id = term_year.term_id
+                JOIN year   ON year.year_id = class_exams.year_id
+                WHERE class_exams.id =:class_exam_id";
+
+        $query = $dbh->prepare($sql);
+
+        $query->bindParam(':class_exam_id', $class_exam_id, PDO::PARAM_STR);
+        $query->execute();
+
+        $exam_result = $query->fetchAll();
+
+        return $exam_result;
     }
 
 ?>

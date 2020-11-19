@@ -54,20 +54,7 @@
     // Query to fetch the exam of the result card. 
     try{
 
-        $sql = "SELECT exam_name, year_name, class_exams.exam_id, exam_out_of,name   
-                FROM exam 
-                JOIN class_exams ON exam.exam_id = class_exams.exam_id
-                LEFT JOIN term_year ON class_exams.term_id = term_year.term_year_id 
-                LEFT JOIN term ON term.id = term_year.term_id
-                JOIN year   ON year.year_id = class_exams.year_id
-                WHERE class_exams.id =:class_exam_id";
-
-        $query = $dbh->prepare($sql);
-        
-        $query->bindParam(':class_exam_id', $class_exam_id, PDO::PARAM_STR);
-        $query->execute();
-
-        $exam_result = $query->fetchAll();
+        $exam_result = getExamDetails($class_exam_id);
      
         foreach($exam_result as $exam_result_item){
             $exam_name = $exam_result_item['exam_name'];
@@ -211,10 +198,17 @@
 
         $pdf->Rect(5, 39, 200, 255); // Rectangle Around the Page.
 
-       
         $pdf->SetTextColor(255,255,255);
-        // $pdf->Cell($width_cell[1], 5, 'Total',1,0,'C','B');
-        $pdf->Cell(0, 10, "Student's Report For " . $exam_name. " ".  $name . " For Academic Year " . $year_name . " / 2021", 0, 1, 'C', 'B');
+
+        $pdf->SetFont('aefurat', '', 25);
+
+        $pdf->Cell(0, 10, "كشفا الدر جات لنها ية السنة الدزاسية لعام ", 0, 1, 'C', 'B');
+
+        $pdf->SetFont('aefurat', '', 14);
+
+        $pdf->Cell(0, 10, "Student's Examination Report ( " . $exam_name. " ".  $name . " For Academic Year " . $year_name . " / 2021 )", 0, 1, 'C', 'B');
+
+        $pdf->SetFont('aefurat', '', 12);
 
         $pdf->SetTextColor(0,0,0);  
     }catch(Exception $e){
@@ -234,7 +228,7 @@
         $pdf->Cell(75);
         $pdf->Cell(30,2,  $arr[0]['firstname'] . " ". $arr[0]['second_name'] . " ". $arr[0]['last_name'] . " (" . $arr[0]['rollId']. ")", 0, 1,'C', '', false, 'B', 'T');
 
-        $pdf->Cell(165, 0, "Student's Name: __________________________________________________________________ ", 0,0,'',false);
+        $pdf->Cell(165, 0, "Student's Name: _______________________________________________________________ ", 0,0,'',false);
         $pdf->setRTL(true);
         $pdf->Cell(0, 0, ' ‫اسم‬ الطالب‫ / الطالبة‬: ', 0,1, '',false);
        
@@ -243,7 +237,7 @@
         $pdf->Cell(75, 0);
 
         $pdf->Cell(30,2,  $arr[0]['class_name'],  0, 1,'C', '', false, 'C', 'C');
-        $pdf->Cell(165, 0, 'Class:__________________________________________________________________________________________', 0,0,'',false);
+        $pdf->Cell(165, 0, 'Class:__________________________________________________________________________________', 0,0,'',false);
         
         $pdf->setRTL(true);
         $pdf->Cell(0, 0, '‫الفصل‬: ', 0,1, '',false);
@@ -257,7 +251,7 @@
         $pdf->Cell(110,0,  $percentage . "%",  0, 1,'C', '', false, 'C', 'C');
         // $pdf->SetFont('aefurat', '', 12);
         $pdf->Cell(100, 0, 'Percentage(%):_______________________________(%) ', 0,0,'',false);
-        $pdf->Cell(20, 0, ' النسبة ‫المئویة', 0,0,'',false);
+        $pdf->Cell(20, 0, ' النسبة ‫المئية', 0,0,'',false);
     
         if($stream_id == 108 || $stream_id == 109 || $stream_id == 110){
             $pdf->Cell(0, 5, '  Grade:______ '.getStudentsGradeForRaudhwa($percentage).' _____', 0,0,'',false);
@@ -267,7 +261,7 @@
 
         // $pdf->SetFont('aefurat', '', 12);
         $pdf->setRTL(true);
-        $pdf->Cell(0, 5, '  ‫التقدیر‬: ',  0,1,'',false);
+        $pdf->Cell(0, 5, '  ‫التقدير‬: ',  0,1,'',false);
         $pdf->setRTL(false);
     
         $pdf->Cell(100, 12, 'Stream Position:  ____'. getStudentsPosition($class_id, $class_exam_id, $student_id).' ____  Out Of:   ___ '.getAllStudentsSatForExam($class_id, $class_exam_id).' ___ ', 0,0,'',false);
@@ -275,7 +269,7 @@
         $pdf->Cell(90, 12, '  ‫  _________________________‫من‬ ‫العدد‬:',  0,0,'',false);
       
         $pdf->setRTL(true);
-        $pdf->Cell(90, 10, '  ‫ ا‫لترتیب  ‫الصفي‬ ‬',  0,1,'',false);
+        $pdf->Cell(90, 10, '  ‫ ا‫لترتيب  ‫الصفي‬ ‬',  0,1,'',false);
         $pdf->setRTL(false);
     
         $pdf->Cell(100, 10, 'Overal Position: ____'. $o_r. '_ Out Of: ___'. getTotalOveralNumberOfStudents($stream_id) .'___', 0,0,'',false);
@@ -299,8 +293,8 @@
 
         $pdf->Cell($width_cell[9], 10, 'SUBJECTS',1,0,'L');
         $pdf->Cell($width_cell[13], 10, ' Marks Obtained',1,0,'C');
-        $pdf->Cell($width_cell[13], 10, 'Out of (Marks) ‬',1,0,'C');
-        $pdf->Cell($width_cell[9], 10, ' ‫‫المواد الدراسیة‬ ‬',1,1,'R');
+        $pdf->Cell($width_cell[13], 10, 'Out of (Marks)',1,0,'C');
+        $pdf->Cell($width_cell[9], 10, ' ‫‫المواد الدراسية‬ ‬',1,1,'R');
         $count = 1;
         
         $sub = getSubjectNames($class_id);
@@ -354,7 +348,7 @@
         try{
             $pdf->SetTextColor(255,255,255);
             $pdf->Cell(74, 5, 'GRADES', 'LTB',0,'C', 1);
-            $pdf->Cell(124, 5,'‫التقدیرات‬', 'TRB',1,'C', 1);
+            $pdf->Cell(124, 5,'‫التقديرات‬', 'TRB',1,'C', 1);
             $pdf->SetTextColor(0,0,0);
         
             $pdf->Cell($width_cell[12], 5, '1', 1, 0, 'C');
@@ -366,13 +360,13 @@
             $pdf->Cell($width_cell[12], 5, '2', 1, 0, 'C');
             $pdf->Cell($width_cell[2], 5, 'Very Good', 1, 0, 'C');
             $pdf->Cell($width_cell[2], 5, '86 - 95', 1, 0, 'C');
-            $pdf->Cell($width_cell[2], 5, ' ‫جید‬ ‫جدا‬ ', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, ' ‫جيد‬ ‫جدا‬ ', 1, 0, 'C');
             $pdf->Cell($width_cell[12], 5, '٢', 1, 1, 'C');
         
             $pdf->Cell($width_cell[12], 5, '3', 1, 0, 'C');
             $pdf->Cell($width_cell[2], 5, 'Good', 1, 0, 'C');
             $pdf->Cell($width_cell[2], 5, '70 - 85', 1, 0, 'C');
-            $pdf->Cell($width_cell[2], 5, '‫جید‬', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, '‫جيد‬', 1, 0, 'C');
             $pdf->Cell($width_cell[12], 5, '٣', 1, 1, 'C');
         
             $pdf->Cell($width_cell[12], 5, '4', 1, 0, 'C');
@@ -394,7 +388,7 @@
         try{
             $pdf->SetTextColor(255,255,255);
             $pdf->Cell(74, 5, 'GRADES', 'LTB',0,'C', 1);
-            $pdf->Cell(124, 5,'‫التقدیرات‬', 'TRB',1,'C', 1);
+            $pdf->Cell(124, 5,'‫التقديرات‬', 'TRB',1,'C', 1);
             $pdf->SetTextColor(0,0,0);
         
             $pdf->Cell($width_cell[12], 5, '1', 1, 0, 'C');
@@ -406,13 +400,13 @@
             $pdf->Cell($width_cell[12], 5, '2', 1, 0, 'C');
             $pdf->Cell($width_cell[2], 5, 'Very Good', 1, 0, 'C');
             $pdf->Cell($width_cell[2], 5, '76 - 85', 1, 0, 'C');
-            $pdf->Cell($width_cell[2], 5, ' ‫جید‬ ‫جدا‬ ', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, ' ‫جيد‬ ‫جدا‬ ', 1, 0, 'C');
             $pdf->Cell($width_cell[12], 5, '٢', 1, 1, 'C');
         
             $pdf->Cell($width_cell[12], 5, '3', 1, 0, 'C');
             $pdf->Cell($width_cell[2], 5, 'Good', 1, 0, 'C');
             $pdf->Cell($width_cell[2], 5, '66 - 75', 1, 0, 'C');
-            $pdf->Cell($width_cell[2], 5, '‫جید‬', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, '‫جيد‬', 1, 0, 'C');
             $pdf->Cell($width_cell[12], 5, '٣', 1, 1, 'C');
         
             $pdf->Cell($width_cell[12], 5, '4', 1, 0, 'C');
@@ -442,12 +436,12 @@
    
     $pdf->Cell(0, 10, "", 0, 1);
 
-    $pdf->SetFont('dejavusanscondensed', '', 10);
+    $pdf->SetFont('aefurat', '', 11);
 
     $pdf->Cell(100);
     $pdf->Cell(85, 0,  getClassTeacher($class_id) , 0, 1);
     $pdf->Cell(95);
-    $pdf->Cell(80, 0, '_________________________________:(Class Teacher)', 0, 0);
+    $pdf->Cell(80, 0, '_________________________:(Class Teacher)', 0, 0);
 
     if(getClassTeacherGender($class_id) == "Male"){
         $pdf->Cell(5, 5, ' ‫ مشرف الفصل‬ ‫‬', 0, 1);
@@ -461,11 +455,11 @@
     $pdf->Cell(100);
     $pdf->Cell(20, 0,  "Hassan Faraj Awadh" , 0, 1);
     $pdf->Cell(95);
-    $pdf->Cell(80, 0, '_________________________________:(Principal)', 0, 0);
+    $pdf->Cell(80, 0, '__________________________:(Principal)', 0, 0);
     $pdf->Cell(5, 5, '‫المدیر‬', 0, 1);
     
     
-    $pdf->Cell(27);
+    $pdf->Cell(20);
     $pdf->Cell(0, 5, '‫الختم ‫الرسمي‬‬');
 
     //Close and output PDF document
