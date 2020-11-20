@@ -65,7 +65,7 @@ if(isset($_SESSION['alogin']) || isset($_SESSION['role_id'])){
 
                   <span id="toast"></span>
                   
-                  <form class="user mb-1" id="login_form">
+                  <form class="user mb-1" id="login_form" autocomplete="off">
 
                     <div class="form-group">
                       <label class="text-gray-900" id="email_label" for="exampleInputEmail">
@@ -113,8 +113,8 @@ if(isset($_SESSION['alogin']) || isset($_SESSION['role_id'])){
 
   <script>
 
-    sessionStorage.removeItem('school');
-    sessionStorage.removeItem('_token');
+    sessionStorage.removeItem("uuid");
+    sessionStorage.removeItem("_token");
     
     $('#login_form').validate({
         rules : {
@@ -163,6 +163,7 @@ if(isset($_SESSION['alogin']) || isset($_SESSION['role_id'])){
             if (s.success === true) {
               const last_page = sessionStorage.getItem("last_page");
               const role = sessionStorage.setItem('_token', s.role);
+              const uuid = sessionStorage.setItem('uuid', s.uuid);
 
               $('#toast').empty().append(`<div class="alert alert-success" role="alert">${s.message}.</div>`);
 
