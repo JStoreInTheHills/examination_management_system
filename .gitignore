@@ -2,6 +2,7 @@ node_modules
 dist
 vendor
 package-lock.json
+yarn.lock
 # reports
 .idea
 # dashboard
