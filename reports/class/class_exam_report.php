@@ -3,20 +3,74 @@
     //start of the session.
     session_start();
 
-    //-----------------------------------------------------------------------------
+     try{
 
-    // Setting the global variables.
+            if(file_exists('../templates/tcpdf_template.php')){
+                require('../../utils/configs/TCPDF-master/tcpdf.php');// Include the template file
+            }else{
+                throw new Exception("Error Processing Request. File Template not Found", 1);
+            }
+
+            if(file_exists('../../config/config.php')){
+                include '../../config/config.php'; // Include the Database Config File. 
+            }else{
+                throw new Exception("Error Processing Request. Database File not Found", 1);
+            }
+
+            if(file_exists('./module/getAllSubjectsforClass.php')){
+                include './module/getAllSubjectsforClass.php'; // Include the Database Config File. 
+            }else{
+                throw new Exception("Error Processing Request. getAllSubjectsforClass.php not Found", 1);
+            }
+
+             if(file_exists('./module/class/CalculateClassGrade.php')){
+                include './module/class/CalculateClassGrade.php'; // Include the Database Config File. 
+            }else{
+                throw new Exception("Error Processing Request. ./module/class/CalculateClassGrade.php not Found", 1);
+            }
+
+            if(file_exists('../../utils/functions/getClassTeacher.php')){
+                include '../../utils/functions/getClassTeacher.php'; // Include the Database Config File. 
+            }else{
+                throw new Exception("Error Processing Request. getClassTeacher.php not Found", 1);
+            }
+        }catch(Exception $e){
+            echo 'Exception Caught ',  $e->getMessage() , "\n";
+    }
+   
+    // ---- Start of Variable declaration ------------------------------------------------------------------------------------------------------
+
+    // Setting the global variable that have been collected from the url using the GET function
     $class_id = $_GET['cid'];
+
+    //Variable holding the class exam id 
     $class_exam_id = $_GET['ceid'];
+
+    // Variable holding the class exam name. 
     $class_exam_name; // String to hold the class exam name.
 
+    // Variable holding the name of the class.
+    $_class_name; 
+
+    // Variable holding the name of the term 
+    $term_name;
+
+    // Variable holding the out of marks for the class. 
+    $exam_out_of;
+
+    // Column dimension of the tables in the pdf. 
     $width_cell = array(50,20,60,40,15,8,25,26,30, 10, 11);
 
     $cnt = 1; $grade; $SubjectCounts;
 
-    $subjects_array_ids = array(); // array holding the ids of the Subjects. 
+    // Collection of all the ids of the subjects being done by the class. . 
+    $subjects_array_ids = array(); 
+
 
     $subjectMarksArray = array();
+
+    $numberOfSubjects = getNumberOfSubjects($class_id);
+
 
     // set some language dependent data:
     $lg = Array(); // Array to point to a reference in memory for the languages.
@@ -31,38 +85,12 @@
 
     // Associating every thing and adding configuration files. 
     // Using the TCPDF file package. 
-    try{
 
-        if(file_exists('../templates/tcpdf_template.php')){
-            require('../../utils/configs/TCPDF-master/tcpdf.php');// Include the template file
-        }else{
-            throw new Exception("Error Processing Request. File Template not Found", 1);
-        }
+    // Variable holding the stream id of the class. 
+    $stream_id_of_class = getStreamOfClass($class_id);
 
-        if(file_exists('../../config/config.php')){
-            include '../../config/config.php'; // Include the Database Config File. 
-        }else{
-            throw new Exception("Error Processing Request. Database File not Found", 1);
-        }
+    // --- End of Variable declaration. -------------------------------------------------------------------------------------------------------------
 
-        if(file_exists('./module/getAllSubjectsforClass.php')){
-            include './module/getAllSubjectsforClass.php'; // Include the Database Config File. 
-        }else{
-            throw new Exception("Error Processing Request. getAllSubjectsforClass.php not Found", 1);
-        }
-
-        if(file_exists('../../utils/functions/getClassTeacher.php')){
-            include '../../utils/functions/getClassTeacher.php'; // Include the Database Config File. 
-        }else{
-            throw new Exception("Error Processing Request. getClassTeacher.php not Found", 1);
-        }
-    }catch(Exception $e){
-        echo 'Exception Caught ',  $e->getMessage() , "\n";
-    }
-
-    $_class_name; 
-    $term_name;
-    $exam_out_of;
 
     try{
         $query_to_get_class_details = "SELECT ClassName, exam_name, term.name, exam.exam_out_of
@@ -302,9 +330,9 @@
 
             $subject_count = count($subjectIDs);
 
-            $average = round($row['m'] / $subject_count, 2);
+            $average = round($row['m'] / $numberOfSubjects, 2);
 
-            $total_subject_marks = $exam_out_of * $subject_count;
+            $total_subject_marks = $exam_out_of * $numberOfSubjects;
 
             $SubjectPercentage = round(($row['m'] / $total_subject_marks) * 100);
             // ----------------------------------------------------------------------
@@ -329,16 +357,10 @@
 
             $SubjectPercentages = round($SubjectPercentage);
 
-                if($SubjectPercentages >= 96){
-                    $grade = "EX";
-                }elseif ($SubjectPercentages >= 86 && $SubjectPercentages <= 95) {
-                    $grade = "VG";
-                }elseif($SubjectPercentages >=70 && $SubjectPercentages <= 85 ){
-                    $grade = "G";
-                }elseif ($SubjectPercentages >= 50 && $SubjectPercentages <= 69) {
-                    $grade = "P";
+                if($stream_id_of_class == 108 || $stream_id_of_class == 109 || $stream_id_of_class == 110){
+                   $grade = calculateGradeForStudentsUsingRaudhwaFormart($SubjectPercentages);
                 }else {
-                    $grade = "F";
+                    $grade = calculateGradeForStudentsNotUsingRaudhwaFormart($SubjectPercentages);
                 }
 
             $pdf->Cell($width_cell[10], 7, $grade   ,$border=1,$ln=1,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
@@ -366,7 +388,13 @@
         $pdf->Cell($width_cell[4], 7, "_", $border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');
 
            
-        $pdf->Cell($width_cell[10], 7, calculateGrades($averages), $border=1,$ln=1,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');  
+        if($stream_id_of_class == 108 || $stream_id_of_class == 109 || $stream_id_of_class == 110){
+             $grade2 = calculateGradesForRaudhwa($averages);
+        }else {
+             $grade2 = calculateGrades($averages);
+        }
+
+        $pdf->Cell($width_cell[10], 7, $grade2, $border=1,$ln=1,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');  
 
         $pdf->Cell(83, 7, "Mean Score / Average",$border=1,$ln=0,'C',$fill=true, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='R');  
 
