@@ -403,7 +403,7 @@
             $avgSubjects  = round($subjectMarksArray[$i] / getAllStudentsSatForExam($class_id, $class_exam_id), 1);
 
             if($avgSubjects >=96){
-                $grading = "A";
+                $grading = "EX";
             }else if($avgSubjects <= 95 && $avgSubjects >= 86){
                 $grading = "B";
             }else if($avgSubjects <= 85 && $avgSubjects >= 70){
