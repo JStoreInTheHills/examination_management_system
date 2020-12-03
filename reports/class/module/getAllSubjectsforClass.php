@@ -68,30 +68,30 @@
 
    function calculateGrades($averages){
         if($averages >= 86){
-            $grades = "A";
+            $grades = "EX";
         }elseif ($averages >= 76 && $averages <= 85) {
-            $grades = "B";
+            $grades = "VG";
         }elseif($averages >=66 && $averages <= 75 ){
-            $grades = "C";
+            $grades = "G";
         }elseif ($averages >= 50 && $averages <= 65) {
-            $grades = "D";
+            $grades = "P";
         }else {
-            $grades = "E";
+            $grades = "F";
         }
     return $grades;
    }
 
    function calculateGradesForRaudhwa($averages){
         if($averages >= 96){
-            $grades = "A";
+            $grades = "EX";
         }elseif ($averages >= 86 && $averages <= 95) {
-            $grades = "B";
+            $grades = "VG";
         }elseif($averages >=70 && $averages <= 85 ){
-            $grades = "C";
+            $grades = "G";
         }elseif ($averages >= 50 && $averages <= 69) {
-            $grades = "D";
+            $grades = "P";
         }else {
-            $grades = "E";
+            $grades = "F";
         }
     return $grades;
    }
