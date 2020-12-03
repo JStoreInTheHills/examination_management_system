@@ -256,7 +256,7 @@ subject_teachers_form.validate({
     students_id: "required",
     marks: {
       required: true,
-      range: [0, 20],
+      range: [0, 30],
     },
   },
 
