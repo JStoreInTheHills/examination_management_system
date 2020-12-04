@@ -4,13 +4,6 @@
 
 // $(document).ready(() => {
 const select = document.getElementById("stream_id");
-const mainContent = $("#class_main_content");
-const classAddContent = $("#class_add_card");
-
-// $('.dataTables_filter input[type="search"]').css({
-//   width: "350px",
-//   display: "inline-block",
-// });
 
 const toggle = () => {
   $("body").toggleClass("sidebar-toggled");
@@ -131,6 +124,30 @@ setInterval(() => {
 
 const classForm = $("#class_form");
 
+const stream_id = $("#stream_id");
+
+stream_id.select2({
+  placeholder: "Type to Search Class",
+  theme: "bootstrap4",
+  ajax: {
+    url: "queries/class/get_all_class_during_add_stream.php",
+    type: "POST",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        searchTerm: params.term,
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
+
 classForm.validate({
   rules: {
     ClassName: {
@@ -138,9 +155,16 @@ classForm.validate({
     },
     ClassNameNumeric: {
       required: true,
+      maxlength: 4,
+    },
+    stream_id: {
+      required: true,
+    },
+    teachers_id: {
+      required: true,
     },
   },
-  errorClass: "alert alert-danger",
+  errorClass: "text-danger",
 
   invalidHandler: function (event, validator) {
     var errors = validator.numberOfInvalids();
@@ -170,7 +194,7 @@ classForm.validate({
             transitionIn: "bounceInLeft",
             onClosed: () => {
               classTable.ajax.reload(null, false);
-              classForm.each(() => {
+              $("#class_form").each(function () {
                 this.reset();
               });
             },
@@ -193,16 +217,27 @@ classForm.validate({
   },
 });
 
-$("#add_class").click((e) => {
-  e.preventDefault();
-  mainContent.toggle();
-  classAddContent.show();
-});
-
-$("#cancel_add_class").click((e) => {
-  e.preventDefault();
-  mainContent.show();
-  classAddContent.toggle();
+const teachers_id = $("#teachers_id");
+teachers_id.select2({
+  placeholder: "Type to search for a teacher",
+  theme: "bootstrap4",
+  ajax: {
+    url: "queries/class/get_all_teachers_during_add_stream.php",
+    type: "POST",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        searchTerm: params.term,
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
 });
 
 $('[data-toggle="datepicker"]').datepicker({

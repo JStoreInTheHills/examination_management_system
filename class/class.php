@@ -27,12 +27,6 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
     <!-- Custom styles for this template -->
     <link href="../dist/css/main.min.css" rel="stylesheet">
-    <style>
-        #class_add_card {
-            display: none;
-        };
-       
-    </style>
 </head>
 
 <body id="page-top">
@@ -55,12 +49,24 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-2 text-gray-800"> <span><i class="fas fa-chalkboard-teacher"></i></span>
-                         Manage All Streams </h1>
+                            Manage All Streams </h1>
                         <div class="btn-group">
-                            <a class="btn btn-sm btn-primary" id="add_class" href="#">Add New Stream</a>
+                            <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm dropdown-toggle"
+                                type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <span><i class="fas fa-plus"> </i> Quick Add </span>
+                            </button>
                             <button class="btn btn-outline-primary btn-sm">
                                 <span><i class="fas fa-file-pdf"></i></span> Print Report
                             </button>
+
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <div class="dropdown-header">Tools:</div>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" data-toggle="modal" data-target="#add_new_stream" class="dropdown-item">
+                                    Add New Stream
+                                </a>
+                            </div>
                         </div>
 
                     </div>
@@ -97,6 +103,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                 <table class="table table-striped" id="class_table" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>Created At</th>
                                             <th>Stream Name</th>
                                             <th>Class Teacher</th>
                                             <th>Class Name</th>
@@ -113,78 +120,6 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                     </div>
 
-                    <!-- Class Add Card -->
-                    <div id="class_add_card" class="card shadow col-md-8 mx-auto">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">
-                               <span> <i class="fas fa-chalkboard-teacher"></i></span>  Add a new Stream</h6>
-                        </div>
-                        <div class="card-body">
-                            <form id="class_form" class="user">
-                                <div class="row">
-                                    <div class="form-group col-sm-12 mb-3">
-                                        <label class="text-primary">Stream Name</label>
-                                        <input type="text" id="ClassName" class="form-control" name="ClassName"
-                                            placeholder="E.g 'Raudha' , 'Thanawii' ">
-                                    </div>
-
-                                    <div class="form-group col-sm-12  mb-3">
-                                        <label class="text-primary">Stream Unique Code</label>
-                                        <input type="text" id="ClassNameNumeric" class="form-control"
-                                            name="ClassNameNumeric" placeholder="E.g '0CRB', 'OCRG'">
-                                    </div>
-
-                                    <div class="form-group col-sm-12 mb-3">
-                                        <label class="text-primary">Choose a Class</label>
-                                        <select name="stream_id" id="stream_id" class="form-control">
-                                            <?php
-                                        include "../config/config.php";
-
-                                        $sql = "SELECT stream_id, name from stream";
-                                        $query = $dbh->prepare($sql);
-                                        $query->execute();
-                                        $results = $query->fetchAll(PDO::FETCH_OBJ);
-                                        if ($query->rowCount() > 0) {
-                                            foreach ($results as $result) {   ?>
-                                            <option value="<?php echo htmlentities($result->stream_id); ?>">
-                                                <?php echo htmlentities($result->name); ?>&nbsp;</option>
-                                            <?php }
-                                        } ?>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-sm-12 mb-3">
-                                        <label class="text-primary">Assign Class Teacher <span class="text-danger">(Optional)</span> </label>
-
-                                        <select name="teachers_id" id="teachers_id" class="form-control">
-                                            <option class="readonly" value="">Choose a class teacher</option>
-                                            <?php
-                                                require_once "../config/config.php";
-
-                                                $sql = "SELECT teacher_id, name from tblteachers";
-                                                $query = $dbh->prepare($sql);
-                                                $query->execute();
-                                                $results = $query->fetchAll(PDO::FETCH_OBJ);
-                                                if ($query->rowCount() > 0) {
-                                                    foreach ($results as $result) {   ?>
-                                                        <option value="<?php echo htmlentities($result->teacher_id); ?>">
-                                                            <?php echo htmlentities($result->name); ?>&nbsp;
-                                                        </option>
-                                                    <?php }
-                                                } ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="btn-group">
-                                    <button class="btn btn-primary" name="submit" type="submit">Save</button>
-                                    <button class="btn btn-danger" id="cancel_add_class">Cancel</button>
-                                </div>
-
-                            </form>
-                        </div>
-                    </div>
-
                 </div>
                 <!-- /.container-fluid -->
 
@@ -196,6 +131,67 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
         </div>
         <!-- End of Content Wrapper -->
 
+        <!-- New Class Modal-->
+        <div class="modal fade" id="add_new_stream" data-backdrop="static" tabindex="-1" role="dialog"
+            aria-labelledby="new_class_modal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-primary" id="new_class_modal">
+                            <span><i class="fas fa-chalkboard"></i></span> Add a new Stream</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <strong>Use this form to add a new stream and assign a class teacher to the stream.</strong>
+                            <hr>
+                            <p class="mb-0">Field with the * mark are required</p>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <hr>
+                        <form id="class_form" class="user">
+                                <div class="form-group">
+                                    <label class="text-primary">Stream Name*</label>
+                                    <input type="text" id="ClassName" class="form-control" name="ClassName"
+                                        placeholder="E.g 'Raudha' , 'Thanawii' ">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="text-primary">Stream Unique Code*</label>
+                                    <input type="text" id="ClassNameNumeric" class="form-control"
+                                        name="ClassNameNumeric" placeholder="E.g '0CRB', 'OCRG'">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="text-primary">Choose a Class*</label>
+                                    <select style="width:100%" name="stream_id" id="stream_id" class="form-control">
+                                        
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="text-primary">Assign Class Teacher</label>
+                                    <select style="width:100%" name="teachers_id" id="teachers_id" class="form-control">          
+                                    </select>
+                                </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-primary" type="submit">Save</button>
+                            </div>
+
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
     </div>
     <!-- End of Page Wrapper -->
 
