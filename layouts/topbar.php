@@ -1,11 +1,12 @@
 
 <!-- Topbar -->
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-3 static-top shadow">
 
     <!-- Topbar Search -->
     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
         <div class="input-group">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Click to search for anything"
+            <input type="text" class="form-control bg-light border-1 small" 
+                    placeholder="Click to search for anything"
                 aria-label="Search" aria-describedby="basic-addon2">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="button">
@@ -49,18 +50,25 @@
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-800 small">
-                    <?php echo htmlentities($_SESSION['alogin']); ?></span>
+                <span class="mr-2 d-none d-lg-inline text-gray-900 small">
+                    <?php echo htmlentities($_SESSION['alogin']); ?>
+                </span>
                 <img class="img-profile rounded-circle" src="/src/img/download.png">
             </a>
             <!-- Dropdown - User Information -->
-            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+            <div class="dropdown-menu dropdown-menu-right animated--grow-in" aria-labelledby="userDropdown">
 
-                <a href="" class="dropdown-item">
+                <a href="/admin/pages/profile" class="dropdown-item">
                     <i class="fas fa-user-edit fa-lg fa-fw mr-2 text-primary"></i>
-                    Profile
+                    Manage Your Account
                 </a>
 
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-calendar fa-lg fa-fw mr-2 text-primary"></i>
+                    Create a Task
+                </a>
+
+                <hr class="sidebar-divider my-1">
 
                 <a class="dropdown-item" data-toggle="modal" data-target="#logoutModal">
                     <i class="fas fa-sign-out-alt fa-lg fa-fw mr-2 text-danger"></i>
