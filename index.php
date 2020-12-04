@@ -2,14 +2,13 @@
 
 session_start();
 
-// include "./layouts/utils/redirect.php";
+ include "./layouts/utils/redirect.php";
 
 if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500 || !isset($_SESSION['role_id'])){
-  header("Location: /login");
-  exit;
+  redirectToHomePage();
 }else{
       $_SESSION['last_login_timestamp'] = time();
-  ?>
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -62,9 +61,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
   <!-- End of Page Wrapper -->
 
   <script src="/dist/js/main.min.js"></script>
-
-  <script src="/dist/js/dashboard/dashboard.js"></script>
   <script src="/dist/js/utils/utils.js"></script>
+  <script src="/dist/js/dashboard/dashboard.js"></script>
 </body>
 
 </html>

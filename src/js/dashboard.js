@@ -5,7 +5,7 @@
   '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = "#858796";
 
-// variable holding the gender url.
+// add a variable to hold the gender url.
 const gender_url = "/dashboard/queries/get_gender_count.php";
 
 // variable holding the pie chart element.
@@ -21,8 +21,6 @@ edit_madrasa = $("#edit_madrasa");
 
 // variable holding the index heading.
 const index_heading = $("#index_heading");
-
-NProgress.start();
 
 const init = () => {
   $.ajax({
