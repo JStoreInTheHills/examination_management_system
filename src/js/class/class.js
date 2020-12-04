@@ -42,7 +42,6 @@ streamFunction();
 const classTable = $("#class_table").DataTable({
   autoWidth: true,
   info: true,
-  processing: true,
   ajax: {
     url: "queries/get_all_classes.php",
     type: "GET",
@@ -50,7 +49,7 @@ const classTable = $("#class_table").DataTable({
   },
   columnDefs: [
     {
-      targets: 0,
+      targets: 1,
       data: {
         id: "id",
         ClassName: "ClassName",
@@ -61,15 +60,15 @@ const classTable = $("#class_table").DataTable({
       },
     },
     {
-      targets: 1,
+      targets: 2,
       data: "ClassNameNumeric",
     },
     {
-      targets: 2,
+      targets: 3,
       data: "name",
     },
     {
-      targets: 3,
+      targets: 4,
       data: "number_of_subjects",
 
       render: function (data) {
@@ -81,7 +80,7 @@ const classTable = $("#class_table").DataTable({
       },
     },
     {
-      targets: 4,
+      targets: 5,
       data: "exams",
 
       render: function (data) {
@@ -93,7 +92,7 @@ const classTable = $("#class_table").DataTable({
       },
     },
     {
-      targets: 5,
+      targets: 6,
       data: "number_of_students",
 
       render: function (data) {
@@ -105,14 +104,19 @@ const classTable = $("#class_table").DataTable({
       },
     },
     {
-      targets: 6,
+      targets: 7,
       data: "id",
+      width: "3%",
       orderable: false,
       render: (data) => {
         return `
             <a style="color:red" onClick="del(${data})" title="Delete Class"><i class="fas fa-trash"></i></a>
         `;
       },
+    },
+    {
+      targets: 0,
+      data: "CreationDate",
     },
   ],
 });
@@ -248,11 +252,14 @@ $('[data-toggle="datepicker"]').datepicker({
 let toast = {
   question: () => {
     return new Promise((resolve) => {
-      iziToast.question({
-        title: "Question",
-        message: "Are you Sure?",
-        timeout: 20000,
+      iziToast.error({
+        title: "Warning!",
+        titleSize: 40,
+        message:
+          "Are you sure you want to delete this stream? This process is Irreversible",
+        timeout: 200000,
         close: false,
+        overlay: true,
         position: "center",
         buttons: [
           [
@@ -292,6 +299,7 @@ const del = (data) => {
             position: "topRight",
             transitionIn: "bounceInLeft",
             message: s.message,
+            overlay: true,
             onClosing: function () {
               classTable.ajax.reload(null, false);
             },
@@ -300,6 +308,7 @@ const del = (data) => {
           iziToast.error({
             type: "Error",
             message: s.message,
+            overlay: true,
           });
         }
       })
