@@ -82,6 +82,7 @@ const toggle = () => {
 toggle();
 
 const init = () => {
+  $("button").prop("disabled", true);
   $.ajax({
     url: "../queries/class_view/get_class_details.php",
     type: "GET",
@@ -107,6 +108,7 @@ const init = () => {
         class_name_numeric.val(i.ClassNameNumeric);
         class_id_for_add_exam_modal.val(class_id);
       });
+      $("button").prop("disabled", false);
     })
     .fail((e) => {
       console.log(e);
@@ -119,11 +121,13 @@ init();
 const toast = {
   question: () => {
     return new Promise((resolve) => {
-      iziToast.question({
+      iziToast.error({
         title: "Warning",
-        icon: "fas fa-certificate",
+        icon: "fa fa-exclamation-triangle",
         message: "Are you Sure you want to delete?",
-        timeout: 20000,
+        timeout: 2000000,
+        overlay: true,
+        zindex: 999,
         close: false,
         position: "center",
         buttons: [
@@ -196,13 +200,10 @@ const view_class_table = $("#view_class_exams").DataTable({
       targets: 5,
       data: "id",
       orderable: false,
-      width: "10%",
+      width: "5%",
       render: function (data) {
         return `
-        <a href=""><i class="fas fa-edit"></i></a>
         <a style = "color:red" onClick="deleteExam(${data})"><i class="fas fa-trash"></i></a>
-
-
         `;
       },
     },
