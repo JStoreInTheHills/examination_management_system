@@ -314,7 +314,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         <div class="form-group row">
                             <div class="col-sm-12 mb-3 mb-sm-0">
                                 <label class="text-primary" for="year_id">Choose academic year:</label>
-                                <select name="year_id" id="year_id" class="form-control" onClick="getAcademicTerms(value)">
+                                <select style="width:100%" name="year_id" id="year_id" class="form-control">
                                 </select>
                             </div>
                         </div>

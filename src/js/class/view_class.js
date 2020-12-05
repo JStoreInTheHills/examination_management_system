@@ -753,23 +753,6 @@ edit_class_form_submit.click((e) => {
   e.preventDefault();
 });
 
-const getAcademicYears = () => {
-  $.ajax({
-    url: "../queries/class_view/get_academic_years.php",
-    type: "GET",
-    dataSrc: "",
-  }).done((resp) => {
-    const arr = JSON.parse(resp);
-    arr.forEach((item) => {
-      yearInput.append(
-        `<option value="${item.year_id}">${item.year_name}</option>`
-      );
-    });
-  });
-};
-
-getAcademicYears();
-
 const getAcademicTerms = (year_id) => {
   $.ajax({
     url: "../queries/class_view/get_academic_term.php",
@@ -787,6 +770,53 @@ const getAcademicTerms = (year_id) => {
     });
   });
 };
+// Select2 to fill the select option with year data.
+yearInput.select2({
+  theme: "bootstrap4",
+  placeholder: "Click to select year",
+  ajax: {
+    url: "../queries/class_view/get_academic_years.php",
+    type: "POST",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        searchTerm: params.term,
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
+
+yearInput.on("select2:select", function (e) {
+  termInput.select2({
+    theme: "bootstrap4",
+    placeholder: "Click to add an exam",
+    ajax: {
+      url: "../queries/class_view/get_academic_term.php",
+      type: "POST",
+      dataType: "json",
+      delay: 250,
+      data: function (params) {
+        return {
+          searchTerm: params.term,
+          year_id: yearInput.val(),
+        };
+      },
+      processResults: function (response) {
+        return {
+          results: response,
+        };
+      },
+      cache: true,
+    },
+  });
+});
 
 // Interval between method calls.
 setInterval(function () {

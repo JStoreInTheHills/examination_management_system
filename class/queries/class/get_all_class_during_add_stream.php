@@ -18,7 +18,7 @@
          $result = $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    $data [] = array();
+    $data = array();
 
     foreach ($result as $r) {
         $data [] = array (
