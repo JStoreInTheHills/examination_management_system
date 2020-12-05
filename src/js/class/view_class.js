@@ -35,9 +35,6 @@ const classInputId = $("#class_to_add_subject");
 const stream2_name = $("#stream2_name");
 // --------------------------------------------------
 
-// Variable pointing to the Submit button node on the form
-const view_class_submit = $("#view_class_submit");
-
 // Variable pointing to the exam input field on the exam form.
 const examInput = $("#exam_id");
 
@@ -70,7 +67,8 @@ const add_teacher_form = $("#subject_add");
 const subject_id = $("#teacher_id");
 
 var totalValueOfStudent = 0;
-
+//Variable holding the class_id to be sent during adding an exam to the class exam table.
+const class_id_for_add_exam_modal = $("#class_id_for_add_exam_modal");
 // Function to toggle the sidebar.
 const toggle = () => {
   $("body").toggleClass("sidebar-toggled");
@@ -107,6 +105,7 @@ const init = () => {
         classTeacher.html(`<a href="">${i.tname}</a>`);
         creationdate.html(`${i.CreationDate}`);
         class_name_numeric.val(i.ClassNameNumeric);
+        class_id_for_add_exam_modal.val(class_id);
       });
     })
     .fail((e) => {
@@ -416,46 +415,78 @@ const deleteSubject = (subjectId) => {
       });
   });
 };
+// Assign a node element to a variable
+const view_class_form = $("#view_class_form");
+// Using validate to validate the inputs passed in then send the request to the server.
+view_class_form.validate({
+  rules: {
+    year_id: {
+      required: true,
+    },
+    term_id: {
+      required: true,
+    },
+    exam_id: {
+      required: true,
+    },
+  },
 
-// Add an exam to a class event handler.
-view_class_submit.click((e) => {
-  e.preventDefault();
+  errorClass: "text-danger",
 
-  const formData = {
-    exam_id: examInput.val(),
-    year_id: yearInput.val(),
-    term_id: termInput.val(),
-    class_id: class_id,
-  };
-
-  $.ajax({
-    url: "../queries/add_class_exam.php",
-    type: "POST",
-    data: formData,
-  }).done((response) => {
-    const s = JSON.parse(response);
-    if (s.success === true) {
-      iziToast.success({
-        type: "Success",
-        transitionIn: "bounceInLeft",
-        position: "topRight",
-        message: s.message,
-        onClosing: function () {
-          view_class_table.ajax.reload(null, false);
-          get_total_exams_in_class();
-        },
-      });
-    } else {
-      iziToast.error({
-        type: "Error",
-        transitionIn: "bounceInLeft",
-        position: "topRight",
-        message: s.message,
-      });
-    }
-  });
+  submitHandler: function (form) {
+    $.ajax({
+      url: "../queries/add_class_exam.php",
+      type: "POST",
+      data: $(form).serialize(),
+    }).done((response) => {
+      const s = JSON.parse(response);
+      if (s.success === true) {
+        iziToast.success({
+          type: "Success",
+          transitionIn: "bounceInLeft",
+          position: "topRight",
+          message: s.message,
+          overlay: true,
+          onClosing: function () {
+            view_class_table.ajax.reload(null, false);
+            get_total_exams_in_class();
+            $("#add_class_exam").modal("hide");
+          },
+        });
+      } else {
+        iziToast.error({
+          type: "Error",
+          transitionIn: "bounceInLeft",
+          position: "topRight",
+          message: s.message,
+          overlay: true,
+        });
+      }
+    });
+  },
 });
 
+examInput.select2({
+  theme: "bootstrap4",
+  placeholder: "Type to search for Exam",
+  ajax: {
+    url: "../queries/class_view/add_exam_to_class.php",
+    type: "POST",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        searchTerm: params.term,
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
 // fucntion to get all the students and place them in a variable.
 const get_total_students = () => {
   $.ajax({
@@ -595,6 +626,7 @@ const deleteExam = (examId) => {
           iziToast.success({
             type: "Success",
             message: r.message,
+            overlay: true,
             onClosing: () => {
               view_class_table.ajax.reload(null, false);
               get_total_exams_in_class();
@@ -604,6 +636,7 @@ const deleteExam = (examId) => {
           iziToast.error({
             type: "Error",
             message: r.message,
+            overlay: true,
           });
         }
       })
@@ -762,5 +795,6 @@ setInterval(function () {
   get_total_students();
   get_total_exams_in_class();
   total_subjects_in_class();
+  reloadChart();
 }, 100000);
 // });

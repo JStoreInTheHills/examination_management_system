@@ -50,8 +50,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         <h1 class="h3 mb-0 text-gray-800" id="heading"></h1>
 
                         <div class="dropdown">
-
-                            <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm dropdown-toggle"
+                        	<div class="btn-group">
+                        		<button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm dropdown-toggle"
                                 type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
                                 <span><i class="fas fa-plus"> </i> Quick Add </span>
@@ -62,7 +62,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                 <span>Edit this Stream </span>
                             </button>
 
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <div class="dropdown-header">Tools:</div>
                                 <div class="dropdown-divider"></div>
 
@@ -76,21 +76,24 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                 <a href="/students/student" target="_blank" class="dropdown-item">
                                     Add Students To Stream</a>
                             </div>
+                        	</div>
+                          
+                           
 
                         </div>
 
                     </div>
 
                     <div class="d-sm-flex align-items-center justify-content-between mb-2">
-                        <h5 class="h5 mb-0 " id="class_teacher"><span><i class="text-gray-800"> Class Name :
+                        <h5 class="h5 mb-0 " id="class_teacher"><span><i class="text-gray-800"> Stream Name :
                                     <a id="stream2_name" href=""></a> </i></span> </h1>
 
-                            <h5 class="h5 mb-0 " id="creation_date"> Date Exam Was Created : <span><i
+                            <h5 class="h5 mb-0 " id="creation_date"> Date Stream Was Created : <span><i
                                         class="text-gray-800" id="creationdate"></i></span> </h1>
                     </div>
 
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h5 class="h5 mb-0" id="class_teacher">Class Teachers Name : <span><i><a
+                        <h5 class="h5 mb-0" id="class_teacher">Stream Teachers Name : <span><i><a
                                         id="classTeacher"></a></i></span> </h1>
 
                     </div>
@@ -293,11 +296,11 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
     <!-- Exam Modal-->
     <div class="modal fade" id="add_class_exam" data-backdrop="static" tabindex="-1" role="dialog"
         aria-labelledby="exam_modal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title text-primary" id="exam_modal">
-                        <span><i class="fas fa-users"></i></span> Add Exam To Class</h5>
+                        <span><i class="fas fa-edit"></i></span> Add Exam To Class</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -307,6 +310,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                     <form id="view_class_form" class="user">
 
+                        <input type="hidden" id="class_id_for_add_exam_modal" name="class_id_for_add_exam_modal">
                         <div class="form-group row">
                             <div class="col-sm-12 mb-3 mb-sm-0">
                                 <label class="text-primary" for="year_id">Choose academic year:</label>
@@ -326,34 +330,18 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         <div class="form-group row">
                             <div class="col-sm-12 mb-3 mb-sm-0">
                                 <label class="text-primary" for="exam_id">Choose an Exam:</label>
-                                <select name="exam_id" id="exam_id" class="form-control ">
-                                    <option readonly value="">Select An Exam</option>
-                                    <?php
-                                                    $sql = "SELECT exam_id, exam_name from exam";
-                                                    $query = $dbh->prepare($sql);
-                                                    $query->execute();
-                                                    $results = $query->fetchAll(PDO::FETCH_OBJ);
-                                                    if ($query->rowCount() > 0) {
-                                                        foreach ($results as $result) {   ?>
-                                    <option value="<?php echo htmlentities($result->exam_id); ?>">
-                                        <?php echo htmlentities($result->exam_name); ?>
-                                    </option>
-                                    <?php } } ?>
-                                </select>
+                                <select name="exam_id" id="exam_id" style="width:100%"  class="form-control "></select>
                             </div>
                         </div>
 
-
-
-                       
-                    </form>
+                        <div class="btn-group modal-footer">
+                            <button class="btn btn-primary" type="submit">
+                                Add
+                            </button>
+                        </div> 
                 </div>
-
-                <div class="modal-footer btn-group">
-                    <button class="btn btn-dark" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary" type="submit" id="view_class_submit">
-                        Save
-                    </button>
+                        </div> 
+                    </form>
                 </div>
             </div>
         </div>

@@ -18,7 +18,7 @@ include "../../config/config.php";
     }else{
         $exam_id = $_POST['exam_id'];
         $year_id = $_POST['year_id'];
-        $class_id = $_POST['class_id'];
+        $class_id = $_POST['class_id_for_add_exam_modal'];
 
         $term_id = $_POST['term_id'];
 
