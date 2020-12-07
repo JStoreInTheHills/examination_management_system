@@ -115,6 +115,12 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                             <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
                                 aria-labelledby="nav-home-tab">
 
+                                <div class="alert alert-info mb-1" role="alert">
+                                    <h6 class="alert-heading font-weight-bold">This is the class exam chart performance.</h6>
+                                    <hr>
+                                    <p class="mb-0">The best student are arranged from left to right with their overal marks.</p>
+                                </div>
+
                                 <div class="card mb-3">
                                     <div
                                         class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -125,6 +131,18 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                     <div class="card-body">
                                         <canvas id="students_chart" height="60"></canvas>
                                     </div>
+                                </div>
+
+                                <hr>
+                                    <p class="text-center">Class Exam Performance</p>
+                                <hr>
+
+                                <div class="alert alert-info mb-1" role="alert">
+                                    <h6 class="alert-heading font-weight-bold">This is the class exam performance table.</h6>
+                                    <hr>
+                                    <p class="mb-0">This table contains names of the students who sat for the exam and their performance.
+                                                 Click on a student to view their profile and performance overtime 
+                                    </p>
                                 </div>
 
                                 <div class="card shadow ">
@@ -139,12 +157,11 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                                 id="class_exam_student_table" width="100%" cellspacing="0">
                                                 <thead>
                                                     <tr>
+                                                        <th>Date Added</th>
                                                         <th>Position</th>
                                                         <th>Student Name</th>
                                                         <th>Adm#</th>
-                                                        <th>Date Added</th>
                                                         <th>MeanScore</th>
-                                                        <!-- <th>Grade</th> -->
                                                         <th>Subjects</th>
                                                         <th>Total Score</th>
 

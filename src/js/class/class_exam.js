@@ -248,7 +248,7 @@ fetch_class_exams();
  * We pass the class and class_exam id as parameters for the call
  */
 const class_exam_student_table = $("#class_exam_student_table").DataTable({
-  order: [[0, "asc"]],
+  order: [[1, "asc"]],
   ajax: {
     url: "../queries/fetch_class_exams_student_performance.php",
     type: "GET",
@@ -260,12 +260,12 @@ const class_exam_student_table = $("#class_exam_student_table").DataTable({
   },
   columnDefs: [
     {
-      targets: 0,
+      targets: 1,
       width: "1%",
       data: "students_rank",
     },
     {
-      targets: 1,
+      targets: 2,
       data: {
         FirstName: "FirstName",
         students_id: "students_id",
@@ -277,11 +277,11 @@ const class_exam_student_table = $("#class_exam_student_table").DataTable({
       },
     },
     {
-      targets: 2,
+      targets: 3,
       data: "RollId",
     },
     {
-      targets: 3,
+      targets: 0,
       data: "created_at",
     },
     {
