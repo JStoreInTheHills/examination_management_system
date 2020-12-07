@@ -256,6 +256,7 @@ const populateChart = () => {
             ticks: {
               maxTicksLimit: 5,
               padding: 10,
+              beginAtZero: true,
             },
             gridLines: {
               color: "rgb(234, 236, 244)",
@@ -505,6 +506,31 @@ classid.select2({
   },
 });
 
+const term_performance_table = $("#term_performance_table").DataTable({
+  ajax: {
+    url: "../queries/fetch_term.php",
+    type: "GET",
+    dataSrc: "",
+    data: {},
+  },
+  columnDefs: [
+    {
+      targets: 0,
+      data: {
+        name: "name",
+        year_id: "year_id",
+        term_year_id: "term_year_id",
+      },
+      render: function (data) {
+        return `<a target="_blank" href="/reports/class/module/term/exam_report?year_id=${data.year_id}&&term_id=${data.term_year_id}&&cid=${class_id}&&sid=${stdid}">${data.name}</a>`;
+      },
+    },
+    {
+      targets: 1,
+      data: "year_name",
+    },
+  ],
+});
 setInterval(() => {
   populateChart();
   overal_exam_table.ajax.reload(null, false);

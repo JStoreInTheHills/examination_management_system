@@ -8,7 +8,8 @@ $query = "SELECT year_name, exam_name, ce.id, SUM(marks) as mar
           JOIN exam e ON ce.exam_id =e.exam_id  
           JOIN year y ON y.year_id = ce.year_id
           WHERE students_id =:sid
-          GROUP BY students_id, class_exam_id";
+          GROUP BY students_id, class_exam_id
+          ORDER BY ce.id asc";
 
 $sql = $dbh->prepare($query);
 $sql->bindParam(":sid", $sid, PDO::PARAM_STR);
