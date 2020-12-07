@@ -49,6 +49,7 @@
   
         $width_cell = array(50,20,60,40,15,8,30,25,10,54,24,22,9,45);
 
+        $nameOfExams = getExams($class_id, $term_id);
 
         $marks_for_subjects = getStudentsMarksForRespectiveSubjects($year_id, $term_id, $student_id);
 
@@ -101,10 +102,9 @@
 
         $pdf->SetFont('aefurat', '', 25);
 
-        $pdf->Cell(0, 10, "كشفا الدر جات لنها ية السنة الدزاسية لعام ", 0, 1, 'C', 'B');
 
         $pdf->SetFont('aefurat', '', 14);
-        $pdf->Cell(0, 10, "Student's Examination Report ( Mid & End 0f 1st Semester for the Academic Year 2020/2021 ) ", 0, 1, 'C', 'B');
+        $pdf->Cell(0, 10, "Student's Examination Report ( Mid & End of 1st Semester for the Academic Year 2020/2021 ) ", 0, 1, 'C', 'B');
 
         $pdf->SetFont('aefurat', '', 12);
 
@@ -176,11 +176,11 @@
             $pdf->Ln(2);
 
             $pdf->Cell($width_cell[9], 10, 'SUBJECTS',1,0,'C');
-            
-            $pdf->Cell($width_cell[6], 10, 'الفصل الدر اسي‬',1,0,'C');
-            $pdf->Cell($width_cell[6], 10, 'الفصل الدر اسي',1,0,'C');
-            $pdf->Cell($width_cell[6], 10, 'المجمؤ (٥٠)',1,0,'C');
-            $pdf->Cell($width_cell[9], 10, ' ‫‫المواد الدراسية‬ ‬',1,1,'C');
+            for($x=0; $x < count(getExams($class_id, $term_id)); $x++){
+                $pdf->Cell($width_cell[6], 10, $nameOfExams[$x]['exam_name'], 1,0,"C");
+            }
+            $pdf->Cell($width_cell[6], 10, "Final Marks(50)", 1,0,"C");
+            $pdf->Cell($width_cell[9], 10, 'SUBJECTS',1,1,'C');
             $count = 1;
 
             for($x=0; $x < count($subjectName); $x++){

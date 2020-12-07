@@ -385,6 +385,24 @@
 
     }
 
+    function getExams($class_id, $term_id){
+        global $dbh;
+        $query = "SELECT exam_name, exam_out_of 
+                  FROM class_exams 
+                  LEFT JOIN exam 
+                  ON exam.exam_id = class_exams.exam_id 
+                  WHERE term_id =:term_id
+                  AND class_id =:class_id
+                  ORDER BY class_exams.exam_id DESC";
+
+        $sql=$dbh->prepare($query);
+        $sql->bindParam(":class_id", $class_id, PDO::PARAM_STR);
+        $sql->bindParam(":term_id", $term_id, PDO::PARAM_STR);
+        $sql->execute();
+
+        $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
 
     /**
      * Function to return the stream id for the class. 
