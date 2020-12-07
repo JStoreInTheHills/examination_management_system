@@ -1,10 +1,9 @@
 <?php
 
-session_start();
+include "../../layouts/utils/redirect.php";
 
 if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500 || !isset($_SESSION['role_id'])){
-    header("Location: /login.php");
-    exit;
+  redirectToHomePage();
   }else{
       $_SESSION['last_login_timestamp'] = time();
   ?>
@@ -46,10 +45,15 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                        <h1 id="class_name" class="h3 mb-0 text-gray-800"></h1>
                         <h1 id="heading" class="h3 mb-0 text-gray-800"></h1>
                     </div>
 
+                    <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                        <h5 id="class_creation_date" class="h5 mb-0 text-gray-800"></h5>
+                        <h5 id="class_teachers_name" class="h5 mb-0 text-gray-800"></h5>
+                    </div>
                     <nav aria-label="breadcrumb mb-3">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/index.php">Home</a></li>
@@ -62,8 +66,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                     <!-- start of row -->
                     <div class="row">
 
-                        <div class="col-lg-8">
-                            <div class="card shadow mb-4">
+                        <div class="col-lg-6">
+                            <div class="card mb-3">
                                 <div class="card-header text-primary">
                                     All Exams for the Academic Period
                                 </div>
@@ -72,7 +76,10 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                         <table class="table table-striped" width="100%" cellspacing="0" id="table">
                                             <thead>
                                                 <tr>
-                                                    <th>Exam Name</th>
+                                                    <th>Date Created</th>
+                                                     <th>Exam Name</th>
+                                                    <th>Status</th>
+                                                    <th>Out Of</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -83,19 +90,20 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         </div>
                         <!------------------------------------------------------------------------------------------------->
 
-                        <div class="col-lg-8">
-                            <div class="card shadow mb-4">
+                        <div class="col-lg-12">
+                            <div class="card shadow mb-3">
                                 <div class="card-header text-primary">
                                     End Year Result Students Table
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-striped" id="class_academic_table">
+                                        <table class="table table-striped" width="100%" id="class_academic_table">
                                             <thead>
                                                 <tr>
+                                                    <th>Date Created</th>
                                                     <th>Student Name</th>
                                                     <th>Admission #</th>
-                                                    <th>Action</th>
+                                                    <th>Status</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -105,11 +113,10 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         </div>
                     </div>
                     <!-- endo of row -->
-
-
                 </div>
                 <!-- /.container-fluid -->
 
+                <?php include '../../layouts/footer.php' ?>
             </div>
             <!-- End of Main Content -->
         </div>

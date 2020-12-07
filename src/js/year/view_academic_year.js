@@ -19,6 +19,7 @@ const term_name = $("#term_name");
 
 // Constructor method that populates everything.
 const init = () => {
+  $("button").prop("disabled", true);
   $.ajax({
     url: "../queries/get_year_details.php",
     data: {
@@ -45,6 +46,7 @@ const init = () => {
             </div>
         `);
     });
+    $("button").prop("disabled", false);
   });
 };
 
@@ -258,30 +260,30 @@ const class_end_year_table = $("#class_end_year_table").DataTable({
   },
   columnDefs: [
     {
-      targets: 0,
-      data: "ClassName",
-      render: function (data) {
-        return `<a href="./view_class_academic_year_performance.php?class_name=${data}&academic_year=${year_id}">${data}</a>`;
-      },
-    },
-    {
       targets: 1,
-      data: "ClassNameNumeric",
+      data:{
+        ClassName : "ClassName",
+        id : "id",
+      },
+      render: function (data) {
+        return `<a href="./view_class_academic_year_performance?cid=${data.id}&yid=${year_id}">${data.ClassName}</a>`;
+      },
     },
     {
       targets: 2,
-      data: "name",
+      data: "ClassNameNumeric",
     },
     {
       targets: 3,
-      data: "class_result",
-      render: function (data) {
-        if (data === null) {
-          return "0";
-        } else {
-          return `${data}`;
-        }
-      },
+      data: "ClassTeacher",
+    },
+    {
+      targets: 4,
+      data: "name",
+    },
+    {
+      targets: 0,
+      data: "CreationDate",
     },
   ],
 });

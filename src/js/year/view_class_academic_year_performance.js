@@ -1,29 +1,63 @@
-var queryString = window.location.search;
-var urlParams = new URLSearchParams(queryString);
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
 
-var class_name = urlParams.get("class_name");
-var academic_year = urlParams.get("academic_year");
+const class_name = urlParams.get("cid");
+const academic_year = urlParams.get("yid");
 
-var formData = {
+const heading = $("#heading");
+const academic_title = $("#academic_title");
+const bread_list = $("#bread_list");
+
+const class_name_title = $("#class_name");
+const class_creation_date = $("#class_creation_date");
+const class_teachers_name = $("#class_teachers_name");
+
+const formData = {
   class_name: class_name,
   academic_year: academic_year,
 };
 
-var heading = $("#heading");
-heading.append(`${class_name} ~ Academic Year ~ ${academic_year}`);
-$("#academic_title").append(`${academic_year} || ${class_name}`);
-$("#bread_list").append(
-  `<a href="/academic_year/page/view_academic_year.php?year_name=${academic_year}">${academic_year}</a>`
-);
-$("#bread_list2").append(`${class_name}`);
+const init = () => {
+  $.ajax({
+    url : "../queries/get_year_details",
+    type : "GET",
+    data : {
+      year_id: academic_year
+    },
+  }).done((response)=>{
+    const arr = JSON.parse(response);
+    arr.forEach(items =>{
+      heading.html(`Academic Year: ${items.year_name}`);
+      academic_title.html(`${items.year_name}`);
+      bread_list.html(`<a href="/academic_year/page/view_academic_year?year_id=${items.year_id}">${items.year_name}</a>`
+      );
+      
+    });
+    getClassDetails();
+  });
+}
 
-// tables.
-var table = $("#table");
-var class_academic_table = $("#class_academic_table");
+init();
 
+const getClassDetails = () => {
+  $.ajax({
+      url : "../queries/get_class_details_for_final_result_show.php",
+      type : "GET",
+      data : {
+        class_id: class_name
+      },
+    }).done((response)=>{
+      const arr = JSON.parse(response);
+      arr.forEach(items =>{
+       class_name_title.html(`${items.ClassName} (${items.ClassNameNumeric})`);
+       class_creation_date.html(`Date Created: ${items.CreationDate}`);
+       class_teachers_name.html(`Class Teacher: ${items.name}`);
+       $("#bread_list2").html(`${items.ClassName}`);
+      })
+    });
+}
 
-
-table.DataTable({
+const table = $("#table").DataTable({
   ajax: {
     url: "./../queries/class_exam_results.php",
     data: formData,
@@ -32,16 +66,36 @@ table.DataTable({
   },
   columnDefs: [
     {
-      targets: 0,
+      targets: 1,
       data: "exam_name",
       render: function (data) {
         return `<a href="#">${data}</a>`;
       },
     },
+    {
+      targets: 0,
+      data: "created_at",
+    },
+    {
+      targets: 2,
+      data: "status",
+      render: function (data) {
+        if(data == 1){
+          return `<span class="badge badge-pill badge-success">Active</span>`;
+        }else{
+           return `<span class="badge badge-pill badge-danger">Inactive</span>`;
+        }
+      },
+    },
+    {
+      targets: 3,
+      width: "10%",
+      data: "exam_out_of",
+    },
   ],
 });
 
-class_academic_table.DataTable({
+var class_academic_table = $("#class_academic_table").DataTable({
   ajax: {
     url: "./../queries/class_academic_year_exam_students.php",
     type: "GET",
@@ -51,23 +105,34 @@ class_academic_table.DataTable({
   columnDefs: [
     {
       targets: 0,
-      data: {
-        StudentName: "StudentName",
-        StudentId: "StudentId",
-      },
-      render: function (data) {
-        return `<a href="./page/print_result.php?sid=${data.StudentId}">${data.StudentName}</a>`;
-      },
-    },
+      data: "RegDate",
+    },  
     {
       targets: 1,
-      data: "RollId",
+      data: {
+        FirstName: "FirstName",
+        StudentId: "StudentId",
+        LastName : "LastName",
+        OtherNames : "OtherNames",
+      },
+      render: function (data) {
+        return `<a href="./page/print_result.php?sid=${data.StudentId}">${data.FirstName} ${data.OtherNames} ${data.LastName}</a>`;
+      },
     },
     {
       targets: 2,
-      data: "StudentId",
+      data: "RollId",
+    },
+    {
+      targets: 3,
+      data: "Status",
       render: function (data) {
-        return `${data}`;
+        if(data == 1){
+           return `<span class="badge badge-pill badge-success">Active</span>`;
+        }else{
+           return `<span class="badge badge-pill badge-danger">Inactive</span>`;
+        }
+        
       },
     },
   ],

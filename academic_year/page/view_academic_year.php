@@ -137,10 +137,11 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                                     id="class_end_year_table">
                                                     <thead>
                                                         <tr>
+                                                            <th>Date Created</th>
                                                             <th>Stream Name</th>
                                                             <th>Stream Code</th>
+                                                            <th>Class Teacher</th>
                                                             <th>Class</th>
-                                                            <th>Total Marks</th>
                                                         </tr>
                                                     </thead>
                                                 </table>
