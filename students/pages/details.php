@@ -129,7 +129,7 @@
                                                         <tr>
                                                             <th>Exam Name</th>
                                                             <th>Total Marks</th>
-                                                            <!-- <th>Grade</th> -->
+                                                            <th>Term</th>
                                                             <th>Year</th>
                                                         </tr>
                                                     </thead>

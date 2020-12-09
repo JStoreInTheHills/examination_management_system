@@ -29,8 +29,6 @@ const pupil = {};
 
 const makeStudentInactive = $("#makeStudentInactive");
 
-makeStudentInactive.hide();
-
 var { stdid, class_id } = checkTokenization();
 
 function checkTokenization() {
@@ -45,6 +43,7 @@ function checkTokenization() {
 }
 
 function get_details() {
+  makeStudentInactive.prop("disabled", true);
   var stat;
   var formData = {
     sid: stdid,
@@ -82,6 +81,7 @@ function get_details() {
 
     checkIfStudentIsInactive();
     populateStudentsDetails();
+    makeStudentInactive.prop("disabled", false);
   });
 
   function populateStudentsDetails() {
@@ -177,9 +177,12 @@ const overal_exam_table = $("#overrall_exam_table").DataTable({
       data: "mar",
       width: "20%",
     },
-
     {
       targets: 2,
+      data: "name",
+    },
+    {
+      targets: 3,
       data: "year_name",
     },
   ],
@@ -361,10 +364,6 @@ function checkIfStudentIsInactive() {
     makeStudentInactive.html(`Make Active`);
   }
 }
-
-$(document).ajaxComplete(function () {
-  makeStudentInactive.show();
-});
 
 makeStudentInactive.click(() => {
   let status;
