@@ -18,7 +18,7 @@ $("#class_id").val(class_id);
 
 // -----------------------------------------------------------------
 
-console.log(sessionStorage.getItem("token_number"));
+// console.log(sessionStorage.getItem("token_number"));
 
 const class_teacher_modal_title = $("#class_teacher_modal_title");
 
@@ -62,7 +62,7 @@ const formData = {
 
 const errror = $("#errror");
 
-var exam_out_of;
+$("#btnSubmit").prop("disabled", true);
 
 const init = () => {
   $.ajax({
@@ -80,7 +80,7 @@ const init = () => {
     getSubject();
 
     $("#toast").html(`
-      <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">
       <strong>Uses this page to add a students performance marks for a subject that you teach.</strong>
       <hr>
       <p class="mb-0">Click Save after choosing the exam, the student and the appropriate performance.
@@ -97,29 +97,6 @@ const init = () => {
 };
 
 init();
-
-$("#students_id").select2({
-  placeholder: "Type to search student",
-  theme: "bootstrap4",
-  ajax: {
-    url: "../queries/get_class_students",
-    type: "POST",
-    dataType: "json",
-    delay: 250,
-    data: function (params) {
-      return {
-        searchTerm: params.term,
-        class_id: class_id, // search term
-      };
-    },
-    processResults: function (response) {
-      return {
-        results: response,
-      };
-    },
-    cache: true,
-  },
-});
 
 $("#students_id").on("select2:select", function (e) {
   $("#btnSubmit").prop("disabled", false);
@@ -177,9 +154,34 @@ const getExam = () => {
   });
 };
 
+$("#students_id").select2({
+  placeholder: "Type to search student",
+  theme: "bootstrap4",
+  width: "100%",
+  ajax: {
+    url: "../queries/get_class_students",
+    type: "POST",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        searchTerm: params.term,
+        class_id: class_id, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
+
 year_id.select2({
   theme: "bootstrap4",
   placeholder: "Select a year",
+  width: "100%",
   ajax: {
     url: "../queries/fetch_academic_year.php",
     type: "GET",
@@ -202,6 +204,7 @@ year_id.select2({
 term_name.select2({
   theme: "bootstrap4",
   placeholder: "Type to search for term",
+  width: "100%",
   ajax: {
     url: "../queries/get_year_terms.php",
     type: "POST",
@@ -226,6 +229,7 @@ term_name.on("select2:select", function (e) {
   exam_id.select2({
     theme: "bootstrap4",
     placeholder: "Select An Exam",
+    width: "100%",
     ajax: {
       url: "../queries/get_class_specific_exam.php",
       type: "POST",
@@ -248,71 +252,22 @@ term_name.on("select2:select", function (e) {
   });
 });
 
-subject_teachers_form.validate({
-  rules: {
-    year_id: "required",
-    term_name: "required",
-    exam_id: "required",
-    students_id: "required",
-    marks: {
-      required: true,
-      range: [0, 30],
+exam_id.on("select2:select", () => {
+  let exam_out_of;
+  $.ajax({
+    url: "../queries/get_examOutOf.php",
+    type: "GET",
+    data: {
+      exam_id: exam_id.val(),
     },
-  },
-
-  errorClass: "text-danger",
-
-  submitHandler: (form) => {
-    $.ajax({
-      url: "../queries/add_students_result_for_stream.php",
-      type: "POST",
-      data: $(form).serialize(),
-    }).done((resp) => {
-      const arr = JSON.parse(resp);
-      if (arr.success == true) {
-        iziToast.success({
-          type: "Success",
-          position: "topRight",
-          transitionIn: "bounceInLeft",
-          message: arr.message,
-          onClosing: () => {
-            teachers_subject_table.ajax.reload(null, false);
-            $("#subject_teacher_form").each(function () {
-              this.reset();
-            });
-          },
-        });
-      } else {
-        $("#errror")
-          .html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>${arr.message}</strong>
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-              </div>`);
-        $("#errror").fadeIn();
-        $("#btnSubmit").prop("disabled", true);
-        iziToast.error({
-          type: "Error",
-          icon: "fas fa-exclamation",
-          position: "center",
-          transitionIn: "bounceInLeft",
-          message: arr.message,
-        });
-      }
+  }).done((response) => {
+    const arr = JSON.parse(response);
+    arr.forEach((element) => {
+      exam_out_of = element.exam_out_of;
     });
-  },
-
-  invalidHandler: (event, validator) => {
-    let error = validator.numberOfInvalids();
-    if (error) {
-      let message = error == 1 ? "You missed" : `You missed ${error} fields`;
-      $("#errror").html(message).addClass(`alert alert-danger`);
-      $("#errror").show();
-    } else {
-      $("#errror").hide();
-    }
-  },
+    validateResult(exam_out_of);
+    $("#btnSubmit").prop("disabled", false);
+  });
 });
 
 const teachers_subject_table = $("#teachers_subject_table").DataTable({
@@ -520,3 +475,78 @@ students_id.change((e) => {
 setInterval(() => {
   teachers_subject_table.ajax.reload(null, false);
 }, 1000000000);
+
+function validateResult(exam_out_of) {
+  subject_teachers_form.validate({
+    ignore: null,
+    rules: {
+      year_id: "required",
+      class_id: "required",
+      term_name: "required",
+      exam_id: "required",
+      students_id: "required",
+      marks: {
+        required: true,
+        range: [0, exam_out_of],
+      },
+    },
+
+    errorClass: "text-danger",
+
+    submitHandler: (form) => {
+      $.ajax({
+        url: "../queries/add_students_result_for_stream.php",
+        type: "POST",
+        data: $(form).serialize(),
+      }).done((resp) => {
+        const arr = JSON.parse(resp);
+        if (arr.success == true) {
+          iziToast.success({
+            type: "Success",
+            position: "topRight",
+            transitionIn: "bounceInLeft",
+            message: arr.message,
+            overlay: true,
+            zindex: 999,
+            onClosing: () => {
+              teachers_subject_table.ajax.reload(null, false);
+              $("#subject_teacher_form").each(function () {
+                this.reset();
+              });
+            },
+          });
+        } else {
+          $("#errror")
+            .html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>${arr.message}</strong>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+              </div>`);
+          $("#errror").fadeIn();
+          $("#btnSubmit").prop("disabled", true);
+          iziToast.error({
+            type: "Error",
+            icon: "fas fa-exclamation",
+            position: "center",
+            transitionIn: "bounceInLeft",
+            overlay: true,
+            zindex: 999,
+            message: arr.message,
+          });
+        }
+      });
+    },
+
+    invalidHandler: (event, validator) => {
+      let error = validator.numberOfInvalids();
+      if (error) {
+        let message = error == 1 ? "You missed" : `You missed ${error} fields`;
+        $("#errror").html(message).addClass(`alert alert-danger`);
+        $("#errror").show();
+      } else {
+        $("#errror").hide();
+      }
+    },
+  });
+}

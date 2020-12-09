@@ -1,11 +1,9 @@
 <?php 
-
-    include '../../config/config.php';
     session_start();
+    include '../../layouts/utils/redirect.php';
 
     if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500 || !isset($_SESSION['role_id'])){
-        header("Location: /login");
-        exit;
+        redirectToHomePage();
     }else{
         $_SESSION['last_login_timestamp'] = time();
 ?>
@@ -42,21 +40,16 @@
                 <div class="container-fluid">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-2">
-                        <h1 class="h3 mb-0 text-gray-800" id="heading">
-                            <span><i class="fas fa-users"></i></span>
-                        </h1>
+                        <h1 class="h3 mb-0 text-gray-800" id="heading"></h1>
 
-                        <h1 class="h3 mb-0 text-gray-800" id="Subject_Taught">
-                        </h1>
-
+                        <h1 class="h3 mb-0 text-gray-800" id="Subject_Taught"></h1>
 
                     </div>
                     <div class="d-sm-flex align-items-center justify-content-between mb-2">
                         
                         <h1 class="h6 mb-0 text-gray-800" id="SubjectCreationDate"></h1>
 
-                        <h1 class="h5 mb-0 text-gray-800" id="status">
-                        </h1>
+                        <h1 class="h5 mb-0 text-gray-800" id="status"></h1>
 
                     </div>
 
@@ -79,7 +72,7 @@
                     <div class="row">
 
                         <div class="col-lg-12 mb-1">
-                            <div id="add_result" class="card shadow mb-2">
+                            <div id="add_result" class="card mb-2">
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary"> Add Result
@@ -98,19 +91,14 @@
                                                 <label for="year_id" class="m-0 font-weight-bold text-primary"
                                                     id="year_label">Choose a
                                                     Year</label>
-                                                <select name="year_id" id="year_id" class="form-control select">
-                                                    <option readonly value="">Choose a year</option>
-                                                <option readonly value="">Choose a year</option>    
-                                                    <option readonly value="">Choose a year</option>
-                                                </select>
+                                                <select name="year_id" id="year_id" class="form-control select"></select>
                                             </div>
 
                                             <div class="form-group col-md-4">
                                                 <label for="term_id" class="m-0 font-weight-bold text-primary"
                                                     id="term_label">Choose a
                                                     Term</label>
-                                                <select name="term_name" id="term_name" onclick="getExam(value)"
-                                                    class="form-control select"></select>
+                                                <select name="term_name" id="term_name" class="form-control select"></select>
                                             </div>
 
                                             <div class="form-group col-md-4">
@@ -155,6 +143,16 @@
                         </div>
 
                         <div class="col-lg-12 mb-1">
+                        <hr>
+                            <p class="text-center"> Student Subject Performance </p>
+                        <hr>
+
+                        <div class="alert alert-info alert-dismissible fade show mb-1" role="alert">
+                            <strong>Table below shows the results that you have already declared.</strong>
+                            <hr>
+                            <p class="mb-0">Click edit result on the furthest right for student to edit their results.
+                            </p>
+                        </div>
                             <div id="main_content" class="card shadow mb-4">
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
