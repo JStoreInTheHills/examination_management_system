@@ -47,8 +47,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-4 text-gray-800" id="page_heading"></h1>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                        <h1 class="h3 text-gray-800" id="page_heading"></h1>
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <button class="btn btn-outline-primary" id="editExamStatusButton"></button>
                             <button class="btn btn-primary" id="editExamDetails"></button>
@@ -129,7 +129,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
         <!-- Modal -->
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title text-primary" id="exampleModalCenterTitle"></h5>
@@ -138,6 +138,13 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         </button>
                     </div>
                     <div class="modal-body">
+
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        <strong> Use this card to edit the exam. </strong>
+                        <hr>
+                        <p class="mb-0">Click on save changes to save the changes. </p>
+                    </div>
+                    
                         <form id="edit_exam_form" action="" method="POST">
                             <input type="hidden" name="exam_id_edit" id="exam_id_edit">
                             
@@ -153,13 +160,13 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                     <input type="text" id="exam_out_of_edit" class="form-control" name="exam_out_of_edit">
                                 </div>
                             </div>
-                            <label for="exam_out_of" class="text-primary">Enter Exam Out Of: </label>
+                            <label for="exam_out_of" class="text-primary">Select Reporting Style: </label>
                             <div class="form-group row">
                                 <div class="col-sm-12 mb-3 mb-sm-0">
                                     <select name="r_style" id="r_style" style="width:100%" class="form-control"></select>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary" id="edit_exam_form_save_button">Save changes</button>
                         </form>
                     </div>
                 </div>

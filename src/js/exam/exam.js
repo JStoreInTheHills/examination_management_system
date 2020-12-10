@@ -33,6 +33,21 @@ const exam_table = $("#exam_table").DataTable({
     },
     {
       targets: 4,
+      data: "closed",
+      render: (data) => {
+        if (data == 1) {
+          return `<span class="badge badge-pill badge-success">Active</span>`;
+        } else {
+          return `<span class="badge badge-pill badge-danger">InActive</span>`;
+        }
+      },
+    },
+    {
+      targets: 5,
+      data: "name",
+    },
+    {
+      targets: 6,
       width: "5%",
       orderable: false,
       data: "exam_id",

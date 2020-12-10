@@ -57,19 +57,55 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                     </nav>
 
 
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Use this window to manage all the exams in the school.</strong>
+                    <div class="alert alert-info alert-dismissible fade show mb-1" role="alert">
+                        <strong>Use this card to add an exam or exams to the school.</strong>
                         <hr>
-                        <p class="mb-0">All Exams are attached with an out of associated attribute .</p>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <p class="mb-0">All Exams have a name, a reporting style and an exam out of value.</p>
+                        
                     </div>
 
 
                     <div class="row">
-                        <div class="col-lg-7">
-                            <div class="card mb-4 shadow ">
+                        <div class="col-lg-12">
+                            <div class="card mb-2">
+                                <div class="card-header text-primary font-weight-bold">
+                                    <span><i class="fas fa-edit"></i></span> Add Examination
+                                </div>
+                                <div class="card-body">
+                                    <form for="exam_form" class="user" id="exam_form">
+                                        <div class="form-group row">
+                                            <div class="col-sm-6 mb-2 mb-sm-0">
+                                                <label for="exam_name" class="text-primary">Exam Name: </label>
+                                                <input type="text" name="exam_name" id="exam_name" class="form-control"
+                                                    placeholder="Enter exam name">
+                                            </div>
+                                            
+                                            <div class="col-sm-6 mb-2 mb-sm-0">
+                                                <label for="exam_out_of" class="text-primary">Exam Out of: </label>
+                                                <input type="text" name="exam_out_of" id="exam_out_of"
+                                                    class="form-control" placeholder="Enter exam out of marks">
+                                            </div>
+                                        </div>
+
+                                        <label for="exam_out_of" class="text-primary">Report Card Style</label>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12 mb-3 mb-sm-0">
+                                                <select class="form-control" style="width:100%" name="r_style" id="r_style">
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary" id="submit" type="submit">Save</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="card mb-3 shadow ">
                                 <div class="card-header text-primary font-weight-bold">
                                     All Examinations
                                 </div>
@@ -82,6 +118,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                                     <th>Exam Name</th>
                                                     <th>Out of</th>
                                                     <th>Created By</th>
+                                                    <th>Status</th>
+                                                    <th>Reporting Style</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
@@ -91,45 +129,6 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                 </div>
                             </div>
 
-                        </div>
-
-                        <div class="col-lg-5">
-                            <div class="card mb-4">
-                                <div class="card-header text-primary font-weight-bold">
-                                    <span><i class="fas fa-edit"></i></span> Add Examination
-                                </div>
-                                <div class="card-body">
-                                    <form for="exam_form" class="user" id="exam_form">
-                                        <label for="exam_name" class="text-primary">Exam Name: </label>
-                                        <div class="form-group row">
-                                            <div class="col-sm-12 mb-3 mb-sm-0">
-                                                <input type="text" name="exam_name" id="exam_name" class="form-control"
-                                                    placeholder="Enter exam name">
-                                            </div>
-                                        </div>
-                                        <label for="exam_out_of" class="text-primary">Exam Out of: </label>
-                                        <div class="form-group row">
-                                            <div class="col-sm-12 mb-3 mb-sm-0">
-                                                <input type="text" name="exam_out_of" id="exam_out_of" class="form-control"
-                                                    placeholder="Enter exam out of marks">
-                                            </div>
-                                        </div>
-                                        <label for="exam_out_of" class="text-primary">Report Card Style</label>
-                                        <div class="form-group row">
-                                            <div class="col-sm-12 mb-3 mb-sm-0">
-                                                <select class="form-control"width="100%" name="r_style" id="r_style">
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="btn-group">
-                                            <button class="btn btn-primary" id="submit"
-                                                type="submit">Save</button>
-                                        </div>
-
-                                    </form>
-                                </div>
-                            </div>
                         </div>
 
 
@@ -154,8 +153,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
     <?php require_once('../layouts/utils/logout_modal.html')?>
 
     <script src="/dist/js/main.min.js"></script>
-    <script src="/dist/js/exams/exam.js"></script>
     <script src="/dist/js/utils/utils.js"></script>
+    <script src="/dist/js/exams/exam.js"></script>
 </body>
 
 </html>

@@ -30,6 +30,7 @@ const r_style = $("#r_style");
 var studentSelect = $("#r_style");
 var isClosed;
 
+const edit_exam_form_save_button = $("#edit_exam_form_save_button");
 const init = () => {
   $.ajax({
     url: "../queries/get_exam_details.php",
@@ -189,12 +190,14 @@ function checkExamStatusBeforeEdit() {
   }
 }
 
+// Trigger modal show for
 editExamDetails.html(`Edit Exam`);
 
 editExamDetails.click(() => {
   $("#exampleModalCenter").modal("show");
 });
 
+// Function to validate the input form for new exam.
 edit_exam_form.validate({
   rules: {
     exam_name: {
@@ -230,6 +233,7 @@ edit_exam_form.validate({
   },
 });
 
+// Add the select2 for the reporting style.
 r_style.select2({
   theme: "bootstrap4",
   placeholder: "Type to select Report style",
@@ -242,4 +246,13 @@ r_style.select2({
       };
     },
   },
+});
+
+// Check to see if the form is valid and enable or disable the submit button.
+edit_exam_form.on("blur keyup change", "input", () => {
+  if (edit_exam_form.valid()) {
+    edit_exam_form_save_button.prop("disabled", false);
+  } else {
+    edit_exam_form_save_button.prop("disabled", "disabled");
+  }
 });
