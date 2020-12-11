@@ -81,6 +81,8 @@ const toggle = () => {
 // Invocation of the toggle method.
 toggle();
 
+const class_id_input = $("#class_id_input");
+
 const init = () => {
   $("button").prop("disabled", true);
   $.ajax({
@@ -94,6 +96,8 @@ const init = () => {
     .done((response) => {
       const arr = JSON.parse(response);
       let class_name;
+      let collectedTeacherData = {};
+      let collectedClassesData = {};
       arr.forEach((i) => {
         class_name = i.ClassName;
         pageHeading.html(class_name);
@@ -107,8 +111,19 @@ const init = () => {
         creationdate.html(`${i.CreationDate}`);
         class_name_numeric.val(i.ClassNameNumeric);
         class_id_for_add_exam_modal.val(class_id);
+
+        class_id_input.val(class_id);
+
+        collectedTeacherData.teachername = i.tname;
+        collectedTeacherData.teachers_id = i.teacher_id;
+
+        collectedClassesData.stream_name = i.sname;
+        collectedClassesData.stream_id = i.stream_id;
       });
       $("button").prop("disabled", false);
+
+      fillSelect2WithDataForTeacher(collectedTeacherData);
+      fillSelect2WithDataForClasses(collectedClassesData);
     })
     .fail((e) => {
       console.log(e);
@@ -667,45 +682,6 @@ const getSubjectTeacher = (val) => {
   });
 };
 
-add_teacher_form.click((e) => {
-  formData = {
-    class_id: class_id,
-    subject_id: $("#subject_id").val(),
-    teacher_id: $("#teacher_id").val(),
-  };
-
-  $.ajax({
-    url: "../queries/add_subject_to_class.php",
-    type: "post",
-    data: formData,
-    dataSrc: "",
-  }).done(function (response) {
-    let r = JSON.parse(response);
-    if (r.success === true) {
-      iziToast.success({
-        title: "Success",
-        icon: "fas fa-user-graduate",
-        transitionIn: "bounceInLeft",
-        position: "topRight",
-        message: r.message,
-        onClosing: function () {
-          view_class_subjects.ajax.reload(null, false);
-          total_subjects_in_class();
-        },
-      });
-    } else {
-      iziToast.error({
-        title: "Error",
-        icon: "fas fa-user-graduate",
-        transitionIn: "bounceInLeft",
-        position: "bottomRight",
-        message: r.message,
-      });
-    }
-  });
-
-  e.preventDefault();
-});
 
 // Initialization of the functions.
 get_total_students();
@@ -713,63 +689,60 @@ get_total_exams_in_class();
 total_subjects_in_class();
 reloadChart();
 
-edit_class_form_submit.click((e) => {
-  const formData = {
-    class_id: class_id,
-    edit_class_name: $("#edit_class_name").val(),
-    edit_class_code: $("#edit_class_name_numeric").val(),
-    edit_stream: $("#edit_stream_id").val(),
-    edit_date: $("#edit_date").val(),
-    edit_teacher: $("#edit_teacher").val(),
-  };
-
-  $.ajax({
-    url: "../queries/class_view/edit_class.php",
-    type: "POST",
-    data: formData,
-  }).done((response) => {
-    const arr = JSON.parse(response);
-    if (arr.success == true) {
-      iziToast.success({
-        type: "Success",
-        position: "topRight",
-        transitionIn: "bounceInRight",
-        message: arr.message,
-        onClosing: function () {
-          $("#edit_this_class").modal("hide");
-          init();
-        },
-      });
-    } else {
-      iziToast.error({
-        type: "Error",
-        position: "topRight",
-        transitionIn: "bounceInRight",
-        message: arr.message,
-      });
-    }
-  });
-
-  e.preventDefault();
+const edit_this_class_form = $("#edit_this_class_form");
+edit_this_class_form.validate({
+  rules: {
+    edit_class_name: {
+      required: true,
+    },
+    edit_class_name_numeric: {
+      required: true,
+    },
+    edit_stream_id: {
+      required: true,
+    },
+    dob: {
+      required: true,
+    },
+    edit_teacher: {
+      required: true,
+    },
+    class_id_input: {
+      required: true,
+    },
+  },
+  submitHandler: (form) => {
+    $.ajax({
+      url: "../queries/class_view/edit_class.php",
+      type: "POST",
+      data: $(form).serialize(),
+    }).done((response) => {
+      const arr = JSON.parse(response);
+      if (arr.success == true) {
+        iziToast.success({
+          type: "Success",
+          position: "topRight",
+          transitionIn: "bounceInUp",
+          message: arr.message,
+          overlay: true,
+          onClosing: function () {
+            $("#edit_this_class").modal("hide");
+            init();
+          },
+        });
+      } else {
+        iziToast.error({
+          type: "Error",
+          position: "topRight",
+          transitionIn: "bounceInRight",
+          message: arr.message,
+        });
+      }
+    });
+  },
+  errorClass: "text-danger",
 });
 
-const getAcademicTerms = (year_id) => {
-  $.ajax({
-    url: "../queries/class_view/get_academic_term.php",
-    type: "GET",
-    dataSrc: "",
-    data: {
-      year_id: year_id,
-    },
-  }).done((resp) => {
-    const arr = JSON.parse(resp);
-    arr.forEach((item) => {
-      termInput.append(
-        `<option value="${item.term_year_id}">${item.name}</option>`
-      );
-    });
-  });
-};
 // Select2 to fill the select option with year data.
 yearInput.select2({
   theme: "bootstrap4",
@@ -829,3 +802,76 @@ setInterval(function () {
   reloadChart();
 }, 100000);
 // });
+
+const classidInput = $("#edit_stream_id");
+const teacherInputId = $("#edit_teacher");
+
+function fillSelect2WithDataForTeacher(data) {
+  var option = new Option(data.teachername, data.teachers_id, true, true);
+  teacherInputId.append(option).trigger("change");
+  teacherInputId.trigger({
+    type: "select2:select",
+    params: {
+      data: data,
+    },
+  });
+}
+
+function fillSelect2WithDataForClasses(data) {
+  var option = new Option(data.stream_name, data.stream_id, true, true);
+  classidInput.append(option).trigger("change");
+  classidInput.trigger({
+    type: "select2:select",
+    params: {
+      data: data,
+    },
+  });
+}
+
+const edit_stream_id = $("#edit_stream_id");
+edit_stream_id.select2({
+  theme: "bootstrap4",
+  width: "100%",
+  placeholder: "Click to choose a class",
+  ajax: {
+    url: "../queries/class_view/get_stream_for_edit_.php",
+    type: "POST",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        searchTerm: params.term,
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
+
+const edit_teacher = $("#edit_teacher");
+edit_teacher.select2({
+  theme: "bootstrap4",
+  placeholder: "Click to choose a class teacher",
+  width: "100%",
+  ajax: {
+    url: "../queries/class_view/get_teachers_for_edit_.php",
+    type: "POST",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        searchTerm: params.term,
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});

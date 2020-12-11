@@ -3,7 +3,7 @@
 $class_id = $_GET['class_id'];
 
 $query = " SELECT  ClassName,ClassNameNumeric, stream.name as sname,
-           tblclasses.stream_id, CreationDate, tblteachers.name as tname, classTeacher 
+           tblclasses.stream_id, CreationDate, tblteachers.name as tname, classTeacher, tblteachers.teacher_id
             FROM  tblclasses 
             LEFT JOIN tblteachers 
             ON tblclasses.classTeacher = tblteachers.teacher_id
