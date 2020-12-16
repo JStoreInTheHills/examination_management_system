@@ -68,26 +68,6 @@
     }
 
     /**
-     * This function check if a grade satisfies a specific condition and returns the code under 
-     * which the condition is true.
-     */
-    function caluculateGrade($grade){
-        
-        if($grade >= 96){
-            return "Excellent";
-        }elseif ($grade >= 95 && $grade <= 86) {
-            return "Very Good";
-        }elseif ($grade >= 70 && $grade <= 85) {
-            return "Good";
-        }elseif ($grade >= 50 && $grade <= 69) {
-            return "Pass";
-        }else {
-            return "Fail";
-        }
-        
-    }
-
-    /**
      * This fucntion uses sub query to calculate the students rank for the term exams.
      */
     function getStudentsRank($year_id, $term_id, $student_id, $class_id){
@@ -404,26 +384,36 @@
         return $result;
     }
 
-    /**
-     * Function to return the stream id for the class. 
-
-        // function getClassDetails($class_id){
-        //     global $dbh;
-            
-        //     $query = "SELECT stream_id FROM tblclasses
-        //     WHERE id=:class_id";
-            
-        //     $sql = $dbh->prepare($query);
-            
-        //     $sql->bindParam(":class_id", $class_id, PDO::PARAM_STR);
-            
-        //     $sql->execute();
-            
-        //     $result = $sql->fetchColumn();
-            
-        //     return $result;
-            
-        // }
+     /**
+     * This function check if a grade satisfies a specific condition and returns the code under 
+     * which the condition is true.
      */
+    function calculateGradeForRaudha($grade){
 
+            if($grade >= 96){
+                   return "Excellent";
+            }elseif ($grade >= 86  && $grade <= 95) {
+                    return "Very Good";
+            }elseif ($grade >= 70 && $grade <= 85) {
+                    return "Good";
+            }elseif ($grade >= 50 && $grade <= 69) {
+                    return "Pass";
+            }else {
+                 return "Fail";
+           }
+    }
+
+    function calculateGrade($grade){
+        if($grade >= 86){
+            return "Excellent";
+        }elseif ($grade >= 76  && $grade <= 85) {
+            return "Very Good";
+        }elseif ($grade >= 66 && $grade <= 75) {
+            return "Good";
+        }elseif ($grade >= 50 && $grade <= 65) {
+            return "Pass";
+        }else {
+            return "Fail";
+        } 
+    }
 ?>

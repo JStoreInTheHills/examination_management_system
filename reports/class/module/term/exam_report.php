@@ -47,7 +47,7 @@
 
         $students_result = checkIfTheStudentSatForAllSubjectsBetweenTheExams($student_id, $term_id, $year_id);
   
-        $width_cell = array(50,20,60,40,15,8,30,25,10,54,24,22,9,45);
+        $width_cell = array(50,20,60,40,15,8,30,25,10,54,24,22,9,45, 51);
 
         $nameOfExams = getExams($class_id, $term_id);
 
@@ -144,7 +144,11 @@
         $pdf->Cell(100, 0, 'Percentage(%):_______________________________(%) ', 0,0,'',false);
         $pdf->Cell(20, 0, ' النسبة ‫المئة ية', 0,0,'',false);
     
-        $pdf->Cell(0, 5, '  Grade:________' .caluculateGrade(getPercentage($sum_of_total, $class_id)). "______", 0,0,'',false);
+        if(getClassStreamId($class_id) == 110 || getClassStreamId($class_id) == 109 || getClassStreamId($class_id) == 108){
+            $pdf->Cell(0, 5, '  Grade:________' .calculateGradeForRaudha(getPercentage($sum_of_total, $class_id)). "______", 0,0,'',false);
+        }else{
+            $pdf->Cell(0, 5, '  Grade:________' .calculateGrade(getPercentage($sum_of_total, $class_id)). "______", 0,0,'',false);
+        }
 
         // $pdf->SetFont('aefurat', '', 12);
         $pdf->setRTL(true);
@@ -175,21 +179,21 @@
         try{
             $pdf->Ln(2);
 
-            $pdf->Cell($width_cell[9], 10, 'SUBJECTS',1,0,'C');
+            $pdf->Cell(42, 10, 'SUBJECTS',1,0,'C');
             for($x=0; $x < count(getExams($class_id, $term_id)); $x++){
-                $pdf->Cell($width_cell[6], 10, $nameOfExams[$x]['exam_name'], 1,0,"C");
+                $pdf->Cell(38, 10, $nameOfExams[$x]['exam_name'] . " (" . $nameOfExams[$x]['exam_out_of'] . ") ", 1,0,"C");
             }
-            $pdf->Cell($width_cell[6], 10, "Final Marks(50)", 1,0,"C");
-            $pdf->Cell($width_cell[9], 10, 'SUBJECTS',1,1,'C');
+            $pdf->Cell(38, 10, "Final Marks (50)", 1,0,"C");
+            $pdf->Cell(42, 10, 'SUBJECTS',1,1,'C');
             $count = 1;
 
             for($x=0; $x < count($subjectName); $x++){
                 $pdf->Cell(10, 8, $count,1,0,'C');
-                $pdf->Cell(44, 8, $subjectName[$x]['SubjectName'],1,0,'C');
-                $pdf->Cell($width_cell[6], 8, $marks_for_subjects[0][$x], 1,0,'C');
-                $pdf->Cell($width_cell[6], 8, $marks_for_subjects[1][$x], 1,0,'C');
-                $pdf->Cell($width_cell[6], 8, $totalSubjectPerformance[$x]['marks'], 1,0,'C');
-                $pdf->Cell(44, 8, $subjectName[$x]['SubjectName'],1,0,'C');
+                $pdf->Cell(32, 8, $subjectName[$x]['SubjectName'],1,0,'C');
+                $pdf->Cell(38, 8, $marks_for_subjects[0][$x], 1,0,'C');
+                $pdf->Cell(38, 8, $marks_for_subjects[1][$x], 1,0,'C');
+                $pdf->Cell(38, 8, $totalSubjectPerformance[$x]['marks'], 1,0,'C');
+                $pdf->Cell(32, 8, $subjectName[$x]['SubjectName'],1,0,'C');
                 $pdf->Cell(10, 8, $count,1,1,'C');
                 $count++;
             }
@@ -229,6 +233,7 @@
 
     // ----------------------------- Start Of Grade Section ----------------------------------------------------
 
+    if(getClassStreamId($class_id) == 110 || getClassStreamId($class_id) == 109 || getClassStreamId($class_id) == 108){
         try{
             $pdf->SetTextColor(255,255,255);
             $pdf->Cell(74, 5, 'GRADES', 'LTB',0,'C', 1);
@@ -267,7 +272,48 @@
             $pdf->Cell($width_cell[12], 5, '٥', 1, 1, 'C');
         }catch (Exception $e){
             echo 'Uncaught Exception', $e->getMessage(), "\n";
-        }
+       }   
+    }else{
+        try{
+            $pdf->SetTextColor(255,255,255);
+            $pdf->Cell(74, 5, 'GRADES', 'LTB',0,'C', 1);
+            $pdf->Cell(124, 5,'‫التقد ير ات‬', 'TRB',1,'C', 1);
+            $pdf->SetTextColor(0,0,0);
+        
+            $pdf->Cell($width_cell[12], 5, '1', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, 'Excellent', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, '86 - 100', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, '‫ممتاز‬', 1, 0, 'C');
+            $pdf->Cell($width_cell[12], 5, '١', 1, 1, 'C');
+        
+            $pdf->Cell($width_cell[12], 5, '2', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, 'Very Good', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, '76 - 85', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, ' ‫جيد‬ ‫جدا‬ ', 1, 0, 'C');
+            $pdf->Cell($width_cell[12], 5, '٢', 1, 1, 'C');
+        
+            $pdf->Cell($width_cell[12], 5, '3', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, 'Good', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, '66 - 75', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, '‫جيد‬', 1, 0, 'C');
+            $pdf->Cell($width_cell[12], 5, '٣', 1, 1, 'C');
+        
+            $pdf->Cell($width_cell[12], 5, '4', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, 'Pass', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, '50 - 65', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, '‫مقبول‬', 1, 0, 'C');
+            $pdf->Cell($width_cell[12], 5, '٤', 1, 1, 'C');
+        
+        
+            $pdf->Cell($width_cell[12], 5, '5', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, 'Fail', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, '00 - 49', 1, 0, 'C');
+            $pdf->Cell($width_cell[2], 5, '‫راسب‬', 1, 0, 'C');
+            $pdf->Cell($width_cell[12], 5, '٥', 1, 1, 'C');
+        }catch (Exception $e){
+            echo 'Uncaught Exception', $e->getMessage(), "\n";
+       }   
+    }
    
     // ---------------------------- End of Grade Section -----------------------------------------------------
 
