@@ -3,7 +3,7 @@
             <div class="container my-auto">
                 <div class="text-center mx-auto">
                     <span>Made with <span><i class="text-danger">&hearts;</i></span>   by
-                      <a href="#" target="_blank"> 
+                      <a href="https://kedtechgroup.com/" target="_blank"> 
                             <i class="fas fa-user-graduate"></i>
                              Kedtech Group Limited
                       </a>
