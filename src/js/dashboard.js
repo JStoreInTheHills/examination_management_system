@@ -9,7 +9,7 @@ Chart.defaults.global.defaultFontColor = "#858796";
 const gender_url = "/dashboard/queries/get_gender_count.php";
 
 // variable holding the pie chart element.
-const ctx = document.getElementById("myPieChart");
+// const ctx = document.getElementById("myPieChart");
 
 // Area Chart Example
 const clx = document.getElementById("myAreaChart");
@@ -21,6 +21,22 @@ edit_madrasa = $("#edit_madrasa");
 
 // variable holding the index heading.
 const index_heading = $("#index_heading");
+
+// Pointer to the number of students in the school.
+let number_of_students;
+
+// Pointer to the number of teachers in the school.
+let number_of_teachers;
+
+// Function to toogle the sidebar
+const toggle = () => {
+  $("body").toggleClass("sidebar-toggled");
+  $(".sidebar").toggleClass("toggled");
+  if ($(".sidebar").hasClass("toggled")) {
+    $(".sidebar .collapse").collapse("hide");
+  }
+};
+toggle();
 
 const init = () => {
   $.ajax({
@@ -59,8 +75,10 @@ const get_students_count = () => {
     const j = JSON.parse(response);
     j.forEach((items) => {
       $("#all_students").html(items.students);
+      number_of_students = items.students;
     });
   });
+  getMaleStudents();
 };
 
 // Function to populate the number of teachers in the school.
@@ -70,7 +88,11 @@ const get_all_teachers = () => {
     type: "GET",
   }).done((response) => {
     let t = JSON.parse(response);
-    $("#all_teachers").empty().append(t[0].teachers_id);
+    t.forEach((item) => {
+      number_of_teachers = item.teachers_id;
+    });
+    $("#all_teachers").html(number_of_teachers);
+    getMaleTeachers();
   });
 };
 
@@ -88,36 +110,36 @@ const get_all_class = () => {
 const populate_students_ratio = () => {};
 
 // Pie Chart Example
-const myPieChart = new Chart(ctx, {
-  type: "doughnut",
-  data: {
-    labels: ["Female", "Male"],
-    datasets: [
-      {
-        data: [50, 50],
-        backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc"],
-        hoverBackgroundColor: ["#2e59d9", "#17a673", "#2c9faf"],
-      },
-    ],
-  },
-  options: {
-    maintainAspectRatio: false,
-    tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      borderColor: "#dddfeb",
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: true,
-      caretPadding: 10,
-    },
-    legend: {
-      display: true,
-    },
-    cutoutPercentage: 0,
-  },
-});
+// const myPieChart = new Chart(ctx, {
+//   type: "doughnut",
+//   data: {
+//     labels: ["Female", "Male"],
+//     datasets: [
+//       {
+//         data: [50, 50],
+//         backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc"],
+//         hoverBackgroundColor: ["#2e59d9", "#17a673", "#2c9faf"],
+//       },
+//     ],
+//   },
+//   options: {
+//     maintainAspectRatio: false,
+//     tooltips: {
+//       backgroundColor: "rgb(255,255,255)",
+//       bodyFontColor: "#858796",
+//       borderColor: "#dddfeb",
+//       borderWidth: 1,
+//       xPadding: 15,
+//       yPadding: 15,
+//       displayColors: true,
+//       caretPadding: 10,
+//     },
+//     legend: {
+//       display: true,
+//     },
+//     cutoutPercentage: 0,
+//   },
+// });
 
 function number_format(number, decimals, dec_point, thousands_sep) {
   // *     example: number_format(1234.56, 2, ',', ' ');
@@ -222,6 +244,7 @@ var line_chart_data = {
       pointHitRadius: 10,
       pointBorderWidth: 2,
       data: [500, 200, 477, 300],
+      fill: true,
     },
   ],
 };
@@ -237,3 +260,129 @@ setInterval(() => {
   get_all_class();
   get_all_teachers();
 }, 1000000);
+
+const recent_Datatables = $("#recent_Datatables").DataTable({
+  paging: false,
+  ordering: false,
+  info: true,
+  bFilter: true,
+  ajax: {
+    url: "/admin/queries/get_latest_result.php",
+    data: "",
+    dataSrc: "",
+    type: "GET",
+  },
+  columnDefs: [
+    {
+      targets: 0,
+      data: "RegDate",
+    },
+    {
+      targets: 1,
+      data: {
+        FirstName: "FirstName",
+        OtherNames: "OtherNames",
+        LastName: "LastName",
+        ClassName: "RollId",
+      },
+      render: (data) => {
+        return `<a>${data.FirstName} ${data.OtherNames} ${data.LastName} (${data.RollId})</a>`;
+      },
+    },
+    {
+      targets: 2,
+      data: "ClassName",
+    },
+    {
+      targets: 3,
+      data: "Status",
+      render: (data) => {
+        if (data != 1) {
+          return `<span class="cute_dot cute_dot-lg bg-danger mr-2"></span>`;
+        } else {
+          return `<span class="cute_dot cute_dot-lg bg-success mr-2"></span>`;
+        }
+      },
+    },
+  ],
+});
+
+const getMaleStudents = () => {
+  $.ajax({
+    url: "/admin/queries/get_male_students.php",
+    type: "GET",
+    data: "",
+  }).done((response) => {
+    let maleStudents = JSON.parse(response);
+    let male_;
+    let female_;
+    maleStudents.forEach((item) => {
+      male_ = item.male;
+    });
+
+    female_ = number_of_students - male_;
+
+    $("#male_students").html(male_);
+    $("#female_students").html(female_);
+  });
+};
+
+const getMaleTeachers = () => {
+  $.ajax({
+    url: "/admin/queries/get_male_teachers.php",
+    data: "",
+    type: "GET",
+  }).done((response) => {
+    let maleTeachers = JSON.parse(response);
+    let teachers_male_;
+    let teachers_female_;
+    maleTeachers.forEach((items) => {
+      teachers_male_ = items.male;
+      $("#male_teachers").html(items.male);
+    });
+    teachers_female_ = number_of_teachers - teachers_male_;
+    $("#female_teachers").html(teachers_female_);
+  });
+};
+
+const recent_result_declared = $("#recent_result_declared").DataTable({
+  paging: false,
+  ordering: false,
+  info: true,
+  bFilter: true,
+  ajax: {
+    url: "/admin/queries/get_latest_result_declared.php",
+    type: "GET",
+    data: "",
+    dataSrc: "",
+  },
+  columnDefs: [
+    {
+      targets: 0,
+      data: "created_at",
+    },
+    {
+      targets: 1,
+      data: {
+        FirstName: "FirstName",
+        OtherNames: "OtherNames",
+        LastName: "LastName",
+      },
+      render: (data) => {
+        return `<a href="">${data.FirstName} ${data.OtherNames} ${data.LastName} </a>`;
+      },
+    },
+    {
+      targets: 2,
+      data: "ClassName",
+    },
+    {
+      targets: 3,
+      data: "SubjectName",
+    },
+    {
+      targets: 4,
+      data: "marks",
+    },
+  ],
+});

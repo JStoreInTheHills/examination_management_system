@@ -1,0 +1,14 @@
+/* custom dot */
+.cute_dot {
+  content: "";
+  border-radius: 50%;
+  display: inline-block;
+}
+.cute_dot-md {
+  height: 6px;
+  width: 6px;
+}
+.cute_dot-lg {
+  width: 10px;
+  height: 10px;
+}
