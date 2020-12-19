@@ -189,7 +189,7 @@ const overal_exam_table = $("#overrall_exam_table").DataTable({
 });
 
 const populateChart = () => {
-  var ctx = document.getElementById("myAreaChart");
+  var ctx = document.getElementById("myAreaChart").getContext("2d");
   const formData = {
     sid: stdid,
   };
@@ -215,14 +215,14 @@ const populateChart = () => {
         {
           label: "Marks",
           lineTension: 0.3,
-          backgroundColor: "rgba(78, 115, 223, 0.05)",
-          borderColor: "rgba(78, 115, 223, 1)",
+          backgroundColor: "rgba(255, 99, 132, 0.2)",
+          borderColor: "rgba(255, 99, 132, 1)",
           pointRadius: 3,
-          pointBackgroundColor: "rgba(78, 115, 223, 1)",
-          pointBorderColor: "rgba(78, 115, 223, 1)",
+          pointBackgroundColor: "rgba(255, 99, 132, 0.2)",
+          pointBorderColor: "rgba(255, 99, 132, 0.2)",
           pointHoverRadius: 3,
-          pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-          pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+          pointHoverBackgroundColor: "rgba(255, 99, 132, 0.2)",
+          pointHoverBorderColor: "rgba(255, 99, 132, 0.2)",
           pointHitRadius: 10,
           pointBorderWidth: 2,
           data: myChartDataSet,
@@ -534,3 +534,58 @@ setInterval(() => {
   populateChart();
   overal_exam_table.ajax.reload(null, false);
 }, 200000);
+
+// chartIt();
+
+// // async funxtion to fetch the students subject Performance.
+// async function chartIt() {
+//   const data = await getSubjectData();
+//   var ctx = document.getElementById("mySubjectChart").getContext("2d");
+//   var myChart = new Chart(ctx, {
+//     type: "line",
+//     data: {
+//       labels: data.xs,
+//       datasets: [
+//         {
+//           label: "Student Subject Performance for The Exams",
+//           data: data.ys,
+//           fill: true,
+//           backgroundColor: "rgba(255, 99, 132, 0.2)",
+//           borderColor: "rgba(255, 99, 132, 1)",
+//           borderWidth: 1,
+//           pointHitRadius: 10,
+//           pointBorderWidth: 2,
+//         },
+//       ],
+//     },
+//     options: {
+//       scales: {
+//         yAxes: [
+//           {
+//             ticks: {
+//               beginAtZero: true,
+//             },
+//           },
+//         ],
+//       },
+//     },
+//   });
+// }
+
+// async function getSubjectData() {
+//   const xs = [];
+//   const ys = [];
+//   const response = await fetch(
+//     `/students/chartjs/get_students_subject_performance.php?stdid=${stdid}`
+//   );
+//   const datas = await response.text();
+
+//   const parsed = JSON.parse(datas);
+
+//   parsed.forEach((row) => {
+//     xs.push(row.SubjectName);
+//     ys.push(row.marks);
+//   });
+
+//   return { xs, ys };
+// }
