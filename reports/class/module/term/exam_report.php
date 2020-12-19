@@ -61,7 +61,7 @@
     try{
         $pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-        $pdf->SetTitle('Student End of Semester Report');
+        $pdf->SetTitle("End Term || " . $arr[0]['firstname'] . " ". $arr[0]['second_name'] . " ". $arr[0]['last_name']);
         $pdf->SetSubject("students end of semester report");
 
         // set default header data
@@ -142,7 +142,7 @@
         $pdf->Ln(5);
         $pdf->Cell(110,0, getPercentage($sum_of_total, $class_id) . "%", 0, 1, 'C', '', false, 'C', 'C');
         $pdf->Cell(100, 0, 'Percentage(%):_______________________________(%) ', 0,0,'',false);
-        $pdf->Cell(20, 0, ' النسبة ‫المئة ية', 0,0,'',false);
+        $pdf->Cell(20, 0, ' النسبة المئوية', 0,0,'',false);
     
         if(getClassStreamId($class_id) == 110 || getClassStreamId($class_id) == 109 || getClassStreamId($class_id) == 108){
             $pdf->Cell(0, 5, '  Grade:________' .calculateGradeForRaudha(getPercentage($sum_of_total, $class_id)). "______", 0,0,'',false);
@@ -152,7 +152,7 @@
 
         // $pdf->SetFont('aefurat', '', 12);
         $pdf->setRTL(true);
-        $pdf->Cell(0, 5, '  ‫التق ير‬: ',  0,1,'',false);
+        $pdf->Cell(0, 5, '  ‫التقدير: ',  0,1,'',false);
         $pdf->setRTL(false);
     
         $pdf->Cell(100, 12, 'Stream Position:  ____' . getStudentsRank($year_id, $term_id, $student_id, $class_id). ' _______Out Of:_______'.getNumberOfStudentsSatForTheExam($class_id, $term_id, $year_id).' ___ ', 0,0,'',false);
