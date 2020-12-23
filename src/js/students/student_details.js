@@ -1,7 +1,7 @@
-// Set new default font family and font color to mimic Bootstrap's default styling
-(Chart.defaults.global.defaultFontFamily = "Nunito"),
-  '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-Chart.defaults.global.defaultFontColor = "#858796";
+// // Set new default font family and font color to mimic Bootstrap's default styling
+// (Chart.defaults.global.defaultFontFamily = "Nunito"),
+//   '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+// Chart.defaults.global.defaultFontColor = "#858796";
 
 const queryString = window.location.search; // points to the url and store the value in a constiable
 const urlParams = new URLSearchParams(queryString); // the url is passed as an argurment to the search
@@ -167,7 +167,7 @@ const overal_exam_table = $("#overrall_exam_table").DataTable({
       },
       render: function (data) {
         return `
-            <a target="_blank" href="/reports/students/report_card?sid=${stdid}&cid=${class_id}&ceid=${data.id}">
+            <a href="/students/pages/students_exam_details?sid=${stdid}&cid=${class_id}&ceid=${data.id}">
               ${data.exam_name}
             </a>`;
       },
@@ -245,10 +245,7 @@ const populateChart = () => {
             time: {
               unit: "date",
             },
-            gridLines: {
-              display: true,
-              drawBorder: true,
-            },
+           
             ticks: {
               maxTicksLimit: 7,
             },
