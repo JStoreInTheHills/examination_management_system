@@ -17,6 +17,15 @@ const title = $("#title");
 // total_sum_of_marks for all the subjects done.
 const total_sum_of_marks = $("#total_sum_of_marks");
 
+const exam_name = $("#exam_name");
+const exam_out_of = $("#exam_out_of");
+
+// Node of the average marks DOM element
+const average_marks = $("#average_marks");
+
+// Percentage marks Node DOM element.
+const percentage_marks = $("#percentage_marks");
+
 // function to get the students details.
 async function init() {
   // Students details Assignment.
@@ -62,7 +71,6 @@ populateStudentsDetails();
 
 // Setting the defaults.
 print_results[0].href = `/reports/students/report_card?sid=${stdid}&cid=${cid}&ceid=${ceid}`;
-print_results[0].class = "btn btn-outline-primary btn-md";
 print_results.html(`Print This Result`);
 
 // Invocation of the chart js method.
@@ -194,6 +202,7 @@ const subject_performance = $("#subject_performance").DataTable({
 
 // Function to calculate the sum of all the subject performance for that Exam.
 async function getSubjectTotalSum() {
+  const total_marks_overal = await getTotalOveralOutOfMarks();
   let totalSumOfSubjects;
   const response = await fetch(
     `/students/chartjs/getTotalSumOfSubject.php?sid=${stdid}&ceid=${ceid}`
@@ -204,7 +213,89 @@ async function getSubjectTotalSum() {
 
   totalSumOfSubjects = parsed;
 
-  total_sum_of_marks.html(`${totalSumOfSubjects}`);
+  total_sum_of_marks.html(
+    `${totalSumOfSubjects} / ${total_marks_overal.total_overal_marks}`
+  );
+
+  return { totalSumOfSubjects };
+}
+
+async function getOutOfMarksForTheExam() {
+  let exam_out_of;
+  let exam_name;
+  const response = await fetch(
+    `/students/chartjs/get_exam_out_of_value.php?cid=${cid}$&ceid=${ceid}`
+  );
+  const data = await response.text();
+  const parsed = JSON.parse(data);
+
+  parsed.forEach((item) => {
+    exam_name = item.exam_name;
+    exam_out_of = item.exam_out_of;
+  });
+  return { exam_name, exam_out_of };
 }
 
 getSubjectTotalSum();
+
+// Async function to get the exam name and exam out of value.
+async function populateExamDetails() {
+  const exam_obj = await getOutOfMarksForTheExam();
+  exam_name.html(
+    `<span class="text-muted">Exam Name:</span> ${exam_obj.exam_name}`
+  );
+  exam_out_of.html(
+    `<span class="text-muted">Exam Out Of: </span>${exam_obj.exam_out_of}`
+  );
+}
+
+// Populate the exam with exam out of and exam names.
+populateExamDetails();
+
+async function getTotalNumberOfSubjects() {
+  let number_of_subjects;
+  const response = await fetch(
+    `/students/chartjs/get_total_number_of_subjects.php?cid=${cid}`
+  );
+  const data = await response.text();
+  const parsed = JSON.parse(data);
+
+  number_of_subjects = parsed;
+
+  return { number_of_subjects };
+}
+
+async function getTotalOveralOutOfMarks() {
+  const total_number_of_subjects_for_class_ = await getTotalNumberOfSubjects();
+  const overall_exam_out_of = await getOutOfMarksForTheExam();
+
+  let total_overal_marks =
+    total_number_of_subjects_for_class_["number_of_subjects"] *
+    overall_exam_out_of["exam_out_of"];
+
+  return { total_overal_marks };
+}
+
+//function to calculate the average of the students marks.
+async function calculateAverageTotalMarks() {
+  const totalsumofsubjects = await getTotalNumberOfSubjects();
+  const studentstotalmarks = await getSubjectTotalSum();
+  const totaloveralout_of = await getTotalOveralOutOfMarks();
+
+  let average =
+    studentstotalmarks.totalSumOfSubjects /
+    totalsumofsubjects.number_of_subjects;
+
+  average = average.toFixed(1);
+  average_marks.html(`${average}`);
+
+  let percentage =
+    (studentstotalmarks.totalSumOfSubjects /
+      totaloveralout_of.total_overal_marks) *
+    100;
+
+  percentage = percentage.toFixed(1);
+  percentage_marks.html(`${percentage}%`);
+}
+
+calculateAverageTotalMarks();

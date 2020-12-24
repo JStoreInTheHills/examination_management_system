@@ -1,6 +1,6 @@
 <?php 
     include '../../config/config.php';
-    include "../layouts/utils/redirect.php";
+    include "../../layouts/utils/redirect.php";
 
     if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500){
         redirectToHomePage();
@@ -35,7 +35,7 @@
 
         <?php  
             if(isset($_SESSION['role_id'])){
-                include "../layouts/sidebar.php"; 
+                include "../../layouts/sidebar.php"; 
             }
          ?>
 
