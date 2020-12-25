@@ -29,7 +29,7 @@ const init = () => {
   }).done((response) => {
     const arr = JSON.parse(response);
     arr.forEach((items) => {
-      $("#year_title").append(`Academic Year - ${items.year_name}`);
+      $("#title").append(`Academic Year - ${items.year_name}`);
       $("#heading").html(`Academic Year ~ ${items.year_name}`);
       $("#bread_list").html(`${items.year_name}`);
       edit_academic_year.html(`Edit Academic Year ${items.year_name}`);
@@ -261,9 +261,9 @@ const class_end_year_table = $("#class_end_year_table").DataTable({
   columnDefs: [
     {
       targets: 1,
-      data:{
-        ClassName : "ClassName",
-        id : "id",
+      data: {
+        ClassName: "ClassName",
+        id: "id",
       },
       render: function (data) {
         return `<a href="./view_class_academic_year_performance?cid=${data.id}&yid=${year_id}">${data.ClassName}</a>`;
