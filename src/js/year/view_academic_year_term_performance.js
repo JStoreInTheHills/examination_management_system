@@ -70,7 +70,7 @@ setInterval(() => {
 
 const heading = $("#heading");
 const a = document.getElementById("bread_list_year");
-const year_title = $("#year_title");
+const year_title = $("#title");
 const bread_list_year = $("#bread_list_year");
 const bread_list_term = $("#bread_list_term");
 
