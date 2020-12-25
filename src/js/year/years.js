@@ -8,9 +8,9 @@ const year_form = $("#year_form");
 
 const year_heading = $("#year_heading");
 
-const academic_year_title = $("#academic_year_title");
+const academic_year_title = $("#title");
 
-const school = sessionStorage.getItem("school");
+const school = sessionStorage.getItem("school_name");
 
 const init = () => {
   academic_year_title.html(`Academic Years - ${school}`);
