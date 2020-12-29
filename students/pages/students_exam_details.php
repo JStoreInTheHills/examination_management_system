@@ -1,5 +1,4 @@
 <?php 
-include '../../config/config.php';
 include "../../layouts/utils/redirect.php";
 
 if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) > 1500){
@@ -10,23 +9,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title id=title></title>
-
-    <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <link rel="stylesheet" href="/dist/css/main.min.css">
-
-</head>
+    <?php include "../../_partials/css_files.php"; ?>
 
 <body id="page-top">
 
@@ -48,8 +31,9 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                 <?php include './../../layouts/topbar.php' ?>
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <a class="btn btn-md text-primary mb-2" onclick="goBack()"> <i class="fas fa-arrow-left"></i> Back to previous page</a>
                     <div class="d-sm-flex align-items-center justify-content-between mb-3">
-                        <h1 class="h3 mb-2 text-gray-800" id="page_title">
+                        <h1 class="h3 text-gray-800" id="page_title">
                         </h1>
 
                         <div class="btn-group">
@@ -58,7 +42,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         </div>
                     </div>
 
-                    <div class="d-sm-flex align-items-center justify-content-between mb-3">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-2">
                         <h5 class="h5 mb-2 text-gray-800" id="exam_name">
                         </h5>
                         <h5 class="h5 mb-2 text-gray-800" id="exam_out_of">
@@ -156,8 +140,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
     <?php include '../../layouts/utils/logout_modal.html'; ?>
 
     <script src="/dist/js/main.min.js"> </script>
-    <script src="/dist/js/utils/utils.js">
-    </script>
+    <script src="/dist/js/utils/utils.js"></script>
     <script src="/dist/js/students/students_exam_details.js"></script>
 </body>
 

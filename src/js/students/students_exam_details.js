@@ -299,3 +299,8 @@ async function calculateAverageTotalMarks() {
 }
 
 calculateAverageTotalMarks();
+
+function goBack() {
+  window.history.go(-1);
+  return false;
+}
