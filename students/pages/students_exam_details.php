@@ -49,30 +49,67 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         </h5>
                     </div>
 
-                    <!-- Total marks of the student for the exam -->
-                    <div class="card shadow col-md-3 eq-card mb-2 border-left-primary">
-                        <div class="card-body mb-n3">
-                            <div class="row items-align-baseline h-100">
-                                <div class="col-md-12 my-1">
-                                    <p class="mb-0"><strong class="mb-0 text-uppercase text-primary">Total Marks
-                                        </strong></p>
-                                    <h3 id="total_sum_of_marks"></h3>
-                                    <p class="text-muted">This shows the total marks of the student.</p>
-                                </div>
-                                <div class="col-md-6 border-top py-3">
-                                    <p class="mb-1"><strong class="text-primary">Average Marks</strong></p>
-                                    <h4 class="mb-0" id="average_marks"></h4>
-                                    <p class="small text-muted mb-0"><span></span></p>
-                                </div> <!-- .col -->
-                                <div class="col-md-6 border-top py-3">
-                                    <p class="mb-1"><strong class="text-primary">Total Percentage</strong></p>
-                                    <h4 class="mb-0" id="percentage_marks"></h4>
-                                    <p class="small text-muted mb-0"><span></span></p>
-                                </div> <!-- .col -->
+                    <div class="row items-align-baseline">
+                        <div class="col-md-12 col-lg-3">
+                            <!-- Total marks of the student for the exam -->
+                            <div class="card shadow eq-card mb-2 border-left-primary">
+                                <div class="card-body mb-n3">
+                                    <div class="row items-align-baseline h-100">
+                                        <div class="col-md-12 my-1">
+                                        <p class="text-muted">This is the total marks of the student for the exam.</p>
+                                            <p class="mb-0"><strong class="mb-0 text-uppercase text-primary">Total Marks
+                                                </strong></p>
+                                            <h3 id="total_sum_of_marks"></h3>
+                                        </div>
+                                        <div class="col-md-6 border-top py-3">
+                                            <p class="mb-1"><strong class="text-primary">Mean Score(Average)</strong></p>
+                                            <h4 class="mb-0" id="average_marks"></h4>
+                                            <p class="small text-muted mb-0"><span></span></p>
+                                        </div> <!-- .col -->
+                                        <div class="col-md-6 border-top py-3">
+                                            <p class="mb-1"><strong class="text-primary">Total Percentage (%)</strong></p>
+                                            <h4 class="mb-0" id="percentage_marks"></h4>
+                                            <p class="small text-muted mb-0"><span></span></p>
+                                        </div> 
+                                       
+                                    </div>
+                                </div> <!-- .card-body -->
+                            </div> 
+                            <!-- .card -->
+                        </div>
+                        <div class="col-md-12 col-lg-3">
+                            <!-- Position of the student in the exam -->
+                            <div class="card shadow eq-card mb-2 border-left-primary">
+                                <div class="card-body mb-n3">
+                                    <div class="row items-align-baseline h-100">
+                                        <div class="col-md-12 my-1">
+                                        <p class="text-muted">This is the position of the student for the exam.</p>
+                                            <p class="mb-0"><strong class="mb-0 text-uppercase text-primary">Students Position
+                                                </strong></p>
+                                            <h3 id="students_position"></h3>
+                                        </div>
+                                        <div class="col-md-12 border-top py-3">
+                                            <p class="mb-1"><strong class="text-primary">Total Number of Students Sat for Exam.</strong></p>
+                                            <h4 class="mb-0" id="total_number_of_students"></h4>
+                                        </div> <!-- .col -->
+                                    </div>
+                                </div> <!-- .card-body -->
+                            </div> 
+                            <!-- .card -->
+                        </div>
 
-                            </div>
-                        </div> <!-- .card-body -->
-                    </div> <!-- .card -->
+                        <!-- <div class="col-md-12 col-lg-3">
+                            <div class="card shadow eq-card mb-2 border-left-primary">
+                                <div class="card-body mb-n3">
+                                <p class="text-muted">This is the percentage score for the.</p>
+
+                                    <div class="">
+                                    <canvas id="myDonught" ></canvas>
+                                    </div>
+                                </div> 
+                            </div> 
+                        </div> -->
+                    </div>
 
                     <div class="alert alert-info alert-dismissible fade show mb-2" role="alert">
                         <strong>The chart below shows the students performance for all the subjects sat for this

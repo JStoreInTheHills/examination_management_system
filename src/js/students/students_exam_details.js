@@ -26,6 +26,14 @@ const average_marks = $("#average_marks");
 // Percentage marks Node DOM element.
 const percentage_marks = $("#percentage_marks");
 
+const donoughtPercentage = $("#donoughtPercentage");
+
+//DOM node for student position.
+const students_position = $("#students_position");
+
+// DOM node for total number of students in the school.
+const total_number_of_students = $("#total_number_of_students");
+
 // function to get the students details.
 async function init() {
   // Students details Assignment.
@@ -296,6 +304,8 @@ async function calculateAverageTotalMarks() {
 
   percentage = percentage.toFixed(1);
   percentage_marks.html(`${percentage}%`);
+
+  return { percentage, average };
 }
 
 calculateAverageTotalMarks();
@@ -304,3 +314,87 @@ function goBack() {
   window.history.go(-1);
   return false;
 }
+
+// Function to populate the donought with data.
+async function percentageChart() {
+  // Declaration of the chart node element.
+  const clx = document.getElementById("myDonught").getContext("2d");
+  // array to hold the data
+  let dataArray = [];
+  // data fetched from the asynchronous function and piped throught a constant variable.
+  const data = await calculateAverageTotalMarks();
+  // getting the cutout percentage of the data inorder to get the remainder of the chart.
+  let remainder = 100 - data.percentage;
+  // Rounding off the reminder to 1 decimal point to get a fixed of 1 value.
+  remainder = remainder.toFixed(1);
+  // Piping the data into the array
+  dataArray.push(data.percentage);
+  // Piping the reminder into the array as well
+  dataArray.push(remainder);
+  // start of chart Declaration using the chart node element constant.
+  const myPieChart = new Chart(clx, {
+    type: "doughnut",
+    data: {
+      labels: ["Percentage", "Remaining Percent"],
+      datasets: [
+        {
+          data: dataArray,
+          backgroundColor: ["#4e73df", "#fff"],
+          hoverBackgroundColor: ["#2e59d9", "#17a673"],
+        },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      tooltips: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        borderColor: "#dddfeb",
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        displayColors: true,
+        caretPadding: 10,
+      },
+      legend: {
+        display: false,
+      },
+      cutoutPercentage: 0,
+    },
+  });
+
+  donoughtPercentage.html(data.percentage);
+}
+
+// percentageChart();
+
+// get the position of the student on the exam.
+async function getStudentsPosition() {
+  const request = await fetch(
+    `/students/chartjs/get_students_position.php?cid=${cid}&ceid=${ceid}&sid=${stdid}`
+  );
+  // await the request then use the text API to get the text from it.
+  const response = await request.text();
+
+  //parsing the string into int.
+  const parsed_response = JSON.parse(response);
+  // print the position of the student to the DOM.
+  // get the DOM node.
+  return { parsed_response };
+}
+
+async function getTotalNumberOfStudentsSatForExam() {
+  const numberofstudents = await getStudentsPosition();
+  const request = await fetch(
+    `/students/chartjs/get_total_number_of_students_sat_for_exam.php?cid=${cid}&ceid=${ceid}`
+  );
+  const response = await request.text();
+
+  //parsing the string into int.
+  const parsed_response = JSON.parse(response);
+
+  students_position.html(numberofstudents.parsed_response);
+  total_number_of_students.html(parsed_response);
+}
+
+getTotalNumberOfStudentsSatForExam();
