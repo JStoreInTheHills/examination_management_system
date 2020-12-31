@@ -56,7 +56,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                 <div class="card-body mb-n3">
                                     <div class="row items-align-baseline h-100">
                                         <div class="col-md-12 my-1">
-                                        <p class="text-muted">This is the total marks of the student for the exam.</p>
+                                        <p class="text-muted">This is total marks of the student for the exam.</p>
                                             <p class="mb-0"><strong class="mb-0 text-uppercase text-primary">Total Marks
                                                 </strong></p>
                                             <h3 id="total_sum_of_marks"></h3>
