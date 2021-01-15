@@ -6,34 +6,35 @@
 
     include "../config/config.php";
 
+    $email_address = $_POST['email'];
+    $password = $_POST['password'];
+
     // Array to hold the data 
     $data = array(); 
 
     // Array to hold the error caught. 
     $error = array();
 
-//    // Check to see if the email input field is empty, if true add item to the
-//    // error array.
-//    if(empty($_GET['email_address']))
-//        $error['Email'] = 'Email Address cannot be empty';
-//
-//    // Check to see if the password input field is empty, if true add item to the
-//    // error array.
-//    if(empty($_GET['password']))
-//        $error['password'] = 'Password cannot be empty.';
-//
-//    // Is the error array not empty? Save your result to the data array.
-//    if(!empty($error)){
-//        $data['success'] = false;
-//        $data['message'] = $error;
-//
-//    // Other wise get the values being passed to the page using the
-//    // Asynchronous call and store them in a local variable for execution.
-//    }else{
+   // Check to see if the email input field is empty, if true add item to the
+   // error array.
+   if(empty($email_address))
+       $error['email'] = 'Email Address cannot be empty';
 
-        $email_address = $_POST['email'];
-        $password = $_POST['password'];
+   // Check to see if the password input field is empty, if true add item to the
+   // error array.
+   if(empty($password))
+       $error['password'] = 'Password cannot be empty.';
 
+   // Is the error array not empty? Save your result to the data array.
+   if(!empty($error)){
+       $data['success'] = false;
+       $data['message'] = $error;
+
+   // Other wise get the values being passed to the page using the
+   // Asynchronous call and store them in a local variable for execution.
+   }else{
+
+    
         // Get the id, Password, UserName, role_name of the user trying to login to the
         // System. This data can be useful in the log files. 
         $sql = "SELECT id, password, username, role_name, r.role_id
@@ -83,6 +84,8 @@
             $data['success'] = false;
             $data['message'] = $err[2];
         }
+    }
 
     // echo out the results of the data array.
- echo json_encode($data);
+    echo json_encode($data);
+    exit();

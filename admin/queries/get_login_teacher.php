@@ -2,26 +2,37 @@
 
     include "../../config/config.php";
 
-    $uuid = $_GET['uuid'];
+    $uuid = $_POST['uuid'];
 
-    $sql = "SELECT teacher_id
-            FROM tblteachers 
-            LEFT JOIN  tblsubjectcombination
-            ON tblteachers.teacher_id = tblsubjectcombination.teachers_id
-            WHERE user_id =:user_id 
-            LIMIT 1";
+    $error = array();
+    $data = array();     
+
+    if(empty($uuid))
+        $error['uuid'] = "uuid cannot be empty";
+
+   if(!empty($error)){
+        $data['success'] = false;
+        $data['data'] = $error;
+   }else{
+        $sql = "SELECT teacher_id
+                FROM tblteachers 
+                LEFT JOIN  tblsubjectcombination
+                ON tblteachers.teacher_id = tblsubjectcombination.teachers_id
+                WHERE user_id =:user_id 
+                LIMIT 1";
+
+        $query = $dbh->prepare($sql);
+
+        $query->bindParam(":user_id",$uuid, PDO::PARAM_STR );
+
+        $query->execute();
+
+        $result = $query->fetchColumn();
+
+        $data['success'] = true;
+        $data['data'] = $result;
+   }
     
-    $query = $dbh->prepare($sql);
-    
-    $query->bindParam(":user_id",$uuid, PDO::PARAM_STR );
-
-    $query->execute();
-
-   $result = $query->fetchAll(PDO::FETCH_OBJ);
-
-   echo json_encode($result);
-  // $fp = fopen('../../teacher_module/subject_class.json', 'w');
-  // fwrite($fp, json_encode($result));
-  // fclose($fp);
-?>
+   echo json_encode($data);
+   exit();
 
