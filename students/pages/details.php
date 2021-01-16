@@ -51,18 +51,14 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800" id="heading"> </h1>
 
-                        <div class="btn-group">
-                            <button class="btn btn-outline-primary btn-md" id="edit_students">
-                            </button>
-
-                            <?php
+                        <?php
                                 if(isset($_SESSION['role_id'])){
-                                    echo  "<button class='btn btn-primary btn-md' id='makeStudentInactive'></button>";
-                                }
-                                
-                            ?>
-                        </div>
-
+                                    echo  '<div class="btn-group">
+                                            <button class="btn btn-outline-primary btn-md" id="edit_students"></button>
+                                            <button class="btn btn-primary btn-md" id="makeStudentInactive"></button>
+                                           </div>';
+                                  }
+                        ?>
                     </div>
 
                     <div id="alert"></div>
