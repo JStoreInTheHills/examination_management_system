@@ -6,6 +6,6 @@
     $query = $dbh->prepare($sql);
     
     $query->execute();
-    $result = $query->fetchAll(PDO::FETCH_OBJ);
+    $result = $query->fetchColumn();
 
     echo json_encode($result);

@@ -8,7 +8,7 @@
     $sql = $dbh->prepare($query);
     $sql->execute();
 
-    $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+    $result = $sql->fetchColumn();
 
     echo json_encode($result);
 

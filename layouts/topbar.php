@@ -1,7 +1,14 @@
 
 <!-- Topbar -->
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-3 static-top shadow">
+<nav class="navbar navbar-expand navbar-dark bg-white topbar mb-3 static-top shadow">
 
+     <!-- Sidebar Toggle (Topbar) -->
+     <button id="sidebarToggleTop" class="btn mr-3 text-primary">
+        <i class="fa fa-bars"></i>
+    </button>
+
+    <h1 class="h3 mb-0 text-gray-800" id="index_heading"></h1>
+    
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
         <!-- Nav Item - Messages -->
@@ -10,20 +17,20 @@
                 aria-haspopup="true" aria-expanded="false">
                 <i class="text-primary fas fa-bell"></i>
                 <!-- Counter - Messages -->
-                <span class="badge badge-danger badge-counter"></span>
+                <span class="badge badge-danger badge-counter">2</span>
             </a>
             <!-- Dropdown - Messages -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 aria-labelledby="messagesDropdown">
                 <h6 class="dropdown-header">
-                    Message Center
+                    Notifications Center
                 </h6>
                     <a class="dropdown-item d-flex align-items-center" href="#">
                         
                         <div class="font-weight-bold">
                             <div>Hi there! <?php echo htmlentities($_SESSION['alogin']); ?>. Welcome to 
                         Al Madrasatul Munawwarah Al Islamiyyah </div>
-                            <div class="small text-gray-500">Emily Fowler · 58m</div>
+                            <div class="small text-gray-500">Salim Juma · 58m</div>
                         </div>
                     </a>
 
@@ -44,13 +51,11 @@
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right animated--grow-in" aria-labelledby="userDropdown">
 
-                <a href="/admin/pages/profile" class="dropdown-item">
-                    <i class="fas fa-user-edit fa-lg fa-fw mr-2 text-primary"></i>
-                    Manage Your Account
+                <a href="/settings/profile" class="dropdown-item">
+                    Manage My Account
                 </a>
 
                 <a href="#" class="dropdown-item">
-                    <i class="fas fa-calendar fa-lg fa-fw mr-2 text-primary"></i>
                     Create a Task
                 </a>
 

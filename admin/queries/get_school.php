@@ -2,7 +2,7 @@
 
     require_once "../../config/config.php";
 
-    $query = "SELECT school_name FROM school";
+    $query = "SELECT id, school_name FROM school";
 
     $sql = $dbh->prepare($query);
 
