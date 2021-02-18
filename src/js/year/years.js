@@ -1,7 +1,4 @@
-// $(document).ready(() => {
 // Official js page for the year file.
-
-// const { default: iziToast } = require("izitoast");
 
 // variable holding the year input form field.
 const year_form = $("#year_form");
@@ -14,16 +11,13 @@ const school = sessionStorage.getItem("school_name");
 
 const init = () => {
   academic_year_title.html(`Academic Years - ${school}`);
-  year_heading.html(`Academic Years `);
+  year_heading.html(`Academic Years (Academic Periods).`);
 
   const alert = $("#alert").html(`
-      <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <div class="alert alert-info alert-dismissible fade show" role="alert">
         <strong>This is the Academic year window. It contains all the academic years in the school.</strong>
       <hr>
         <p class="mb-0">Click on add year to add a new Academic year or click on one of the years to view more details</p>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-      </button>
       </div>
     `);
 };
@@ -68,7 +62,13 @@ const year_table = $("#year_table").DataTable({
     },
     {
       targets: 3,
+      data: "term_count",
+      width: "15%",
+    },
+    {
+      targets: 4,
       orderable: false,
+      width: "5%",
       data: {
         year_id: "year_id",
         status: "status",
@@ -98,6 +98,7 @@ const toast = {
         close: false,
         transitionIn: "bounceInLeft",
         position: "center",
+        overlay: true,
         buttons: [
           [
             "<button><b>YES</b></button>",
@@ -229,6 +230,9 @@ const deleteAcademicYear = (data) => {
             type: "Success",
             message: r.message,
             transitionIn: "bounceInLeft",
+            position: "bottomLeft",
+            overlay: true,
+            messageColor: "black",
             onClosing: function () {
               year_table.ajax.reload(null, false);
             },
@@ -238,6 +242,9 @@ const deleteAcademicYear = (data) => {
             type: "Error",
             message: r.message,
             transitionIn: "bounceInLeft",
+            position: "bottomLeft",
+            overlay: true,
+            messageColor: "black",
           });
         }
       })
@@ -254,8 +261,6 @@ year_form.validate({
   rules: {
     year_name: {
       required: true,
-      minlength: 4,
-      number: true,
     },
   },
   messages: {
@@ -274,9 +279,12 @@ year_form.validate({
       if (r.success === true) {
         iziToast.success({
           message: r.message,
-          position: "topRight",
+          position: "bottomLeft",
           type: "Success",
           transitionIn: "bounceInLeft",
+          overlay: true,
+          zindex: 999,
+          messageColor: "black",
           onClosing: function () {
             year_table.ajax.reload(null, false);
             $("#year_form").each(function () {
@@ -288,10 +296,13 @@ year_form.validate({
       } else {
         iziToast.error({
           message: r.message,
-          position: "topRight",
+          position: "bottomLeft",
           type: "Error",
+          overlay: true,
+          zindex: 999,
           transitionIn: "bounceInLeft",
           progressBar: false,
+          messageColor: "black",
         });
       }
     });
@@ -312,4 +323,3 @@ year_form.validate({
 setInterval(() => {
   year_table.ajax.reload(null, false);
 }, 100000);
-// });

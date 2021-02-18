@@ -11,7 +11,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 <!DOCTYPE html>
 <html lang="en">
 
-    <?php include "../_partials/css_files.php";?>
+<?php include "../_partials/css_files.php";?>
 
 <body id="page-top">
 
@@ -32,7 +32,13 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <div class="d-sm-flex align-items-center justify-content-between">
+                    <a class="btn btn-md text-primary mb-2" onclick="goBack()"> <i class="fas fa-arrow-left"></i> Back
+                        to previous page</a>
+                    </div>
+                    
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-3">
                         <h1 class="h3 mb-0 text-gray-800" id="year_heading"></h1>
                     </div>
 
@@ -50,18 +56,20 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         <div class="col-lg-8">
                             <div class="card shadow mb-4">
                                 <div class="card-header">
-                                   <span class="text-primary"> <i class="fas fa-address-book"></i> All Academic Years</span>
+                                    <span class="text-primary font-weight-bold"> <i class="fas fa-address-book"></i> All
+                                        Academic Years (Academic Periods).</span>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table class="table table-striped" width="100%" cellspacing="0" id="year_table">
                                             <thead>
                                                 <tr>
-                                                   
+
                                                     <th>Created At</th>
                                                     <th>Year Name</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
+                                                    <th>Year Status</th>
+                                                    <th># of Terms</th>
+                                                    <th class="text-center">Actions</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -72,19 +80,21 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         </div>
                         <!------------------------------------------------------------------------------------------------->
                         <div class="col-lg-4">
-                            <div class="card shadow mb-4">
+                            <div class="card mb-4">
                                 <div class="card-header">
-                                   <span class="text-primary" >Add Academic Period</span> 
+                                    <span class="text-primary font-weight-bold">Add an Academic Period (Academic Year).</span>
                                 </div>
                                 <div class="card-body">
 
-                                <div class="errors text-danger"><span></span></div>
+                                    <div class="errors text-danger"><span></span></div>
 
                                     <form id="year_form" class="user">
                                         <div class="form-group row">
                                             <div class="col-md-12 mb-3 mb-sm-0">
-                                            <label for="year_name" class="text-primary">Enter an Academic Year</label>
-                                               <input type="text" name="year_name"  autocomplete="off" class="form-control" id="year_name" placeholder="e.g 2020, 2040">
+                                                <label for="year_name" class="text-primary">Enter an Academic
+                                                    Year</label>
+                                                <input type="text" name="year_name" autocomplete="off"
+                                                    class="form-control" id="year_name" placeholder="e.g 2020-2021">
                                             </div>
                                         </div>
                                         <div class="btn-group float-right">
