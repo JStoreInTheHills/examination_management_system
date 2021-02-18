@@ -30,3 +30,19 @@ $(document).ajaxStart(() => {
 $(document).ajaxComplete(() => {
   NProgress.done();
 });
+
+$("#index_heading").val(sessionStorage.getItem("school_name"));
+
+function goBack() {
+  window.history.go(-1);
+  return false;
+}
+// Function to toogle the sidebar
+const toggle = () => {
+  $("body").toggleClass("sidebar-toggled");
+  $(".sidebar").toggleClass("toggled");
+  if ($(".sidebar").hasClass("toggled")) {
+    $(".sidebar .collapse").collapse("hide");
+  }
+};
+toggle();

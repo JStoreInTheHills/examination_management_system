@@ -20,7 +20,7 @@ const index_title = $("#title");
 edit_madrasa = $("#edit_madrasa");
 
 // variable holding the index heading.
-const index_heading = $("#index_heading");
+// const index_heading = $("#index_heading");
 
 // Pointer to the number of teachers in the school.
 let number_of_teachers;
@@ -56,34 +56,10 @@ const init = () => {
   get_all_class();
 };
 
-// Initial funcrion to run when starting the page.
-async function get_school_name() {
-  const school = {};
-  const request = await fetch(`./admin/queries/get_school.php`);
-  const response = await request.text();
-  const arr = JSON.parse(response);
+const setSchoolName = school.then(() => {
+  setSchoolValuesFromSessionStorage();
+});
 
-  arr.forEach((key) => {
-    school.name = key.school_name;
-    school.id = key.id;
-  });
-
-  return school;
-}
-
-async function setSchoolName() {
-  const school = await get_school_name();
-  school_name_input.val(`${school.name}`);
-  school_id = school.id;
-  school_name = school.name;
-  index_heading.html(school.name);
-  sessionStorage.setItem("school_name", school.name);
-  index_title.html(`Home - ${school.name}`);
-
-  edit_madrasa.html("Edit School Name");
-}
-
-setSchoolName();
 //------------------------------------------------------------------------------------------------------
 
 // Show the modal when the buttton is clicked.
@@ -94,6 +70,17 @@ edit_madrasa.click(() => {
     keyboard: false,
   });
 });
+
+function setSchoolValuesFromSessionStorage() {
+  const s_name = sessionStorage.getItem("school_name");
+  const s_id = sessionStorage.getItem("school_id");
+  school_name_input.val(`${s_name}`);
+  school_id = s_id;
+  school_name = s_name;
+  index_title.html(`Home - ${s_name}`);
+  $("#index_heading").html(sessionStorage.getItem("school_name"));
+  edit_madrasa.html("Edit School Name");
+}
 
 async function get_students_count() {
   const request = await fetch(`dashboard/queries/get_students.php`);
@@ -255,30 +242,6 @@ const recent_result_declared = $("#recent_result_declared").DataTable({
   ],
 });
 
-// Get the term performance for all the students in the school.
-// const getTotalMarksForStudents = () => {
-//   $.ajax({
-//     url: "/admin/queries/getTotalMarksForStudents.php",
-//     type: "GET",
-//     data: "",
-//   }).done((response) => {
-//     const studentsTotalMarks = JSON.parse(response);
-//     totalMarksForStudentsArray = studentsTotalMarks;
-
-//     totalMarksForStudentsArray.forEach((element) => {
-//       let total = element.total;
-
-//       // Divide the total by the number of students in the school.
-//       total = total / number_of_students;
-
-//       // Push the data to the data array.
-//       data.push(total);
-//       label.push(element.name);
-//     });
-//     myLineChart.update();
-//   });
-// };
-
 const line_chart_options = {
   maintainAspectRatio: false,
   layout: {
@@ -398,9 +361,8 @@ edit_school_form.validate({
       type: "POST",
       data: $(form).serialize(),
     }).done(function (response) {
-      edit_school_modal.modal("hide");
+      updateSessionStorageToChanges();
       const json_response = JSON.parse(response);
-
       if (json_response.success == true) {
         iziToast.success({
           message: json_response.message,
@@ -409,7 +371,7 @@ edit_school_form.validate({
           messageColor: "black",
           onClosing: function () {
             edit_school_modal.modal("hide");
-            setSchoolName();
+            setSchoolValuesFromSessionStorage();
           },
         });
       } else {
@@ -425,3 +387,52 @@ edit_school_form.validate({
 });
 
 init();
+
+function updateSessionStorageToChanges() {
+  let v = $("#school_name_input").val();
+  sessionStorage.setItem("school_name", v);
+  edit_school_modal.modal("hide");
+}
+
+$(".edit_school_input").keypress((e) => {
+  if (e.which == 13) {
+    $("#form_edit_school").validate({
+      rules: {
+        school_name_input: {
+          required: true,
+        },
+      },
+      errorClass: "text-danger",
+      submitHandler: (form) => {
+        $.ajax({
+          url: "/admin/queries/edit_school_name.php",
+          type: "POST",
+          data: $(form).serialize(),
+        }).done(function (response) {
+          updateSessionStorageToChanges();
+          const json_response = JSON.parse(response);
+          if (json_response.success == true) {
+            iziToast.success({
+              message: json_response.message,
+              position: "bottomLeft",
+              overlay: true,
+              messageColor: "black",
+              onClosing: function () {
+                setSchoolValuesFromSessionStorage();
+              },
+            });
+          } else {
+            iziToast.error({
+              message: json_response.message,
+              position: "bottomLeft",
+              overlay: true,
+              messageColor: "black",
+            });
+          }
+        });
+      },
+    });
+  }
+
+  // return false;
+});

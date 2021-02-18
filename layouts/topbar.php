@@ -7,8 +7,9 @@
         <i class="fa fa-bars"></i>
     </button>
 
-    <h1 class="h3 mb-0 text-gray-800" id="index_heading"></h1>
-    
+    <form id="form_edit_school" style="width:100%;">
+        <input style="border-width:0px; border:none; font-size: 1.5em;" class="form-control text-gray-800 edit_school_input" type="text" name="school_name_input" id="index_heading">
+    </form>
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
         <!-- Nav Item - Messages -->
