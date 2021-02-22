@@ -47,8 +47,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-2 text-gray-800"> <span><i class="fas fa-chalkboard-teacher"></i></span>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                        <h1 class="h3 text-gray-800">
                             Manage All Streams </h1>
                         <div class="btn-group">
                             <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm dropdown-toggle"
@@ -71,21 +71,21 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                     </div>
 
-                    <nav aria-label="breadcrumb mb-3">
+                   
+
+                    <div class="alert alert-info alert-dismissible fade show mb-2" role="alert">
+                        <strong>Manage your stream in the school.</strong>
+                        <hr>
+                        <p class="mb-0">Use the table below to view and modify the stream</p>
+                        
+                    </div>
+
+                    <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/index">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">All Streams</li>
                         </ol>
                     </nav>
-
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Manage your stream in the school.</strong>
-                        <hr>
-                        <p class="mb-0">Use the table below to view and modify the stream</p>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
 
                     <!-- DataTales Example -->
                     <div id="class_main_content" class="card shadow mb-4">

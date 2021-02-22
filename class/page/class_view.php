@@ -91,8 +91,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                     </div>
 
                     <div class="alert alert-info" role="alert">
-                        <h6 class="alert-heading">Use this page to view, edit and add exams and students for the stream.
-                        </h6>
+                        <h6 class="alert-heading"><strong>Use this page to view, edit and add exams and students for the stream.
+                        </strong></h6>
                         <hr>
                         <p class="mb-0">Use the cards to monitor your students and the number of exams the class has sat
                             for.</p>
