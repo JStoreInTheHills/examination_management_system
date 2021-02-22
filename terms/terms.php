@@ -131,8 +131,8 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
 
     <script src="/dist/js/main.min.js"></script>
-    <script src="/dist/js/terms/terms.js"></script>
     <script src="/dist/js/utils/utils.js"></script>
+    <script src="/dist/js/terms/terms.js"></script>
 </body>
 
 </html>
