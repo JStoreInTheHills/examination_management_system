@@ -37,15 +37,7 @@ const edit_school_form = $("#edit_school_form");
 
 const school_name_input = $("#school_name_input");
 
-// Function to toogle the sidebar
-const toggle = () => {
-  $("body").toggleClass("sidebar-toggled");
-  $(".sidebar").toggleClass("toggled");
-  if ($(".sidebar").hasClass("toggled")) {
-    $(".sidebar .collapse").collapse("hide");
-  }
-};
-toggle();
+
 // Pointer to the school name.
 let school_name;
 let school_id;
