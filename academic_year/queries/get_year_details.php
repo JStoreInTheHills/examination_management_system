@@ -2,7 +2,9 @@
 
 $year_id = $_GET['year_id'];
 
-$query = "SELECT year_name, created_at, year_id FROM year WHERE year_id =:year_id";
+$query = "SELECT year_name, created_at, year_id, status
+          FROM year 
+          WHERE year_id =:year_id";
 
 $sql = $dbh->prepare($query);
 

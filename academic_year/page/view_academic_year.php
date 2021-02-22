@@ -31,12 +31,32 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 id="heading" class="h3 mb-0 text-gray-800"> </h1>
+
+                    <div class="d-sm-flex align-items-center justify-content-between">
+                    <a class="btn btn-md text-primary mb-2" onclick="goBack()"> 
+                        <i class="fas fa-arrow-left"></i> Back to previous page</a>
+                    </div>
+                    
+                    <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                        
+                        <form id="edit_year_form" style="width:50%;">
+                            <input type="hidden" name="year_id" id="year_id">
+                              <input style="border-width:0px; border:none; font-size: 1.5em; background-color:#f8f9fc" class="form-control text-gray-800 edit_school_input" type="text" name="heading"  id="heading">
+                        </form>
+
                         <div class="btn-group">
-                            <button id="edit_academic_year" class="btn btn-md btn-primary"></button>
+                            <button id="edit_academic_year" class="btn btn-sm btn-outline-danger"></button>
                         </div>
                     </div>
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-3">
+                        <h1 id="creation_date" class="h5 mb-0 text-gray-600"> </h1>
+                        <h1 id="status" class="h5 mb-0"></h1>
+                     </div>
+
+                     <hr class="my-2">
+
+                    <span id="alert"></span>
 
                     <nav aria-label="breadcrumb mb-3">
                         <ol class="breadcrumb">
@@ -48,7 +68,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                     <div class="row">
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border-primary  h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
@@ -64,9 +84,27 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-primary  h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Students Registered This Year</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                                id="all_students_registered_this_year"></div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <a href="#"> <i class="fas fa-users fa-2x text-info-300"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <span id="alert"></span>
+                    
+
 
                     <nav class="mb-4">
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -86,7 +124,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                 <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
                                     aria-labelledby="nav-home-tab">
                                     <div class="card shadow mb-4">
-                                        <div class="card-header text-primary">
+                                        <div class="card-header text-primary font-weight-bold">
                                             Academic Year Terms
                                         </div>
                                         <div class="card-body">
@@ -139,7 +177,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         <!------------------------------------------------------------------------------------------------->
                         <div class="col-lg-4">
                             <div class="card shadow mb-4">
-                                <div class="card-header text-primary">
+                                <div class="card-header text-primary font-weight-bold">
                                     Add Terms to Academic Year
                                 </div>
                                 <div class="card-body">

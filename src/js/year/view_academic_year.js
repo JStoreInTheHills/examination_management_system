@@ -12,45 +12,64 @@ const year_form = $("#year_form");
 // Edit Year button to modify the years details.
 const edit_academic_year = $("#edit_academic_year");
 
+let year_acroynm;
+
 //
 const term_name = $("#term_name");
 
-// data fetched through ajax call for the term year table.
+async function init() {
+  const year = {};
+  const request = await fetch(`../queries/get_year_details?year_id=${year_id}`);
+  const response = await request.text();
+  const parsed = JSON.parse(response);
+  parsed.forEach((item) => {
+    year.year_name = item.year_name;
+    year.created_at = item.created_at;
+    year.status = item.status;
+  });
 
-// Constructor method that populates everything.
-const init = () => {
-  $("button").prop("disabled", true);
-  $.ajax({
-    url: "../queries/get_year_details.php",
-    data: {
-      year_id: year_id,
-    },
-    type: "GET",
-  }).done((response) => {
-    const arr = JSON.parse(response);
-    arr.forEach((items) => {
-      $("#title").append(`Academic Year - ${items.year_name}`);
-      $("#heading").html(`Academic Year ~ ${items.year_name}`);
-      $("#bread_list").html(`${items.year_name}`);
-      edit_academic_year.html(`Edit Academic Year ${items.year_name}`);
+  return year;
+}
+const alert = $("#alert");
 
-      const alert = $("#alert").html(`
+async function setYearDetails() {
+  const year = await init();
+  $("#title").append(`Academic Year - ${year.year_name}`);
+  $("#title").append(`Academic Year - ${year.year_name}`);
+  $("#heading").val(`${year.year_name}`);
+  $("#bread_list").html(`${year.year_name}`);
+  edit_academic_year.html(`Delete This Academic Year`);
+  $("#creation_date").html(`Created At : ${year.created_at}`);
+
+  year_acroynm = year.year_name;
+
+  if (year.status === "1") {
+    $("#status").html(
+      ` <span class="badge badge-pill badge-success">Active</span>`
+    );
+    alert.html(`
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-              <strong>View Year ${items.year_name} and its terms. All the terms performance for the year ${items.year_name} in the school are defined on the table below.</strong>
+              <strong>View Academic year ${year.year_name} and its terms. All the terms performance for the year ${year.year_name} in the school are defined on the table below.</strong>
             <hr>
               <p class="mb-0">Click on edit Academic year to modify or click on one of the terms 
                 to view more details and the performance</p>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
             </div>
         `);
-    });
-    $("button").prop("disabled", false);
-  });
-};
-
-init();
+  } else {
+    $("#status").html(
+      ` <span class="badge badge-pill badge-danger">InActive</span>`
+    );
+    alert.html(`
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>View Academic year ${year.year_name} and its terms. All the terms performance for the year ${year.year_name} in the school are defined on the table below.</strong>
+    <hr>
+      <p class="mb-0">Click on edit Academic year to modify or click on one of the terms 
+        to view more details and the performance</p>
+    </div>
+`);
+  }
+}
+setYearDetails();
 
 // Function to get the terms
 const get_terms = () => {
@@ -97,9 +116,11 @@ year_form.submit((event) => {
     if (arr.success == true) {
       iziToast.success({
         type: "Success",
-        position: "topRight",
+        position: "bottomLeft",
         transitionIn: "bounceInLeft",
         message: arr.message,
+        zindex: 999,
+        overlay: true,
         onClosing: () => {
           term_year_table.ajax.reload(null, false);
         },
@@ -107,9 +128,11 @@ year_form.submit((event) => {
     } else {
       iziToast.error({
         type: "Error",
-        position: "topRight",
+        position: "bottomLeft",
         transitionIn: "bounceInLeft",
         message: arr.message,
+        zindex: 999,
+        overlay: true,
       });
     }
   });
@@ -171,7 +194,7 @@ const term_year_table = $("#term_year_table").DataTable({
               <span><i class="fas fa-edit text-primary"></i></span>
             </a>
             
-            <a onClick="deleteTermFromYear()">
+            <a onClick="deleteTermFromYear(${data.term_year_id})">
               <span><i class="fas fa-trash text-danger"></i></span>
             </a>
           </div>
@@ -304,7 +327,11 @@ function get_all_exams_this_year() {
 }
 
 edit_academic_year.click(() => {
-  console.log("Hi There");
+  $("#modal_aside_left").modal({
+    show: true,
+    keyboard: false,
+    backdrop: "static",
+  });
 });
 
 get_all_exams_this_year();
@@ -313,3 +340,89 @@ setInterval(() => {
   class_end_year_table.ajax.reload();
 }, 10000000);
 // });
+
+async function getAllStudentsRegisteredThisYear() {
+  await setYearDetails();
+  let year_name = year_acroynm;
+  let start_query = year_name.slice(0, 4);
+  let end_query = year_name.slice(5, 9);
+  const request = await fetch(
+    `../queries/fetch_all_registered_students_this_year?start=${start_query}&end=${end_query}`
+  );
+  const response = await request.text();
+
+  const parsed = JSON.parse(response);
+
+  $("#all_students_registered_this_year").html(parsed);
+}
+
+getAllStudentsRegisteredThisYear();
+
+$(".edit_school_input").on("keypress", (e) => {
+  $("#year_id").val(year_id);
+  if (e.which == 13) {
+    $("#edit_year_form").validate({
+      rules: {
+        heading: "required",
+      },
+      errorClass: "text-danger",
+      submitHandler: (form) => {
+        $.ajax({
+          url: "../queries/edit_academic_year.php",
+          type: "post",
+          data: $(form).serialize(),
+        }).done((response) => {
+          const arr = JSON.parse(response);
+          if (arr.success == true) {
+            iziToast.success({
+              position: "bottomLeft",
+              message: arr.message,
+              messageColor: "black",
+              overlay: true,
+              zindex: 999,
+              progressBar: false,
+              onClosing: () => {
+                setYearDetails();
+              },
+            });
+          } else {
+            iziToast.error({
+              position: "bottomLeft",
+              message: arr.message,
+              messageColor: "black",
+              overlay: true,
+              zindex: 999,
+              progressBar: false,
+            });
+          }
+        });
+      },
+    });
+  }
+});
+
+function deleteTermFromYear(id) {
+  $.post("../queries/Models/term_year/delete_term_from_year.php", {
+    id: id,
+  }).done(function (response) {
+    const arr = JSON.parse(response);
+    if (arr.success == true) {
+      iziToast.success({
+        message: arr.message,
+        position: "bottomLeft",
+        overlay: true,
+        zindex: 999,
+        onClosing: () => {
+          term_year_table.ajax.reload(null, false);
+        },
+      });
+    } else {
+      iziToast.error({
+        message: arr.message,
+        position: "bottomLeft",
+        overlay: true,
+        zindex: 999,
+      });
+    }
+  });
+}
