@@ -2,9 +2,11 @@
 
 include '../../config/config.php';
 
-$sql = "SELECT year_id, year_name, created_at, status
-        FROM year 
-        ORDER BY year_name DESC";
+$sql = "SELECT y.year_id, year_name, count(y.year_id) term_count, y.status, y.created_at
+        FROM year y 
+        LEFT JOIN term_year ty 
+        ON y.year_id = ty.year_id 
+        GROUP BY y.year_id";
         
 $query = $dbh->prepare($sql);
 
