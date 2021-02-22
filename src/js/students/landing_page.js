@@ -62,6 +62,6 @@ const setConstantsAndAlerts = (s) => {
                   </h4>
             </div>`);
 
-  const students_id = sessionStorage.setItem("students_id", s.uuid);
-  const class_id = sessionStorage.setItem("class_id", s.class_id);
+  sessionStorage.setItem("students_id", s.uuid);
+  sessionStorage.setItem("class_id", s.class_id);
 };

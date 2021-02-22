@@ -45,7 +45,7 @@
             <!-- Main Content -->
             <div id="content">
 
-                <?php include './../../layouts/topbar.php' ?>
+                <?php include '../../layouts/topbar.php'; ?>
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -309,9 +309,11 @@
 
     <?php include '../../layouts/utils/logout_modal.html'; ?>
 
-    <script src="/dist/js/main.min.js"> </script> <script src="/dist/js/utils/utils.js">
-                    </script>
-                    <script src="/dist/js/students/student_details.js"></script>
+    <script src="/dist/js/main.min.js"></script> 
+    <script src="/dist/js/utils/school.js"></script>
+    <script src="/dist/js/utils/utils.js"></script>
+    <script src="/dist/js/students/student_details.js"></script>
+
 </body>
 
 </html>
