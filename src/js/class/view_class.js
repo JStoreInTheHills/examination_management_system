@@ -69,17 +69,6 @@ const subject_id = $("#teacher_id");
 var totalValueOfStudent = 0;
 //Variable holding the class_id to be sent during adding an exam to the class exam table.
 const class_id_for_add_exam_modal = $("#class_id_for_add_exam_modal");
-// Function to toggle the sidebar.
-const toggle = () => {
-  $("body").toggleClass("sidebar-toggled");
-  $(".sidebar").toggleClass("toggled");
-  if ($(".sidebar").hasClass("toggled")) {
-    $(".sidebar .collapse").collapse("hide");
-  }
-};
-
-// Invocation of the toggle method.
-toggle();
 
 const class_id_input = $("#class_id_input");
 
@@ -681,7 +670,6 @@ const getSubjectTeacher = (val) => {
     });
   });
 };
-
 
 // Initialization of the functions.
 get_total_students();

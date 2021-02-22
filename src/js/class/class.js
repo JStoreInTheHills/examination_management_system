@@ -5,15 +5,6 @@
 // $(document).ready(() => {
 const select = document.getElementById("stream_id");
 
-const toggle = () => {
-  $("body").toggleClass("sidebar-toggled");
-  $(".sidebar").toggleClass("toggled");
-  if ($(".sidebar").hasClass("toggled")) {
-    $(".sidebar .collapse").collapse("hide");
-  }
-};
-toggle();
-
 const streamFunction = () => {
   $.ajax({
     url: "./queries/fetch_streams.php",

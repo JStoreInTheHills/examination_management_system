@@ -161,15 +161,6 @@ var class_total_students_count;
 
 var exam_out_of;
 
-const toggle = () => {
-  $("body").toggleClass("sidebar-toggled");
-  $(".sidebar").toggleClass("toggled");
-  if ($(".sidebar").hasClass("toggled")) {
-    $(".sidebar .collapse").collapse("hide");
-  }
-};
-toggle();
-
 // const init = () => {
 //   $.ajax({
 //     url: "",
