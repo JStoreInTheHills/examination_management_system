@@ -1,6 +1,6 @@
 
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion navigation" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion navigation" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -82,12 +82,19 @@
     </li>
 
     <!-- Nav Item - Utilities Teachers Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="/teachers/teachers">
-            <i class="fas fa-users"></i>
-            <span class="text-white">Teachers</span>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+            aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Teachers</span>
         </a>
-      </li>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="/teachers/teachers">Teachers Management</a>
+            </div>
+        </div>
+    </li>
 
     <!-- Nav Item - Pages Collapse Menu -->
     
