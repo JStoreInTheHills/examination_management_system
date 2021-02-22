@@ -50,7 +50,7 @@ const banner = [
 
 // Clean vendor
 function clean() {
-  return del(["./vendor/"]);
+  return del(["./vendor/", "./dist"]);
 }
 
 // Bring third party dependencies from node_modules into vendor directory
@@ -153,6 +153,10 @@ function customJs() {
 
   var utils = gulp.src("./src/js/utils.js").pipe(gulp.dest("./dist/js/utils"));
 
+  var school = gulp
+    .src("./src/js/school.js")
+    .pipe(gulp.dest("./dist/js/utils"));
+
   var terms = gulp.src("./src/js/terms/*").pipe(gulp.dest("./dist/js/terms"));
 
   var classes = gulp
@@ -186,6 +190,10 @@ function customJs() {
 
   var admin = gulp.src("./src/js/admin/*").pipe(gulp.dest("./dist/js/admin"));
 
+  var settings = gulp
+    .src("./src/js/settings/*")
+    .pipe(gulp.dest("./dist/js/settings"));
+
   return merge(
     result,
     classes,
@@ -199,7 +207,9 @@ function customJs() {
     admin,
     utils,
     terms,
-    webfonts
+    webfonts,
+    settings,
+    school
   );
 }
 
@@ -237,7 +247,6 @@ function js() {
       "./vendor/jquery/jquery.min.js",
       "./vendor/bootstrap/js/bootstrap.bundle.min.js",
       "./vendor/jquery-easing/jquery.easing.min.js",
-      "./src/js/sb-admin-2.min.js",
       "./vendor/izitoast/iziToast.min.js",
       "./vendor/datepicker/datepicker.min.js",
       "./vendor/datatables/jquery.dataTables.min.js",
@@ -247,6 +256,7 @@ function js() {
       "./vendor/progressbar/progressbar.min.js",
       "./vendor/nprogress/nprogress.js",
       "./vendor/jquery-validation/jquery.validate.min.js",
+      "./src/js/sb-admin-2.js",
     ])
     .pipe(concat("main.js"))
     .pipe(uglify())
@@ -274,7 +284,7 @@ function css() {
       "./vendor/datatables/dataTables.bootstrap4.min.css",
       "./vendor/select2-bootstrap4-theme/dist/*.css",
       "./vendor/select2/dist/css/select2.css",
-      "./src/css/*.css",
+      "./src/css/sb-admin-2.css",
       "./vendor/nprogress/nprogress.css",
     ])
     .pipe(cleanCSS())
@@ -295,16 +305,15 @@ function css() {
 
 // Watch files
 function watchFiles() {
-  gulp.watch(["./scss/**/*", "./src/css/*"], css);
-  gulp.watch(["./js/**/*", "!./js/**/*.min.js"], js);
   gulp.watch(["./src/js/**/*"], customJs);
-  // gulp.watch("./**/*.html", browserSyncReload);
+  gulp.watch(["./src/css/*"], css);
 }
 
 // Define complex tasks
 const vendor = gulp.series(clean, modules);
 const build = gulp.series(vendor, gulp.parallel(css, js, customJs));
 const watch = gulp.series(build, gulp.parallel(watchFiles));
+const watchJs = watchFiles;
 
 // Export tasks
 exports.scss = scss;
@@ -316,3 +325,4 @@ exports.vendor = vendor;
 exports.build = build;
 exports.watch = watch;
 exports.default = build;
+exports.watchJs = watchJs;
