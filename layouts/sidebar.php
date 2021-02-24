@@ -83,7 +83,14 @@
 
     <!-- Nav Item - Utilities Teachers Menu -->
 
-      <li class="nav-item">
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="/teachers/teachers">
+            <i class="fas fa-users"></i>
+            <span class="text-white">Teachers</span>
+        </a>
+    </li>
+
+      <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
             aria-controls="collapseTwo">
             <i class="fas fa-fw fa-users"></i>
@@ -94,7 +101,7 @@
                 <a class="collapse-item" href="/teachers/teachers">Teachers Management</a>
             </div>
         </div>
-    </li>
+    </li> -->
 
     <!-- Nav Item - Pages Collapse Menu -->
     
