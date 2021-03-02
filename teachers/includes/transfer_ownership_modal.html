@@ -1,0 +1,55 @@
+<div id="modal_aside_left" class="modal fixed-left fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-aside modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-primary">
+                    Transfer Ownership of Subject to Another Teacher</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="alert alert-default shadow border-0" role="alert">
+                    <p><strong>Use this form to transfer ownership of this subject to the teacher from the
+                            select option below.
+                        </strong> </p>
+                    <hr>
+                    <p class="mb-0">Click on complete ownsership to finish.</p>
+                </div>
+
+                <hr class="my-2">
+
+                <div class="alert alert-warning border-2 " role="alert">
+                    <p class="h6 text-gray-900"><strong>Details of the stream and the subject to be
+                            transferred.
+                        </strong></p>
+                    <hr>
+                    <label for="active_class" id="active_class"></label>
+                </div>
+
+                <hr class="my-2">
+
+                <form id="transfer_subject_to_new_teacher" autocomplete="off">
+
+                    <input type="hidden" name="old_teacher_id" id="old_teacher_id">
+                    <input type="hidden" name="subject_id" id="subject_id_input">
+                    <input type="hidden" name="class_id" id="class_id_input">
+
+
+                    <div class="form-group">
+                        <label for="new_teacher_id" class="text-primary">New Ownership (Teacher): </label>
+                        <select name="new_teacher_id" id="new_teacher_id" class="form-control"></select>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="btn-group">
+                        <button class="btn btn-md btn-danger" id="add_item_btn">Complete
+                            Transfer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> <!-- modal-bialog .// -->
+</div> <!-- modal.// -->

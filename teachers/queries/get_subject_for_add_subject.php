@@ -25,5 +25,4 @@ $sql->execute();
 $result = $sql->fetchAll(PDO::FETCH_OBJ);
 
 echo json_encode($result);
-
-?>
+exit();

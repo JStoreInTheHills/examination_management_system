@@ -29,6 +29,8 @@ const phone = $("#gender");
 const CreationDate = $("#CreationDate");
 const edit_teacher_btn = $("#edit_teacher_btn");
 
+const status = $("#status");
+
 const formData = {
   teachers_id: teachers_id,
 };
@@ -42,27 +44,29 @@ const init = () => {
     const arr = JSON.parse(response);
     arr.forEach((item) => {
       heading.html(
-        `<span><img class="img-profile rounded-circle" width="50"  src="/src/img/download.png"></span> ${item.name}`
+        `<span><img class="img-profile rounded-circle" width="50"  src="/src/img/download.png"></span> Welcome, ${item.firstname} ${item.lastname}.`
       );
       teachers_name.html(
-        `<span class="text-gray-800">Name</span> : ${item.name}`
+        `<span class="text-gray-600">Name</span> : ${item.firstname} ${item.lastname}`
       );
       id_no.html(
-        `<span class="text-gray-800">ID Number </span> : ${item.id_no}`
+        `<span class="text-gray-600">ID Number </span> : ${item.id_no}`
       );
       email.html(
-        `<span class="text-gray-800" >Email  </span> : <a href=""> ${item.email}</a>`
+        `<span class="text-gray-600" >Email Address  </span> : <a href=""> ${item.email}</a>`
       );
       phone.html(
-        `<span class="text-gray-800">Phone Number </span>: ${item.phone}`
+        `<span class="text-gray-600">Phone Number </span>: ${item.phone}`
       );
       CreationDate.html(
-        `<span class="text-gray-800">Date of Registration </span>: ${item.created_at}`
+        `<span class="text-gray-600">Date of Registration </span>: ${item.created_at}`
       );
-      title.html(`${item.name} || Teachers`);
+      title.html(`${item.firstname} ${item.lastname} || Teachers`);
       edit_teacher_btn.html(
-        `<span><i class="fas fa-edit"></i> </span> Edit ${item.name}`
+        `<span><i class="fas fa-edit"></i> </span> Edit ${item.firstname}`
       );
+
+      checkTeachersStatus(item);
 
       $("#teacher_address").html(
         `<span class="text-gray-800">Address </span> : ${item.address}`
@@ -72,9 +76,9 @@ const init = () => {
         `<span class="text-gray-800">County </span> : ${item.county_name}`
       );
 
-      $("#edit_teacher_heading").html(item.name);
+      $("#edit_teacher_heading").html(`${item.firstname} ${item.lastname}`);
 
-      $("#edit_teachers_name").val(item.name);
+      $("#edit_teachers_name").val(`${item.firstname} ${item.lastname}`);
       $("#edit_id_no").val(item.id_no);
       $("#edit_phone").val(item.phone);
       $("#address").val(item.address);
@@ -115,6 +119,8 @@ const teachers_subject_table = $("#teachers_subject_table").DataTable({
     },
     {
       targets: 3,
+      orderable: false,
+      width: "5%",
       data: {
         id: "id",
         SubjectId: "SubjectId",
@@ -137,9 +143,13 @@ const toast = {
         transitionIn: "bounceInLeft",
         opacity: "100",
         icon: "fas fa-users",
-        message: "Are you sure you want to remove this subject?",
+        message:
+          "Are you sure you want to remove this subject from this teacher?",
         timeout: 20000,
+        progressBar: false,
         close: false,
+        messageColor: "black",
+        overlay: true,
         position: "center",
         buttons: [
           [
@@ -307,13 +317,20 @@ const deleteSubjectCombination = (class_id, SubjectId) => {
           onClosing: () => {
             teachers_subject_table.ajax.reload(null, false);
           },
+          overlay: true,
+          messageColor: true,
+          close: false,
         });
       } else {
         iziToast.error({
           type: "Error",
-          position: "topRight",
-          transitionIn: "bounceInRight",
+          position: "bottomLeft",
           message: arr.message,
+          progressBar: false,
+          position: "topRight",
+          overlay: true,
+          close: false,
+          messageColor: "black",
         });
       }
     });
@@ -323,4 +340,22 @@ const deleteSubjectCombination = (class_id, SubjectId) => {
 setInterval(function () {
   teachers_subject_table.ajax.reload(null, false);
 }, 1000000);
-// });
+
+const change_ownership = $("#change_ownership").click((e) => {
+  e.preventDefault();
+});
+
+function checkTeachersStatus(item) {
+  if (item.status === "1") {
+    status.html(`<span class="badge badge-pill badge-success">Active</span>
+      `);
+  } else {
+    status.html(`<span class="badge badge-pill badge-danger">InActive</span>`);
+  }
+}
+
+function changeOwnershipOfSubjects() {
+  $.ajax({
+    url: "",
+  });
+}

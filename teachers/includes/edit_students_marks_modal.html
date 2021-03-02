@@ -1,0 +1,47 @@
+<div class="modal fade" id="edit_students_marks" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="class_teacher_modal" aria-hidden="true">
+
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-primary" id="class_teacher_modal">
+                    <span><i class="fas fa-user"></i></span> Change Students Results</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit_students_subject_results">
+                    <div class="row">
+                        <input type="hidden" id="edit_students_id" name="students_id">
+                        <input type="hidden" id="edit_exam_id" name="edit_exam_id">
+                        <input type="hidden" id="edit_result_id" name="edit_result_id">
+
+                        <div class="form-group col-md-12">
+                            <label class="text-primary" for="students_name">Student Name: </label>
+                            <input disabled type="text" class="form-control" name="students_name" id="students_name">
+                            </input>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label class="text-primary" for="subject_id">Enter Marks</label>
+                            <input name="students_marks" id="students_marks" class="form-control">
+                            </input>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="modal-footer btn-group">
+                <button class="btn btn-dark" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" type="submit" id="edit_students_result_submit">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

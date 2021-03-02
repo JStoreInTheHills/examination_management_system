@@ -2,7 +2,7 @@
     
     $teachers_id = $_GET['teachers_id'];
 
-    $sql = "SELECT tblteachers.name, id_no, phone, tblteachers.created_at, tbl_user.email, address, counties.name as county_name
+    $sql = "SELECT tbl_user.firstname, tbl_user.lastname,  id_no, phone, tblteachers.created_at, tbl_user.email, address, counties.name as county_name, status
             FROM tblteachers 
             JOIN tbl_user
             ON tblteachers.user_id = tbl_user.id

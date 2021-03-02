@@ -37,9 +37,9 @@ const students_id = $("#students_id");
 
 // ----------------------------------------------------------------------------------------------
 // Adding the href attribute to the HTML dom for navigation purposes.
-const my_classes = document.getElementById("my_classes");
+// const my_classes = document.getElementById("my_classes");
 
-my_classes.href = `./view_teacher?teachers_id=${teachers_id}`;
+// my_classes.href = `./view_teacher?teachers_id=${teachers_id}`;
 // ----------------------------------------------------------------------------------------------
 
 // Variable holding the form attribute
@@ -55,6 +55,8 @@ const status = $("#status");
 
 // Variable holding the name of the term.
 const term_name = $("#term_name");
+
+setInputForTransferModal();
 
 const formData = {
   class_id: class_id,
@@ -75,22 +77,17 @@ const init = () => {
       $("#heading").html(`Stream: ${item.ClassName}`);
       $("#title").html(`${item.ClassName} || Add Result`);
       const active_class = document.getElementById("active_class");
-      $("#active_class").html(item.ClassName);
+      $("#active_class").html(
+        `<span class="text-gray-900"><strong>Active Stream Name: </strong><span> ${item.ClassName}`
+      );
     });
     getSubject();
 
     $("#toast").html(`
-      <div class="alert alert-primary alert-dismissible fade show" role="alert">
-      <strong>Uses this page to add a students performance marks for a subject that you teach.</strong>
-      <hr>
-      <p class="mb-0">Click Save after choosing the exam, the student and the appropriate performance.
-      Exam that are marked "Closed" are not to be entered and wont appear on the exam
-          options.
-      </p>
-
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-      </button>
+      <div class="alert alert-default alert-dismissible fade show shadow" role="alert">
+        <strong>Use the card below to add a result for a student. Choose the academic year, academic term and an exam. 
+                Choose a student from the students dropdown then finish up with the marks, then click on save to add the result. 
+        </strong>
       </div>
     `);
   });
@@ -476,6 +473,16 @@ setInterval(() => {
   teachers_subject_table.ajax.reload(null, false);
 }, 1000000000);
 
+function setInputForTransferModal() {
+  const old_teacher_id_input = $("#old_teacher_id");
+  const subject_id_input = $("#subject_id_input");
+  const class_id_input = $("#class_id_input");
+
+  old_teacher_id_input.val(teachers_id);
+  subject_id_input.val(subject_id);
+  class_id_input.val(class_id);
+}
+
 function validateResult(exam_out_of) {
   subject_teachers_form.validate({
     ignore: null,
@@ -506,6 +513,7 @@ function validateResult(exam_out_of) {
             position: "topRight",
             transitionIn: "bounceInLeft",
             message: arr.message,
+            messageColor: "black",
             overlay: true,
             zindex: 999,
             onClosing: () => {
@@ -531,6 +539,7 @@ function validateResult(exam_out_of) {
             position: "center",
             transitionIn: "bounceInLeft",
             overlay: true,
+            messageColor: "black",
             zindex: 999,
             message: arr.message,
           });
@@ -550,3 +559,125 @@ function validateResult(exam_out_of) {
     },
   });
 }
+
+const auth_modal = $("#auth_modal");
+
+const modal_aside_left = $("#modal_aside_left");
+const change_ownership = $("#change_ownership");
+change_ownership.click(() => {
+  auth_modal.modal({
+    show: true,
+    keyboard: false,
+    backdrop: "static",
+  });
+});
+
+const new_teacher_id = $("#new_teacher_id").select2({
+  theme: "bootstrap4",
+  placeholder: "Click to select teacher",
+  width: "100%",
+  ajax: {
+    url: "../queries/get_teachers_for_transfer_ownership",
+    type: "POST",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        searchTerm: params.term,
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
+
+const transfer_subject_to_new_teacher = $(
+  "#transfer_subject_to_new_teacher"
+).validate({
+  rules: {
+    new_teacher_id: {
+      required: true,
+    },
+    old_teacher_id: {
+      required: true,
+    },
+    subject_id_input: {
+      required: true,
+    },
+    class_id_input: {
+      required: true,
+    },
+  },
+
+  errorClass: "text-danger",
+  submitHandler: (form) => {
+    $.ajax({
+      url: "../queries/transfer_ownership.php",
+      type: "POST",
+      data: $(form).serialize(),
+    }).done((response) => {
+      const arr = JSON.parse(response);
+      if (arr.success === true) {
+        modal_aside_left.modal("hide");
+        iziToast.success({
+          position: "bottomLeft",
+          message: arr.message,
+          overlay: true,
+          progressBar: false,
+          messageColor: "black",
+          onClosing: () => {
+            goBack();
+          },
+        });
+      } else {
+        iziToast.error({
+          position: "bottomLeft",
+          message: arr.message,
+          overlay: true,
+          messageColor: "black",
+          progressBar: false,
+        });
+      }
+    });
+  },
+});
+
+const authenticate_form = $("#authenticate_form").validate({
+  rules: {
+    email_address_auth: {
+      required: true,
+      email: true,
+    },
+    password_auth: {
+      required: true,
+    },
+  },
+  errorClass: "text-danger",
+  submitHandler: (form) => {
+    $.ajax({
+      url: "../../admin/queries/authenticateUser.php",
+      type: "POST",
+      data: $(form).serialize(),
+    }).done((response) => {
+      const arr = JSON.parse(response);
+      if (arr.success === true) {
+        auth_modal.modal("hide");
+        modal_aside_left.modal({
+          show: true,
+          keyboard: false,
+          backdrop: "static",
+        });
+      } else {
+        const auth_fail_ = $("#auth_fail_").html(`
+          <div class="alert alert-danger" role="alert">
+                    <p><strong>${arr.message}</strong></p>
+          </div>
+        `);
+      }
+    });
+  },
+});

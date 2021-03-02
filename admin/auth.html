@@ -1,0 +1,42 @@
+<div class="modal fade" id="auth_modal" tabindex="-1" role="dialog" aria-labelledby="auth_modal_title"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-gray-900" id="auth_modal_title">Authenticate Person</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="alert alert-info" role="alert">
+                    <p><strong>To proceed you must authenticate yourself.</strong></p>
+                    <hr>
+                    <p class="mb-0">Click on authenticate to proceed</p>
+                </div>
+
+                <span id="auth_fail_"></span>
+
+                <form id="authenticate_form">
+
+                    <div class="form-group">
+                        <label for="email_address" class="text-primary">Email Address</label>
+                        <input type="text" class="form-control" id="email_address_auth" name="email_address_auth"
+                            autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email_address" class="text-primary">Password</label>
+                        <input type="password" class="form-control" id="password_auth" name="password_auth"
+                            autocomplete="off">
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary">Authenticate</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

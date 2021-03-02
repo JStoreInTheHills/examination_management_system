@@ -38,6 +38,10 @@
                 <?php include '../../layouts/topbar.php' ?>
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+
+                    <a class="btn btn-md text-primary mb-2" onclick="goBack()"> <i class="fas fa-arrow-left"></i> Back
+                        to previous page</a>
+
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-2">
                         <h1 class="h3 mb-0 text-gray-800" id="heading"></h1>
@@ -46,44 +50,55 @@
 
                     </div>
                     <div class="d-sm-flex align-items-center justify-content-between mb-2">
-                        
+
                         <h1 class="h6 mb-0 text-gray-800" id="SubjectCreationDate"></h1>
 
                         <h1 class="h5 mb-0 text-gray-800" id="status"></h1>
 
                     </div>
+                    <hr>
+
+                    <div class="alert alert-warning alert-dismissible fade show shadow border-0" role="alert">
+                        <div class="align-items-center justify-content-between">
+
+                            <p><strong>Use this button if you want to change Ownership of a subject to another teacher
+                                    or in the case where a teacher is not available.
+                                    Click on Transfer Ownership of Subject to transfer Ownership from one teacher to the
+                                    other.</strong></p>
+                            <button class="btn btn-md btn-primary" id="change_ownership">Transfer Ownership of Subject
+                                to Another Teacher</button>
+                        </div>
+
+                    </div>
 
                     <hr>
 
-                    <nav aria-label="breadcrumb mb-1">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="" id="my_classes">My Classes </a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><a id="active_class"></a></li>
-                        </ol>
-                    </nav>
 
-                    <div id="toast"></div>
+
 
                     <div id="errror" class=""></div>
-                    <hr>
+                    <!-- <hr> -->
 
-                    <h2 class="m-0 text-gray-800 mb-3" id="class_teacher_modal_title"></h2>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-1">
+                        <h3 class="m-0 text-gray-800 mb-1" id="class_teacher_modal_title"></h3>
+                    </div>
+                    <div id="toast"></div>
                     <!-- start of row -->
                     <div class="row">
 
                         <div class="col-lg-12 mb-1">
-                            <div id="add_result" class="card mb-2">
+                            <div id="add_result" class="card border-bottom-primary mb-2">
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary"> Add Result
                                     </h6>
                                 </div>
                                 <div class="card-body">
-                                <form id="subject_teachers_form" method="post">
-                                     
-                                        <input id="class_id" name="class_id" type="hidden" >
+                                    <form id="subject_teachers_form" method="post">
 
-                                        <input id="subject_id" name="subject_id" type="hidden" >
+                                        <input id="class_id" name="class_id" type="hidden">
+
+                                        <input id="subject_id" name="subject_id" type="hidden">
 
                                         <div class="row">
 
@@ -91,14 +106,16 @@
                                                 <label for="year_id" class="m-0 font-weight-bold text-primary"
                                                     id="year_label">Choose a
                                                     Year</label>
-                                                <select name="year_id" id="year_id" class="form-control select"></select>
+                                                <select name="year_id" id="year_id"
+                                                    class="form-control select"></select>
                                             </div>
 
                                             <div class="form-group col-md-4">
                                                 <label for="term_id" class="m-0 font-weight-bold text-primary"
                                                     id="term_label">Choose a
                                                     Term</label>
-                                                <select name="term_name" id="term_name" class="form-control select"></select>
+                                                <select name="term_name" id="term_name"
+                                                    class="form-control select"></select>
                                             </div>
 
                                             <div class="form-group col-md-4">
@@ -143,17 +160,18 @@
                         </div>
 
                         <div class="col-lg-12 mb-1">
-                        <hr>
-                            <p class="text-center"> Student Subject Performance </p>
-                        <hr>
 
-                        <div class="alert alert-info alert-dismissible fade show mb-1" role="alert">
-                            <strong>Table below shows the results that you have already declared.</strong>
+                            <p class="text-center"> <strong> Student Subject Performance </strong></p>
                             <hr>
-                            <p class="mb-0">Click edit result on the furthest right for student to edit their results.
-                            </p>
-                        </div>
-                            <div id="main_content" class="card shadow mb-4">
+
+                            <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+                                <strong>Table below shows the results that you have already declared.</strong>
+                                <hr>
+                                <p class="mb-0">Click edit result on the furthest right for student to edit their
+                                    results.
+                                </p>
+                            </div>
+                            <div id="main_content" class="card border-primary mb-4">
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary"> <span><i
@@ -194,59 +212,14 @@
     <!-- End of Page Wrapper -->
     <?php include '../../layouts/utils/logout_modal.html'; ?>
 
-    <div class="modal fade" id="edit_students_marks" data-backdrop="static" tabindex="-1" role="dialog"
-        aria-labelledby="class_teacher_modal" aria-hidden="true">
-
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-primary" id="class_teacher_modal">
-                        <span><i class="fas fa-user"></i></span> Change Students Results</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="edit_students_subject_results">
-                        <div class="row">
-                            <input type="hidden" id="edit_students_id" name="students_id">
-                            <input type="hidden" id="edit_exam_id" name="edit_exam_id">
-                            <input type="hidden" id="edit_result_id" name="edit_result_id">
-
-                            <div class="form-group col-md-12">
-                                <label class="text-primary" for="students_name">Student Name: </label>
-                                <input disabled type="text" class="form-control" name="students_name"
-                                    id="students_name">
-                                </input>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <label class="text-primary" for="subject_id">Enter Marks</label>
-                                <input name="students_marks" id="students_marks" class="form-control">
-                                </input>
-                            </div>
-
-                        </div>
-
-                    </form>
-
-                </div>
-
-                <div class="modal-footer btn-group">
-                    <button class="btn btn-dark" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary" type="submit" id="edit_students_result_submit">
-                        Save
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <?php include '../includes/edit_students_marks_modal.html' ?>
+    <?php include '../includes/transfer_ownership_modal.html' ?>
+    <?php include '../../admin/auth.html' ?>
+    
     <script src="/dist/js/main.min.js"></script>
     <script src="/dist/js/utils/utils.js"></script>
     <script src="/dist/js/teachers/add_result.js"></script>
-   
+
 </body>
 
 </html>
