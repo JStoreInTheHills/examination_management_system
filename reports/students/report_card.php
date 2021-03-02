@@ -206,7 +206,7 @@
 
         $pdf->SetFont('aefurat', '', 14);
 
-        $pdf->Cell(0, 10, "Student's Examination Report ( " . $exam_name. " ".  $name . " For Academic Year " . $year_name . " / 2021 )", 0, 1, 'C', 'B');
+        $pdf->Cell(0, 10, "Student's Examination Report ( " . $exam_name. " ".  $name . " For Academic Year " . $year_name . " )", 0, 1, 'C', 'B');
 
         $pdf->SetFont('aefurat', '', 12);
 
