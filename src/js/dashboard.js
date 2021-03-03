@@ -37,7 +37,6 @@ const edit_school_form = $("#edit_school_form");
 
 const school_name_input = $("#school_name_input");
 
-
 // Pointer to the school name.
 let school_name;
 let school_id;
@@ -181,9 +180,9 @@ const recent_Datatables = $("#recent_Datatables").DataTable({
       data: "Status",
       render: (data) => {
         if (data != 1) {
-          return `<span class="cute_dot cute_dot-lg bg-danger mr-2"></span>`;
+          return `<span class="badge badge-pill badge-danger">InActive</span>`;
         } else {
-          return `<span class="cute_dot cute_dot-lg bg-success mr-2"></span>`;
+          return `<span class="badge badge-pill badge-success">Active</span>`;
         }
       },
     },
