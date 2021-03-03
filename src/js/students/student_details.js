@@ -1,7 +1,7 @@
 // // Set new default font family and font color to mimic Bootstrap's default styling
-// (Chart.defaults.global.defaultFontFamily = "Nunito"),
-//   '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-// Chart.defaults.global.defaultFontColor = "#858796";
+(Chart.defaults.global.defaultFontFamily = "Nunito"),
+  '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+Chart.defaults.global.defaultFontColor = "#858796";
 
 const queryString = window.location.search; // points to the url and store the value in a constiable
 const urlParams = new URLSearchParams(queryString); // the url is passed as an argurment to the search
@@ -42,7 +42,7 @@ function checkTokenization() {
   return { stdid, class_id };
 }
 
-function get_details() {
+async function get_details() {
   makeStudentInactive.prop("disabled", true);
   var stat;
   var formData = {
@@ -86,11 +86,11 @@ function get_details() {
 
   function populateStudentsDetails() {
     $("#title").html(
-      `${pupil.FirstName} ${pupil.OtherNames} ${pupil.LastName}`
+      `${pupil.FirstName} ${pupil.OtherNames} ${pupil.LastName} (${pupil.RollId})`
     );
 
     $("#heading").html(
-      `${pupil.FirstName} ${pupil.OtherNames} ${pupil.LastName}`
+      `${pupil.FirstName} ${pupil.OtherNames} ${pupil.LastName} (${pupil.RollId})`
     );
     $("#nav").html(`${pupil.FirstName} ${pupil.OtherNames} ${pupil.LastName}`);
 
@@ -146,47 +146,52 @@ function fillSelect2WithData(data) {
   });
 }
 
-get_details();
+let overal_exam_table;
 
-const overal_exam_table = $("#overrall_exam_table").DataTable({
-  order: [[2, "desc"]],
-  ajax: {
-    url: "../queries/populate_students_area_chart.php",
-    type: "GET",
-    dataSrc: "",
-    data: {
-      sid: stdid,
-    },
-  },
-  columnDefs: [
-    {
-      targets: 0,
+async function populateOverallExamTable() {
+  await get_details();
+  overal_exam_table = $("#overrall_exam_table").DataTable({
+    order: [[1, "desc"]],
+    ajax: {
+      url: "../queries/populate_students_area_chart.php",
+      type: "GET",
+      dataSrc: "",
       data: {
-        exam_name: "exam_name",
-        id: "id",
-      },
-      render: function (data) {
-        return `
-            <a href="/students/pages/students_exam_details?sid=${stdid}&cid=${class_id}&ceid=${data.id}">
-              ${data.exam_name}
-            </a>`;
+        sid: stdid,
       },
     },
-    {
-      targets: 1,
-      data: "mar",
-      width: "20%",
-    },
-    {
-      targets: 2,
-      data: "name",
-    },
-    {
-      targets: 3,
-      data: "year_name",
-    },
-  ],
-});
+    columnDefs: [
+      {
+        targets: 0,
+        data: {
+          exam_name: "exam_name",
+          id: "id",
+        },
+        render: function (data) {
+          return `
+              <a href="/students/pages/students_exam_details?sid=${stdid}&cid=${class_id}&ceid=${data.id}">
+                ${data.exam_name}
+              </a>`;
+        },
+      },
+      {
+        targets: 3,
+        data: "mar",
+        width: "20%",
+      },
+      {
+        targets: 1,
+        data: "name",
+      },
+      {
+        targets: 2,
+        data: "year_name",
+      },
+    ],
+  });
+}
+
+populateOverallExamTable();
 
 const populateChart = () => {
   var ctx = document.getElementById("myAreaChart").getContext("2d");
@@ -245,7 +250,7 @@ const populateChart = () => {
             time: {
               unit: "date",
             },
-           
+
             ticks: {
               maxTicksLimit: 7,
             },
@@ -342,9 +347,6 @@ function checkIfStudentIsInactive() {
       <strong>Use this page to view name, admission number and class of the students.</strong>
       <hr>
           <p class="mb-0">Active students are denoted by <span class="badge badge-pill badge-success">Active</span> while In Active students are denoted by <span class="badge badge-pill badge-danger">Inactive</span> </p>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-      </button>
     </div>`);
 
     makeStudentInactive.html(`Make InActive`);
@@ -354,9 +356,6 @@ function checkIfStudentIsInactive() {
       <strong>This is an InActive Student.</strong>
       <hr>
           <p>The student could be having arrears or has not cleared with Finance. Kindly consult with the Mudhir or the Accounts Department.</p>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-      </button>
     </div>`);
     makeStudentInactive.html(`Make Active`);
   }

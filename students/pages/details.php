@@ -124,9 +124,9 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Exam Name</th>
-                                                            <th>Total Marks</th>
                                                             <th>Term</th>
                                                             <th>Year</th>
+                                                            <th>Total Marks</th>
                                                         </tr>
                                                     </thead>
 
