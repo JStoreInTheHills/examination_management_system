@@ -253,4 +253,59 @@
         return $exam_result;
     }
 
+    function getTermOfExam($class_exam_id){
+        global $dbh;
+        $query = "SELECT term_id 
+                  FROM class_exams 
+                  WHERE id =:class_exam_id";
+
+        $sql = $dbh->prepare($query);
+        $sql->bindParam(":class_exam_id", $class_exam_id, PDO::PARAM_STR);
+        $sql->execute();
+        $result = $sql->fetchColumn();
+        
+        return $result;
+    }
+
+    function getStreamOfClass($class_id){
+        global $dbh;
+
+        $query = "SELECT stream_id 
+                  FROM tblclasses
+                  WHERE id =:class_id";
+        $sql = $dbh->prepare($query);
+        $sql->bindParam(":class_id", $class_id, PDO::PARAM_STR);
+        $sql->execute();
+
+        $stream_id = $sql->fetchColumn();
+        
+        return $stream_id;
+    }
+
+
+    function getOveralPositionOfStudent($stream_id, $term_id, $exam_id, $students_id){
+        global $dbh;
+        $query = "SELECT sub_query.rnk 
+                  FROM (SELECT RANK() OVER(PARTITION BY c.stream_id ORDER BY SUM(marks) DESC) rnk, students_id
+                  FROM result r
+                  LEFT JOIN tblclasses c ON r.class_id = c.id 
+                  LEFT JOIN class_exams ce ON r.class_exam_id = ce.id
+                  WHERE c.stream_id =:stream_id
+                  AND ce.term_id =:term_id
+                  AND ce.exam_id =:exam_id 
+                  GROUP BY students_id) AS sub_query 
+                  WHERE students_id =:students_id";
+        $sql = $dbh->prepare($query);
+
+        $sql->bindParam(":stream_id", $stream_id, PDO::PARAM_STR);
+        $sql->bindParam(":term_id", $term_id, PDO::PARAM_STR);
+        $sql->bindParam(":exam_id", $exam_id, PDO::PARAM_STR);
+        $sql->bindParam(":students_id", $students_id, PDO::PARAM_STR);
+
+        $sql->execute();
+        
+        $students_overall_position = $sql->fetchColumn();
+
+        return $students_overall_position;
+    }
 ?>

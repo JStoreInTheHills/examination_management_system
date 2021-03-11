@@ -80,7 +80,7 @@
             $stream_id = $stream_item['stream_id'];
         }
         // -------------------------------------------------------------------------------------
-        $result_query = "SELECT t.SubjectNamesAr, t.o_r, students_id, 
+        $result_query = "SELECT t.SubjectNamesAr, students_id, 
                                 class_exam_id, class_id, t.subject_id, t.subjectNames,
                                 t.marks, t.total
                         FROM(
@@ -94,8 +94,7 @@
                                 GROUP_CONCAT(SubjectName) as subjectNames,
                                 GROUP_CONCAT(SubjectNameAr) as SubjectNamesAr,
                                 GROUP_CONCAT(marks) as marks,
-                                SUM(marks) as total,
-                                RANK() OVER (PARTITION BY c.stream_id, ce.exam_id ORDER BY SUM(marks) DESC)AS o_r
+                                SUM(marks) as total
                                 FROM result r 
                                 LEFT JOIN tblsubjectcombination ts ON ts.id = r.subject_id 
                                 JOIN tblsubjects s ON s.subject_id = ts.SubjectId 
@@ -137,7 +136,6 @@
             $result_total = $result_item['total'];
           
 
-            $o_r = $result_item['o_r'];
 
             $subject_name_in_ar_array = $result_item['SubjectNamesAr'];
             $subjectAr = explode(',', $subject_name_in_ar_array);
@@ -272,7 +270,7 @@
         $pdf->Cell(90, 10, '  ‫ ا‫لترتيب  ‫الصفي‬ ‬',  0,1,'',false);
         $pdf->setRTL(false);
     
-        $pdf->Cell(100, 10, 'Overal Position: ____'. $o_r. '_ Out Of: ___'. getTotalOveralNumberOfStudents($stream_id) .'___', 0,0,'',false);
+        $pdf->Cell(100, 10, 'Overal Position: ____'. getOveralPositionOfStudent(getStreamOfClass($class_id), getTermOfExam($class_exam_id), $exam_id, $student_id). '_ Out Of: ___'. getTotalOveralNumberOfStudents($stream_id) .'___', 0,0,'',false);
         $pdf->Cell(90, 10, '  ‫  _________________________‫من‬ ‫العدد‬:',  0,0,'',false);
       
         $pdf->setRTL(true);
