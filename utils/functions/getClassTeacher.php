@@ -308,4 +308,28 @@
 
         return $students_overall_position;
     }
+
+    function getSubjectPerformanceForStudent($students_id, $class_exam_id){
+        global $dbh;
+
+        // include "../../config/config.php";
+
+        $query = "SELECT SubjectName, marks, SubjectNameAr
+                  FROM result r 
+                  LEFT JOIN tblsubjectcombination sc ON r.subject_id = sc.id 
+                  LEFT JOIN tblsubjects s ON s.subject_id = sc.SubjectId 
+                  WHERE students_id =:students_id 
+                  AND class_exam_id =:class_exam_id";
+
+        $sql = $dbh->prepare($query);
+        $sql->bindParam(":students_id", $students_id, PDO::PARAM_STR);
+        $sql->bindParam(":class_exam_id", $class_exam_id, PDO::PARAM_STR);
+        $sql->execute();
+
+        $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+        
+    }  
+
 ?>

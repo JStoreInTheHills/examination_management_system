@@ -28,7 +28,6 @@
     }
             
         // GLOBAL VARIABLES --------------------------------------------------------------
-        $stream_id; // variable of the stream that the student belongs to. 
       
         $student_id =$_GET['sid']; // variable holding the students id. 
         $class_id = $_GET['cid']; // variable holding the class id of the student.
@@ -51,6 +50,7 @@
 
         $sum_of_total =getTotalSumOfStudent($student_id, $class_exam_id, $class_id);
 
+        $stream_id = getStreamOfClass($class_id);// variable of the stream that the student belongs to. 
     // Query to fetch the exam of the result card. 
     try{
 
@@ -68,87 +68,6 @@
         echo "Uncaught Exception" , $e->getMessage() , "\n";
     }
 
-    try{
-
-        // ------------------------------------------------------------------------------------------
-        $stream_id_query = $dbh->prepare("SELECT stream_id FROM tblclasses WHERE id =:class_id");
-        $stream_id_query->bindParam(":class_id", $class_id, PDO::PARAM_STR);
-        $stream_id_query->execute();
-
-        $stream_result = $stream_id_query->fetchAll();
-        foreach($stream_result as $stream_item){
-            $stream_id = $stream_item['stream_id'];
-        }
-        // -------------------------------------------------------------------------------------
-        $result_query = "SELECT t.SubjectNamesAr, students_id, 
-                                class_exam_id, class_id, t.subject_id, t.subjectNames,
-                                t.marks, t.total
-                        FROM(
-                                SELECT
-                                class_exam_id,
-                                r.class_id,
-                                students_id,
-                                stream_id,
-                                ce.exam_id,
-                                GROUP_CONCAT(r.subject_id) AS subject_id,
-                                GROUP_CONCAT(SubjectName) as subjectNames,
-                                GROUP_CONCAT(SubjectNameAr) as SubjectNamesAr,
-                                GROUP_CONCAT(marks) as marks,
-                                SUM(marks) as total
-                                FROM result r 
-                                LEFT JOIN tblsubjectcombination ts ON ts.id = r.subject_id 
-                                JOIN tblsubjects s ON s.subject_id = ts.SubjectId 
-                                JOIN tblclasses c ON c.id = r.class_id 
-                                JOIN class_exams ce ON ce.id = r.class_exam_id 
-                                GROUP BY students_id, class_exam_id
-                                ORDER BY ts.id asc
-                                )AS t 
-                            WHERE students_id =:students_id 
-                            AND class_id=:class_id 
-                            AND class_exam_id =:class_exam_id
-                            GROUP BY students_id
-                            ORDER BY t.subject_id ASC";
-
-        $result_prepare_statement = $dbh->prepare($result_query);
-        $result_prepare_statement->bindParam(':students_id',$student_id, PDO::PARAM_STR);
-        $result_prepare_statement->bindParam(':class_id',$class_id, PDO::PARAM_STR);
-        $result_prepare_statement->bindParam(':class_exam_id',$class_exam_id, PDO::PARAM_STR);
-
-        $result_prepare_statement->execute();
-
-        $result_from_result_table = $result_prepare_statement->fetchAll();
-
-        foreach($result_from_result_table as $result_item){
-            
-            // Array containing all the subject names. 
-            // fetch all the subject names and explode them into an array. 
-            $result_subjects_name = $result_item['subjectNames'];
-            $subjects_names = explode(',', $result_subjects_name);
-            // var_dump($subjects_names);
-                     
-            $result_subject_marks = $result_item['marks'];
-            $marks = explode(',', $result_subject_marks);
-            // var_dump($marks);
-
-            $result_subject_id = $result_item['subject_id'];
-            $subject_ids = explode(',', $result_subject_id);
-            // var_dump($subject_ids);
-            $result_total = $result_item['total'];
-          
-
-
-            $subject_name_in_ar_array = $result_item['SubjectNamesAr'];
-            $subjectAr = explode(',', $subject_name_in_ar_array);
-        }
-
-        // ---------------------------------------------------------------------------------------------
-        // Overall Position -----------------------------
-
-
-    }catch(Exception $e){
-        echo 'Uncaught Exception', $e->getMessage(), "\n";
-    }
-    // ------End of Query to fetch students result -------------------------------------------------------
 
     // Add page and utf-8 and pdf-page-orientation. 
     try{
@@ -204,7 +123,7 @@
 
         $pdf->SetFont('aefurat', '', 14);
 
-        $pdf->Cell(0, 10, "Student's Examination Report ( " . $exam_name. " ".  $name . " For Academic Year " . $year_name . " )", 0, 1, 'C', 'B');
+        $pdf->Cell(0, 10, "Student's Examination Report ( " . $exam_name. " ".  $name . " for Academic Year " . $year_name . " )", 0, 1, 'C', 'B');
 
         $pdf->SetFont('aefurat', '', 12);
 
@@ -270,7 +189,7 @@
         $pdf->Cell(90, 10, '  ‫ ا‫لترتيب  ‫الصفي‬ ‬',  0,1,'',false);
         $pdf->setRTL(false);
     
-        $pdf->Cell(100, 10, 'Overal Position: ____'. getOveralPositionOfStudent(getStreamOfClass($class_id), getTermOfExam($class_exam_id), $exam_id, $student_id). '_ Out Of: ___'. getTotalOveralNumberOfStudents($stream_id) .'___', 0,0,'',false);
+        $pdf->Cell(100, 10, 'Overal Position: ____'. getOveralPositionOfStudent(getStreamOfClass($class_id), getTermOfExam($class_exam_id), $exam_id, $student_id). '_ Out Of: ___'. getTotalOveralNumberOfStudents(getStreamOfClass($class_id)) .'___', 0,0,'',false);
         $pdf->Cell(90, 10, '  ‫  _________________________‫من‬ ‫العدد‬:',  0,0,'',false);
       
         $pdf->setRTL(true);
@@ -295,20 +214,19 @@
         $pdf->Cell($width_cell[9], 10, ' ‫‫المواد الدراسية‬ ‬',1,1,'R');
         $count = 1;
         
-        $sub = getSubjectNames($class_id);
-        
-        for($x=0; $x < count($subjects_names); $x++){
-            for($i=0; $i < 1; $i++){
+        $subject_marks = getSubjectPerformanceForStudent($student_id, $class_exam_id);
+
+                foreach ($subject_marks as $s_marks) {
     
-                $pdf->Cell(10, 7, $count, 1,0,'C');
-                $pdf->Cell(44, 7, $subjects_names[$x],1,0,'L');
-                $pdf->Cell($width_cell[13], 7, $marks[$x],1,0,'C');
-                $pdf->Cell($width_cell[13], 7, $exam_out_of_value,1,0,'C');
-                $pdf->Cell($width_cell[9], 7, $subjectAr[$x], 1,1,'R');
-                
-                $count++;
-            }
-        }
+                    $pdf->Cell(10, 7, $count, 1,0,'C');
+                    $pdf->Cell(44, 7, $s_marks["SubjectName"],1,0,'L');
+                    $pdf->Cell($width_cell[13], 7, $s_marks["marks"],1,0,'C');
+                    $pdf->Cell($width_cell[13], 7, $exam_out_of_value,1,0,'C');
+                    $pdf->Cell($width_cell[9], 7, $s_marks["SubjectNameAr"], 1,1,'R');
+                    
+                    $count++;
+                }
+
     }catch(Exception $e){
         echo 'Uncaught Exception' , $e->getMessage(), "\n";
     }
