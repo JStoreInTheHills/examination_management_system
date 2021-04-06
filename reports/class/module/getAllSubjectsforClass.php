@@ -127,7 +127,7 @@
       *  var $class_id;
       *  return $stream_id;
     **/
-   function getStreamOfClass($class_id){
+   function getStreamOfClasses($class_id){
 
         // using the global mysql database connection 
         global $dbh;

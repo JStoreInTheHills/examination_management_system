@@ -87,7 +87,7 @@
     // Using the TCPDF file package. 
 
     // Variable holding the stream id of the class. 
-    $stream_id_of_class = getStreamOfClass($class_id);
+    $stream_id_of_class = getStreamOfClasses($class_id);
 
     // --- End of Variable declaration. -------------------------------------------------------------------------------------------------------------
 
