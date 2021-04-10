@@ -3,10 +3,11 @@
 	$academic_year = $_GET['academic_year'];
 	$class_name = $_GET['class_name'];
 
-	$sql = "SELECT exam_name, ce.created_at, ce.status, e.exam_out_of
+	$sql = "SELECT exam_name, ce.created_at, ce.status, e.exam_out_of, t.name
 			FROM class_exams ce 
-	        LEFT JOIN year y ON y.year_id = ce.year_id 
-	        LEFT JOIN tblclasses c ON ce.class_id = c.id
+	        -- LEFT JOIN year y ON y.year_id = ce.year_id 
+	        LEFT JOIN term_year ty ON ce.term_id = ty.term_year_id
+			LEFT JOIN term t ON ty.term_id = t.id
 	        LEFT JOIN exam e ON e.exam_id = ce.exam_id
 	        WHERE ce.year_id =:academic_year 
 	        AND ce.class_id = :class_name";                        

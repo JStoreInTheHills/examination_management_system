@@ -11,18 +11,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="academic_title"></title>
-
-    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <link href="/dist/css/main.min.css" rel="stylesheet">
-</head>
+    <?php include "../../_partials/css_files.php"; ?>
 
 
 <body id="page-top">
@@ -43,11 +32,20 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
+                <div class="d-sm-flex align-items-center justify-content-between">
+                    <a class="btn btn-md text-primary mb-2" onclick="goBack()"> 
+                        <i class="fas fa-arrow-left"></i> Back to previous page</a>
+                    </div>
 
                     <!-- Page Heading -->
+                    
+                    <div class="d-sm-flex align-items-center justify-content-between mb-3">
+                        <h1 class="h3 mb-0 text-gray-800">End Year Performance. </h1>
+                    </div>
+
                     <div class="d-sm-flex align-items-center justify-content-between mb-2">
-                        <h1 id="class_name" class="h3 mb-0 text-gray-800"></h1>
-                        <h1 id="heading" class="h3 mb-0 text-gray-800"></h1>
+                        <h1 id="class_name" class="h5 mb-0 text-gray-800"></h1>
+                        <h1 id="heading" class="h5 mb-0 text-gray-800"></h1>
                     </div>
 
                     <div class="d-sm-flex align-items-center justify-content-between mb-2">
@@ -63,12 +61,13 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                         </ol>
                     </nav>
 
+                    <hr class="my-4">
                     <!-- start of row -->
                     <div class="row">
 
-                        <div class="col-lg-6">
-                            <div class="card mb-3">
-                                <div class="card-header text-primary">
+                        <div class="col-lg-8">
+                            <div class="card mb-3 border-primary">
+                                <div class="card-header text-primary font-weight-bold">
                                     All Exams for the Academic Period
                                 </div>
                                 <div class="card-body">
@@ -78,6 +77,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
                                                 <tr>
                                                     <th>Date Created</th>
                                                      <th>Exam Name</th>
+                                                     <th>Term Name</th>
                                                     <th>Status</th>
                                                     <th>Out Of</th>
                                                 </tr>
@@ -92,7 +92,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
                         <div class="col-lg-12">
                             <div class="card shadow mb-3">
-                                <div class="card-header text-primary">
+                                <div class="card-header text-primary font-weight-bold">
                                     End Year Result Students Table
                                 </div>
                                 <div class="card-body">
@@ -127,6 +127,7 @@ if(!isset($_SESSION['alogin']) || (time() - $_SESSION['last_login_timestamp']) >
 
 
     <script src="/dist/js/main.min.js"></script>
+    <script src="/dist/js/utils/utils.js"></script>
     <script src="/dist/js/years/view_class_academic_year_performance.js"></script>
 </body>
 

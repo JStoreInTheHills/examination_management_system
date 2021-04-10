@@ -4,7 +4,7 @@
 	
 	$class_id = $_GET['class_id'];
 
-	$query = "SELECT ClassName, id, CreationDate, ClassNameNumeric, name
+	$query = "SELECT ClassName, id, CreationDate, ClassNameNumeric, name, tblteachers.teacher_id
 				FROM tblclasses 
 				LEFT JOIN tblteachers 
 				ON tblteachers.teacher_id = tblclasses.classTeacher
