@@ -135,7 +135,7 @@
     }
 
     function getPercentageYearPerformance($sum_of_total, $total_marks){
-        return ($sum_of_total / $total_marks) * TOTAL_SCORE_FOR_ACADEMIC_YEAR;
+        return number_format(($sum_of_total / $total_marks) * TOTAL_SCORE_FOR_ACADEMIC_YEAR);
     }
 
     function getStudentRankForTheYear($students_id, $class_id, $year_id){
