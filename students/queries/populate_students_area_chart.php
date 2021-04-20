@@ -2,7 +2,7 @@
 
 $sid = $_GET['sid'];
 
-$query = "SELECT year_name, exam_name, class_exams.id, SUM(marks) as mar, term.name
+$query = "SELECT year_name, exam_name, class_exams.id, SUM(marks) as mar, term.name, class_exams.created_at
           FROM result
           LEFT JOIN class_exams ON class_exams.id = result.class_exam_id
           LEFT JOIN exam ON exam.exam_id = class_exams.exam_id

@@ -151,7 +151,7 @@ let overal_exam_table;
 async function populateOverallExamTable() {
   await get_details();
   overal_exam_table = $("#overrall_exam_table").DataTable({
-    order: [[1, "desc"]],
+    order: [[0, "desc"]],
     ajax: {
       url: "../queries/populate_students_area_chart.php",
       type: "GET",
@@ -163,6 +163,10 @@ async function populateOverallExamTable() {
     columnDefs: [
       {
         targets: 0,
+        data: "created_at",
+      },
+      {
+        targets: 1,
         data: {
           exam_name: "exam_name",
           id: "id",
@@ -175,16 +179,16 @@ async function populateOverallExamTable() {
         },
       },
       {
-        targets: 3,
+        targets: 4,
         data: "mar",
         width: "20%",
       },
       {
-        targets: 1,
+        targets: 2,
         data: "name",
       },
       {
-        targets: 2,
+        targets: 3,
         data: "year_name",
       },
     ],
@@ -502,6 +506,7 @@ classid.select2({
 });
 
 const term_performance_table = $("#term_performance_table").DataTable({
+  order: [[1, "desc"]],
   ajax: {
     url: "../queries/fetch_term.php",
     type: "GET",
@@ -585,3 +590,28 @@ setInterval(() => {
 
 //   return { xs, ys };
 // }
+
+const academic_year_performance = $("#academic_year_performance").DataTable({
+  order: [[1, "desc"]],
+  ajax: {
+    url: "../queries/fetch_academic_year.php",
+    dataSrc: "",
+    type: "GET",
+  },
+  columnDefs: [
+    {
+      targets: 0,
+      data: {
+        year_name: "year_name",
+        year_id: "year_id",
+      },
+      render: (data) => {
+        return `<a target="_blank" href="/reports/academic_year/students_academic_year_result.php?sid=${stdid}&cid=${class_id}&year_id=${data.year_id}">${data.year_name}</a>`;
+      },
+    },
+    {
+      targets: 1,
+      data: "created_at",
+    },
+  ],
+});

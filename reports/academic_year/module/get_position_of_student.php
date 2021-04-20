@@ -2,7 +2,7 @@
 
     define("TOTAL_SCORE_FOR_ACADEMIC_YEAR", 100); // CONSTANT TOTAL MARKS
 
-    function getTerms($class_id){
+    function getTerms($class_id, $year_id){
         
         // include "../../../config/config.php";
         global $dbh;
@@ -11,12 +11,13 @@
                   FROM class_exams 
                   JOIN term_year ty ON ty.term_year_id = class_exams.term_id 
                   JOIN term ON term.id = ty.term_id 
-                  WHERE class_id =:class_id";
+                  WHERE class_id =:class_id
+                  AND class_exams.year_id=:year_id";
 
         $sql = $dbh->prepare($query);
         
         $sql->bindParam(":class_id", $class_id, PDO::PARAM_STR);
-        
+        $sql->bindParam(":year_id", $year_id, PDO::PARAM_STR);
         $sql->execute();
 
         $result = $sql->fetchAll(PDO::FETCH_ASSOC);

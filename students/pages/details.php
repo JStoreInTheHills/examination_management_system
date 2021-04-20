@@ -73,7 +73,7 @@
                                         class="fas fa-chalkboard"></i></span> Term Performance</a>
                             <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact"
                                 role="tab" aria-controls="nav-contact" aria-selected="false"> <span><i
-                                        class="fas fa-address-book"></i></span> Year Performance</a>
+                                        class="fas fa-address-book"></i></span> Academic Year Performance</a>
 
                         </div>
                     </nav>
@@ -103,7 +103,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
                                         <p class="text-center">Overall Exam Performance</p>
                                     <hr>
                                     <div class="alert alert-info alert-dismissible fade show mb-1" role="alert">
@@ -123,6 +122,7 @@
                                                     width="100%" cellspacing="0">
                                                     <thead>
                                                         <tr>
+                                                            <th>Date Published</th>
                                                             <th>Exam Name</th>
                                                             <th>Term</th>
                                                             <th>Year</th>
@@ -167,7 +167,38 @@
 
                                 </div>
                                 <div class="tab-pane fade" id="nav-contact" role="tabpanel"
-                                    aria-labelledby="nav-contact-tab">...</div>
+                                    aria-labelledby="nav-contact-tab">
+
+                                          <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                                <strong>This table shows the academic year performance of the student.</strong>
+                                                <hr>
+                                                <p class="mb-0">It combines all the term performance in the academic year. Click on an year to view students performance for that specific academic year.</p>
+                                         </div>
+
+                                         <div class="card shadow mb-4">
+                                        <div
+                                            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                            <h6 class="mx font-weight-bold text-primary">Academic year Performance</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped " id="academic_year_performance"
+                                                    width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Academic Year</th>
+                                                            <th>Created At</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                
+                                
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-4">

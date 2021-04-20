@@ -59,7 +59,7 @@
   
     $width_cell = array(50,20,60,40,15,8,30,25,10,54,24,22,9,45, 51);
 
-    $nameOfTerm = getTerms($class_id);
+    $nameOfTerm = getTerms($class_id, $year_id);
 
     $number_count_of_subjects = getNumberOfSubjectsForTheExam($class_id);
 
